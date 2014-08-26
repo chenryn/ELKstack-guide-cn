@@ -1,0 +1,12 @@
+# text
+
+Status: Stable
+
+The text panel is used for displaying static text formated as markdown, sanitized html or as plain text.
+
+## parameters
+
+* mode
+    ‘html’, ‘markdown’ or ‘text’
+* content
+    The content of your panel, written in the mark up specified in `mode`

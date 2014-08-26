@@ -1,0 +1,23 @@
+# Summary
+
+* [Introduction](README.md)
+* [10 minute walk through](10-minute-walk-through.md)
+* [queries and filters](queries-and-filters.md)
+* [rows and panels](rows-and-panels.md)
+* [saving and loading](saving-and-loading.md)
+* [dashboard schema](dashboard-schema.md)
+* [templates and scripts](templates-and-scripts.md)
+* [configuration](configuration.md)
+* [panels](panels/README.md)
+   * [trends](panels/trends.md)
+   * [text](panels/text.md)
+   * [terms](panels/terms.md)
+   * [table](panels/table.md)
+   * [sparklines](panels/sparklines.md)
+   * [map](panels/map.md)
+   * [hits](panels/hits.md)
+   * [histogram](panels/histogram.md)
+   * [goal](panels/goal.md)
+   * [column](panels/column.md)
+   * [bettermap](panels/bettermap.md)
+
