@@ -1,103 +1,103 @@
 # histogram
 
-Status: Stable
+状态：稳定
 
-The histogram panel allow for the display of time charts. It includes several modes and tranformations to display event counts, mean, min, max and total of numeric fields, and derivatives of counter fields.
+histogram 面板用以显示时间序列图。它包括好几种模式和变种，用以显示时间的计数，平均数，最大值，最小值，以及数值字段的和，计数器字段的导数。
 
-## parameters
+## 参数
 
-**axis options**
+**轴(axis)参数**
 
 * mode
-    Value to use for the y-axis. For all modes other than count, `value_field` must be defined. Possible values: count, mean, max, min, total.
+    用于 Y 轴的值。除了 count 以外，其他 `mode` 设置都要求定义 `value_field` 参数。可选值为：count, mean, max, min, total。
 * time_field
-    x-axis field. This must be defined as a date type in Elasticsearch.
+    X 轴字段。必须是在 Elasticsearch 中定义为时间类型的字段。
 * value_field
-    y-axis field if `mode` is set to mean, max, min or total. Must be numeric.
+    如果 `mode` 设置为 mean, max, min 活着 total，Y 轴字段。必须是数值型。
 * x-axis
-    Show the x-axis
+    是否显示 X 轴。
 * y-axis
-    Show the y-axis
+    是否显示 Y 轴。
 * scale
-    Scale the y-axis by this factor
+    以该因子规划 Y 轴
 * y_format
-   none,bytes,'short '
+   Y 轴数值格式，可选：none, bytes, short
 
-**annotations**
+**注释**
 
-* annotate object
-    A query can be specified, the results of which will be displayed as markers on the chart. For example, for noting code deploys.
+* 注释对象
+    可以指定一个请求的结果作为标记显示在图上。比如说，标记某时刻部署代码了。
   * annotate.enable
-    Should annotations, aka markers, be shown?
+    是否显示注释(即标记)
   * annotate.query
-    Lucene query_string syntax query to use for markers.
+    标记使用的 Lucene query_string 语法请求
   * annotate.size
-    Max number of markers to show
+    最多显示多少标记
   * annotate.field
-    Field from documents to show
+    显示哪个字段
   * annotate.sort
-    Sort array in format [field,order], For example [‘@timestamp’,‘desc’] ==== Interval options
+    数组排序，格式为 [field,order]。比如 [‘@timestamp’,‘desc’] ，这是一个内部参数。
 * auto_int
-    Automatically scale intervals?
+    是否自动调整间隔
 * resolution
     If auto_int is true, shoot for this many bars.
 * interval
-    If auto_int is set to false, use this as the interval.
-* interval
-    Array of possible intervals in the View selector. Example [‘auto’,‘1s’,‘5m’,‘3h’] ==== Drawing options
+    如果 `auto_int` 设为假，用这个值做间隔
+* intervals
+    在 `View` 选择器里可见的间隔数组。比如 [‘auto’,‘1s’,‘5m’,‘3h’]，这是绘图参数。
 * lines
-    Show line chart
+    显示折线图
 * fill
-    Area fill factor for line charts, 1-10
+    折线图的区域填充因子，从 1 到 10。
 * linewidth
-    Weight of lines in pixels
+    折线的宽度，单位为像素
 * points
-    Show points on chart
+    在图上显示数据点
 * pointradius
-    Size of points in pixels
+    数据点的大小，单位为像素
 * bars
-    Show bars on chart
+    显示条带图
 * stack
-    Stack multiple series
+    堆叠多个序列
 * spyable
-    Show inspect icon
+    显示审核图标
 * zoomlinks
-    Show ‘Zoom Out’ link
+    显示 ‘Zoom Out’ 链接
 * options
-    Show quick view options section
+    显示快捷的 view 选项区域
 * legend
-    Display the legend
+    显示图例
 * show_query
-    If no alias is set, should the query be displayed?
+    如果没设别名(alias)，是否显示请求
 * interactive
-    Enable click-and-drag to zoom functionality
+    允许点击拖拽进行放大
 * legend_counts
-    Show counts in legend ==== Transformations
+    在图例上显示计数
 * timezone
-    Correct for browser timezone?. Valid values: browser, utc
+    是否调整成浏览器时区。可选值为：browser, utc
 * percentage
-    Show the y-axis as a percentage of the axis total. Only makes sense for multiple queries
+    把 Y 轴数据显示成百分比样式。仅对多个请求时有效。
 * zerofill
-    Improves the accuracy of line charts at a small performance cost.
+    提高折线图准确度，稍微消耗一点性能。
 * derivative
-    Show each point on the x-axis as the change from the previous point
-* tooltip object
+    在 X 轴上显示该点数据在前一个点数据上变动的数值。
+* 提示框(tooltip)对象
   * tooltip.value_type
-    Individual or cumulative controls how tooltips are display on stacked charts
+    控制 tooltip 在堆叠图上怎么显示，可选值：独立(individual)还是累计(cumulative)
   * tooltip.query_as_alias
-    If no alias is set, should the query be displayed?
-* grid object
-    Min and max y-axis values
+    如果没设别名(alias)，是否显示请求
+* 网格(grid)对象
+    Y 轴的最大值和最小值
   * grid.min
-    Minimum y-axis value
+    Y 轴的最小值
   * grid.max
-    Maximum y-axis value
+    Y 轴的最大值
 
-**queries**
+**请求(queries)**
 
-* queries object
-    This object describes the queries to use on this panel.
+* 请求对象
+    这个对象描述本面板使用的请求。
   * queries.mode
-    Of the queries available, which to use. Options: `all, pinned, unpinned, selected`
+    在可用请求中应该用哪些？可设选项有：`all, pinned, unpinned, selected`
   * queries.ids
-    In `selected` mode, which query ids are selected.
+    如果设为 `selected` 模式，具体被选的请求编号。

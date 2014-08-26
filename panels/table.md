@@ -1,49 +1,49 @@
 # table
 
-    Status: Stable
+状态：稳定
 
-    The table panel contains a sortable, pagable view of documents that. It can be arranged into defined columns and offers several interactions, such as performing adhoc terms aggregations.
+表格面板里是一个可排序的分页文档。你可以定义需要排列哪些字段，并且还提供了一些交互功能，比如执行 terms 聚合查询。
 
-## parameters
+## 参数
 
 * size
-    The number of hits to show per page
+    每页显示多少条
 * pages
-    The number of pages available
+    展示多少页
 * offset
-    The current page
+    当前页的页码
 * sort
-    An array describing the sort order of the table. For example [‘@timestamp’,‘desc’]
+    定义表格排序次序的数组，示例如右：[‘@timestamp’,‘desc’]
 * overflow
-    The css overflow property. ‘min-height’ (expand) or ‘auto’ (scroll)
+    css 的 overflow 属性。‘min-height’ (expand) 或 ‘auto’ (scroll)
 * fields
-    the fields used a columns of the table, in an array.
+    表格显示的字段数组
 * highlight
-    The fields on which to highlight, in an array
+    高亮显示的字段数组
 * sortable
-    Set sortable to false to disable sorting
+    设为假关掉排序功能
 * header
-    Set to false to hide the table column names
+    设为假隐藏表格列名
 * paging
-    Set to false to hide the paging controls of the table
+    设为假隐藏表格翻页键
 * field_list
-    Set to false to hide the list of fields. The user will be able to expand it, but it will be hidden by default
+    设为假隐藏字段列表。使用者依然可以展开它，不过默认会隐藏起来
 * all_fields
-    Set to true to show all fields in the mapping, not just the current fields in the table.
+    设为真显示映射表内的所有字段，而不是表格当前使用到的字段
 * trimFactor
-    The trim factor is the length at which to truncate fields taking the number of columns in the table into consideration. For example, a trimFactor of 100, with 5 columns in the table, would trim each column at 20 character. The entirety of the field is still available in the expanded view of the event.
+    裁剪因子(trim factor)，是参考表格中的列数来决定裁剪字段长度。比如说，设置裁剪因子为 100，表格中有 5 列，那么每列数据就会被裁剪为 20 个字符。完整的数据依然可以在展开这个事件后查看到。
 * localTime
-    Set to true to adjust the timeField to the browser’s local time
+    设为真调整 `timeField` 的数据遵循浏览器的本地时区。
 * timeField
-    If localTime is set to true, this field will be adjusted to the browsers local time
+    如果 `localTime` 设为真，该字段将会被调整为浏览器本地时区。
 * spyable
-    Set to false to disable the inspect icon
+    设为假，不显示审查(inspect)按钮。
 
-**queries**
+**请求(queries)**
 
-* queries object
-    This object describes the queries to use on this panel.
+* 请求对象
+    这个对象描述本面板使用的请求。
   * queries.mode
-    Of the queries available, which to use. Options: `all, pinned, unpinned, selected`
+    在可用请求中应该用哪些？可设选项有：`all, pinned, unpinned, selected`
   * queries.ids
-    In `selected` mode, which query ids are selected.
+    如果设为 `selected` 模式，具体被选的请求编号。

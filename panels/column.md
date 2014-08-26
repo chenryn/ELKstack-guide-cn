@@ -1,10 +1,10 @@
 # column
 
-Status: Stable
+状态：稳定
 
-A pseudo panel that lets you add other panels to be arranged in a column with defined heights. While the column panel is stable, it does have many limitations, including the inability to drag and drop panels within its borders. It may be removed in a future release.
+这是一个伪面板。目的是让你在一列中添加多个其他面板。虽然 column 面板状态是稳定，它的限制还是很多的，比如不能拖拽内部的小面板。未来的版本里，column 面板可能被删除。
 
-## parameters
+## 参数
 
 * panel
-  An array of panel objects
+  面板对象构成的数组

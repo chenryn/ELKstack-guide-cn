@@ -1,49 +1,49 @@
 # terms
 
-    Status: Stable
+状态：稳定
 
-    A table, bar chart or pie chart based on the results of an Elasticsearch terms facet.
+基于 Elasticsearch 的 terms facet 接口数据展现表格，条带图，或者饼图。
 
-## parameters
+## 参数
 
 * field
-    The field on which to computer the facet
+    用于计算 facet 的字段名称。
 * exclude
-    terms to exclude from the results
+    要从结果数据中排除掉的 terms
 * missing
-    Set to false to disable the display of a counter showing how much results are missing the field
+    设为假，就可以不显示数据集内有多少结果没有你指定的字段。
 * other
-    Set to false to disable the display of a counter representing the aggregate of all values outside of the scope of your size property
+    设为假，就可以不显示聚合结果在你的 `size` 属性设定范围以外的总计数值。
 * size
-    Show this many terms
+    显示多少个 terms
 * order
-    In terms mode: count, term, reverse_count or reverse_term, in terms_stats mode: term, reverse_term, count, reverse_count, total, reverse_total, min, reverse_min, max, reverse_max, mean or reverse_mean
+    terms 模式可以设置：count, term, reverse_count 或者 reverse_term；terms_stats 模式可以设置：term, reverse_term, count, reverse_count, total, reverse_total, min, reverse_min, max, reverse_max, mean 或者 reverse_mean
 * donut
-    In pie chart mode, draw a hole in the middle of the pie to make a tasty donut.
+    在饼图(pie)模式，在饼中画个圈，变成甜甜圈样式。
 * tilt
-    In pie chart mode, tilt the chart back to appear as more of an oval shape
+    在饼图(pie)模式，倾斜饼变成椭圆形。
 * lables
-    In pie chart mode, draw labels in the pie slices
+    在饼图(pie)模式，在饼图分片上绘制标签。
 * arrangement
-    In bar or pie mode, arrangement of the legend. horizontal or vertical
+    在条带(bar)或者饼图(pie)模式，图例的摆放方向。可以设置：水平(horizontal)或者垂直(vertical)。
 * chart
-* table, bar or pie
+    可以设置：table, bar 或者 pie
 * counter_pos
-    The location of the legend in respect to the chart, above, below, or none.
+    图例相对于图的位置，可以设置：上(above)，下(below)，或者不显示(none)。
 * spyable
-    Set spyable to false to disable the inspect button
+    设为假，不显示审查(inspect)按钮。
 
-**queries**
+**请求(queries)**
 
-* queries object
-    This object describes the queries to use on this panel.
+* 请求对象
+    这个对象描述本面板使用的请求。
   * queries.mode
-    Of the queries available, which to use. Options: `all, pinned, unpinned, selected`
+    在可用请求中应该用哪些？可设选项有：`all, pinned, unpinned, selected`
   * queries.ids
-    In `selected` mode, which query ids are selected.
+    如果设为 `selected` 模式，具体被选的请求编号。
 * tmode
-    Facet mode: terms or terms_stats
+    Facet 模式：terms 或者 terms_stats
 * tstat
-    Terms_stats facet stats field
+    Terms_stats facet stats 字段。
 * valuefield
-    Terms_stats facet value field
+    Terms_stats facet value 字段。

@@ -4,7 +4,7 @@ Status: Experimental
 
 The sparklines panel shows tiny time charts. The purpose of these is not to give an exact value, but rather to show the shape of the time series in a compact manner
 
-## parameters
+## 参数
 
 * mode
     Value to use for the y-axis. For all modes other than count, `value_field` must be defined. Possible values: count, mean, max, min, total.
@@ -17,11 +17,11 @@ The sparklines panel shows tiny time charts. The purpose of these is not to give
 * spyable
     Show inspect icon
 
-**queries**
+**请求(queries)**
 
-* queries object
-    This object describes the queries to use on this panel.
+* 请求对象
+    这个对象描述本面板使用的请求。
   * queries.mode
-    Of the queries available, which to use. Options: `all, pinned, unpinned, selected`
+    在可用请求中应该用哪些？可设选项有：`all, pinned, unpinned, selected`
   * queries.ids
-    In `selected` mode, which query ids are selected.
+    如果设为 `selected` 模式，具体被选的请求编号。

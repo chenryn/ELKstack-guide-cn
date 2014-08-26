@@ -4,7 +4,7 @@ Status: Stable
 
 The goal panel display progress towards a fixed goal on a pie chart
 
-## parameters
+## 参数
 
 * donut
     Draw a hole in the middle of the pie, creating a tasty donut.
@@ -23,12 +23,11 @@ The goal panel display progress towards a fixed goal on a pie chart
   * query.goal
       the fixed goal for goal mode
 
-**queries**
+**请求(queries)**
 
-* queries object
-    This object describes the queries to use on this panel.
-
+* 请求对象
+    这个对象描述本面板使用的请求。
   * queries.mode
-      Of the queries available, which to use. Options: `all, pinned, unpinned, selected`
+    在可用请求中应该用哪些？可设选项有：`all, pinned, unpinned, selected`
   * queries.ids
-      In `selected` mode, which query ids are selected.
+    如果设为 `selected` 模式，具体被选的请求编号。

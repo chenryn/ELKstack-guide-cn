@@ -1,27 +1,27 @@
 # map
 
-Status: Stable
+状态：稳定
 
-The map panel translates 2 letter country or state codes into shaded regions on a map. Currently available maps are world, usa and europe.
+map 面板把 2 个字母的国家或地区代码转成地图上的阴影区域。目前可用的地图包括世界地图，美国地图和欧洲地图。
 
-## parameters
+## 参数
 
 * map
-    Map to display. world, usa, europe
+    显示哪个地图：world, usa, europe
 * colors
-    An array of colors to use to shade the map. If 2 colors are specified, shades between them will be used. For example [‘#A0E2E2’, ‘#265656’]
+    用来涂抹地图阴影的颜色数组。一旦设定好这 2 个颜色，阴影就会使用介于这 2 者之间的颜色。示例 [‘#A0E2E2’, ‘#265656’]
 * size
-    Max number of regions to shade
+    阴影区域的最大数量
 * exclude
-    exclude this array of regions. For example [‘US’,‘BR’,‘IN’]
+    排除的区域数组。示例 [‘US’,‘BR’,‘IN’]
 * spyable
-    Setting spyable to false disables the inspect icon.
+    设为假，不显示审查(inspect)按钮。
 
-**queries**
+**请求(queries)**
 
-* queries object
-    This object describes the queries to use on this panel.
+* 请求对象
+    这个对象描述本面板使用的请求。
   * queries.mode
-    Of the queries available, which to use. Options: `all, pinned, unpinned, selected`
+    在可用请求中应该用哪些？可设选项有：`all, pinned, unpinned, selected`
   * queries.ids
-    In `selected` mode, which query ids are selected.
+    如果设为 `selected` 模式，具体被选的请求编号。

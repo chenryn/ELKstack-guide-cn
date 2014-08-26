@@ -4,7 +4,7 @@ Status: Beta
 
 A stock-ticker style representation of how queries are moving over time. For example, if the time is 1:10pm, your time picker was set to "Last 10m", and the "Time Ago" parameter was set to "1h", the panel would show how much the query results have changed since 12:00-12:10pm
 
-## parameters
+## 参数
 
 * ago
     A date math formatted string describing the relative time period to compare the queries to.
@@ -13,11 +13,11 @@ A stock-ticker style representation of how queries are moving over time. For exa
 * spyable
     Set to false to disable the inspect icon
 
-**queries**
+**请求(queries)**
 
-* queries object
-    This object describes the queries to use on this panel.
+* 请求对象
+    这个对象描述本面板使用的请求。
   * queries.mode
-    Of the queries available, which to use. Options: `all, pinned, unpinned, selected`
+    在可用请求中应该用哪些？可设选项有：`all, pinned, unpinned, selected`
   * queries.ids
-    In `selected` mode, which query ids are selected.
+    如果设为 `selected` 模式，具体被选的请求编号。

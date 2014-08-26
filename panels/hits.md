@@ -4,7 +4,7 @@ Status: Stable
 
 The hits panel displays the number of hits for each of the queries on the dashboard in a configurable format specified by the ‘chart’ property.
 
-## parameters
+## 参数
 
 * arrangement
     The arrangement of the legend. horizontal or vertical
@@ -21,11 +21,11 @@ The hits panel displays the number of hits for each of the queries on the dashbo
 * spyable
     Setting spyable to false disables the inspect icon.
 
-**queries**
+**请求(queries)**
 
-* queries object
-    This object describes the queries to use on this panel.
+* 请求对象
+    这个对象描述本面板使用的请求。
   * queries.mode
-    Of the queries available, which to use. Options: `all, pinned, unpinned, selected`
+    在可用请求中应该用哪些？可设选项有：`all, pinned, unpinned, selected`
   * queries.ids
-    In `selected` mode, which query ids are selected.
+    如果设为 `selected` 模式，具体被选的请求编号。
