@@ -7,6 +7,9 @@
 ## 参数
 
 * mode
+
     ‘html’, ‘markdown’ 或者 ‘text’
+
 * content
+
     面板内容，用 `mode` 参数指定的标记语言书写
