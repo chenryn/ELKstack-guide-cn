@@ -64,6 +64,8 @@ Kibana 的仪表板是由行和面板组成的。这些都可以随意的添加�
 4. Inspectable: 面板是否允许用户查看所用的请求内容。现在先略过。
 5. 点击 **Save** 添加你的新 **terms** 面板到你的仪表板
 
+**译者注：面板宽度也可以在仪表板内直接拖拽修改，将鼠标移动至面板左(右)侧边线处，鼠标会变成相应的箭头，按住左键拖拽成满意宽度松开即可**
+
 ![First panel](http://www.elasticsearch.org/guide/en/kibana/current/tutorials/rows_panels/firstpanel.png)
 
 太棒了！你现在有一个面板了！你可能意识到这个数据跟 [Using Kibana for the first time](http://www.elasticsearch.org/guide/en/kibana/current/using-kibana-for-the-first-time.html) 中的饼图数据一样。 `shakespeare` 数据集集中在 lines，还有少量的 acts 和 scenes。

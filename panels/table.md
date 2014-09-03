@@ -110,15 +110,17 @@ panel 设置可以分成几类，其中比较重要和有用的是：
 
 * 字段列表
 
-table 面板左侧，是字段列表多选区域。字段分为 *_all* 和 *current* 两种。*_all* 是 Kibana 通过 elasticsearch 的 `_mapping` API 直接获取的索引内所有存在过的字段；*current* 则仅显示匹配请求框搜索内容(即会显示在 table 里)的数据用到的字段。
+table 面板左侧，是字段列表多选区域。字段分为 *_all* 和 *current* 两种。*_all* 是 Kibana 通过 elasticsearch 的 `_mapping` API 直接获取的索引内所有存在过的字段；*current* 则仅显示 **table 匹配范围内**的数据用到的字段。
 
 勾选字段列表中某个字段，该字段就加入 table 面板右侧的表格中成为一列。
 
 ![](../img/table-fields.png)
 
-字段列表中，可以点击具体字段，查看 **table 匹配范围内**该字段数据的统计和排行数据。
+字段列表中，可以点击具体字段，查看 **table 匹配范围内**该字段数据的统计和排行数据的小面板。
 
 ![](../img/table-micropanel.png)
+
+小面板上虽然只显示一个很小范围内的数据统计，但是点击小面板底部的 **TERMS** 下拉菜单选项，生成的 term panel 浮层数据却都是基于整个搜索结果的。这部分的内容介绍。请阅读 [term panel](./terms.md) 章节。
 
 * 排序
 
