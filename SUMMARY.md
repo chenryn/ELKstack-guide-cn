@@ -1,6 +1,6 @@
 # Summary
 
-* [Introduction](README.md)
+* [简介](README.md)
 * [10 分钟入门](10-minute-walk-through.md)
 * [请求和过滤](queries-and-filters.md)
 * [行和面板](rows-and-panels.md)
@@ -15,6 +15,7 @@
    * [bettermap](panels/bettermap.md)
    * [terms](panels/terms.md)
    * [column](panels/column.md)
+   * [stats](panels/stats.md)
    * [trends](panels/trends.md)
    * [text](panels/text.md)
    * [sparklines](panels/sparklines.md)
