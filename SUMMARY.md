@@ -16,6 +16,7 @@
    * [terms](panels/terms.md)
    * [column](panels/column.md)
    * [stats](panels/stats.md)
+   * [query](panels/query.md)
    * [trends](panels/trends.md)
    * [text](panels/text.md)
    * [sparklines](panels/sparklines.md)

@@ -1,18 +1,18 @@
 # trends
 
-Status: Beta
+状态: Beta
 
-A stock-ticker style representation of how queries are moving over time. For example, if the time is 1:10pm, your time picker was set to "Last 10m", and the "Time Ago" parameter was set to "1h", the panel would show how much the query results have changed since 12:00-12:10pm
+以证券报价器风格展示请求随着时间移动的情况。比如说：当前时间是 1:10pm，你的时间选择器设置的是 "Last 10m"，而本面板的 "Time Ago" 参数设置的是 "1h"，那么面板会显示的是请求结果从 12:00-12:10pm 以来变化了多少。
 
 ## 参数
 
 * ago
 
-    A date math formatted string describing the relative time period to compare the queries to.
+    描述需要对比请求的时期的时间数值型字符串。
 
 * arrangement
 
-    ‘horizontal’ or ‘vertical’
+    ‘horizontal’ 或 ‘vertical’
 
 * spyable
 
@@ -31,3 +31,15 @@ A stock-ticker style representation of how queries are moving over time. For exa
   * queries.ids
 
     如果设为 `selected` 模式，具体被选的请求编号。
+
+-----------------------------
+
+## 界面配置说明
+
+trends 面板用来对比实时数据与过去某天的同期数据的量的变化。配置很简单，就是设置具体某天前：
+
+![](../img/trends-panel.png)
+
+效果如下：
+
+![](../img/trends.png)
