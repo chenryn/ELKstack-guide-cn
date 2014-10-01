@@ -22,4 +22,7 @@
    * [sparklines](panels/sparklines.md)
    * [hits](panels/hits.md)
    * [goal](panels/goal.md)
+* [认证鉴权](auth/README.md)
+   * [用 nodejs 实现 CAS 认证](auth/nodejs-cas.md)
+   * [用 Perl 实现的认证鉴权框架](auth/mojo-auth.md)
 

@@ -1,8 +1,8 @@
 # hits
 
-Status: Stable
+状态: 稳定
 
-The hits panel displays the number of hits for each of the queries on the dashboard in a configurable format specified by the ‘chart’ property.
+hits 面板显示仪表板上每个请求的 hits 数，具体的显示格式可以通过 "chart" 属性配置指定。
 
 ## 参数
 

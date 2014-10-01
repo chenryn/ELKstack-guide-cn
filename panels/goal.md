@@ -1,33 +1,35 @@
 # goal
 
-Status: Stable
+状态: 稳定
 
-The goal panel display progress towards a fixed goal on a pie chart
+goal 面板在一个饼图上显示到达指定目标的进度。
 
 ## 参数
 
 * donut
-    Draw a hole in the middle of the pie, creating a tasty donut.
+
+    在饼图(pie)模式，在饼中画个圈，变成甜甜圈样式。
+
 * tilt
-    Tilt the pie back into an oval shape
+
+    在饼图(pie)模式，倾斜饼变成椭圆形。
+
 * legend
-    The location of the legend, above, below or none
-* labels
-    Set to false to disable drawing labels inside the pie slices
+
+    图例的位置，上、下或者无。
+
+* lables
+
+    在饼图(pie)模式，在饼图分片上绘制标签。
+
 * spyable
-    Set to false to disable the inspect function.
 
-**query**
-
-* query object
-  * query.goal
-      the fixed goal for goal mode
+    设为假，不显示审查(inspect)图标。
 
 **请求(queries)**
 
 * 请求对象
-    这个对象描述本面板使用的请求。
-  * queries.mode
-    在可用请求中应该用哪些？可设选项有：`all, pinned, unpinned, selected`
-  * queries.ids
-    如果设为 `selected` 模式，具体被选的请求编号。
+
+  * query.goal
+
+    goal 模式的指定目标
