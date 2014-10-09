@@ -1,6 +1,6 @@
 # 简介
 
-Kibana是一个使用 Apache 开源协议，基于浏览器的 Elasticsearch 分析和搜索仪表板。Kibana 非常容易安装和使用。整个项目都是用 HTML 和 Javascript 写的，所以 Kibana 不需要任何服务器端组件，一个纯文本发布服务器就够了。Kibana 和 Elasticsearch 一样，力争成为极易上手，但同样灵活而强大的软件。
+Kibana 是一个使用 Apache 开源协议，基于浏览器的 Elasticsearch 分析和搜索仪表板。Kibana 非常容易安装和使用。整个项目都是用 HTML 和 Javascript 写的，所以 Kibana 不需要任何服务器端组件，一个纯文本发布服务器就够了。Kibana 和 Elasticsearch 一样，力争成为极易上手，但同样灵活而强大的软件。
 
 ## 注释
 
@@ -25,6 +25,10 @@ Kibana 因其丰富的图表类型和漂亮的前端界面，被很多人理解�
 * [Elasticsearch 权威指南](http://fuxiaopang.gitbooks.io/learnelasticsearch/)
 * [Logstash 最佳实践](https://www.gitbook.io/book/chenryn/logstash-best-practice)
 * [The Logstash Book](http://www.logstashbook.com/)
+
+## 进度
+
+[![Build Status](https://www.gitbook.io/button/status/book/chenryn/kibana-guide-cn)](https://www.gitbook.io/book/chenryn/kibana-guide-cn/activity)
 
 *欢迎捐赠，作者支付宝账号：<rao.chenlin@gmail.com>*
 

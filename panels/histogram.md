@@ -222,6 +222,10 @@ histogram 面板用以显示时间序列图。它包括好几种模式和变种�
 
     这里就需要提供一个**在 Elasticsearch 中是数值类型**的字段(即**参数**部分描述的 `value_field`)作为计算平均值的数据集来源了。以 nginx 访问日志为例，这里就填 "request_time"。
 
+    如果你在 Logstash 中使用的是 `%{NUMBER:request_time}`，那么实际类型还是字符串(请记住，正则捕获是 String 类的方法，也只能生成 String 结果)，必须写成 `%{NUMBER:request_time:float}` 强制转换才行。否则，你会看到如下报错信息：
+
+    ![classcastexception](../img/class-cast-exception.jpg)
+
   * total
 
     最常见场景就是统计带宽。配置界面和 mean 是一样的。同样要求填写**数值类型**的字段名，比如 "bytes_sent"。
