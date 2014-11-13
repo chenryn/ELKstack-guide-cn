@@ -26,6 +26,9 @@ Bettermap 之所以叫 bettermap 是因为还没有更好(better)的名字。Bet
 
     悬停在标记上时显示哪个字段。
 
+* provider
+
+    选择哪家地图提供商。
 
 **请求(queries)**
 
@@ -47,14 +50,17 @@ Bettermap 之所以叫 bettermap 是因为还没有更好(better)的名字。Bet
 
 bettermap 面板是为了解决 map 面板地图种类太少且不方便大批量添加各国地图文件的问题开发的。它采用了 [leaflet 库](http://leafletjs.com/)，其 `L.tileLayer` 加载的 OpenStreetMap 地图文件都是在使用的时候单独请求下载，所以在初次使用的时候会需要一点时间才能正确显示。
 
+在 bettermap 的配置界面，我提供了 provider ，可以选择各种地图提供商。比如中文用户可以选择 GaoDe(高德地图)：
+
+![leaflet chinese](../img/bettermap-gaode.png)
+
+## 其他
+
 leaflet 库有丰富的[插件资源](http://leafletjs.com/plugins.html)。比如
 
 * [热力图](http://www.patrick-wied.at/static/heatmapjs/example-heatmap-leaflet.html)
 
 ![leaflet heap](../img/bettermap-heap.png)
 
-* [高德地图](https://github.com/htoooth/Leaflet.ChineseTmsProviders)
-
-![leaflet chinese](../img/bettermap-gaode.png)
-
 *小贴士：其实 Kibana 官方效果的标记集群也是插件实现的，叫[markercluster](https://github.com/Leaflet/Leaflet.markercluster)*
+
