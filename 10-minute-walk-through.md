@@ -91,3 +91,24 @@ friends, romans, countrymen
 ## 下一步
 
 恭喜你，你已经学会了安装和配置 Kibana，算是正式下水了！下一步，打开我们的视频和其他教程学习更高级的技能吧。现在，你可以尝试在一个空白仪表板上添加自己的面板。这方面的内容，请阅读 [Rows and Panels](http://www.elasticsearch.org/guide/en/kibana/current/rows-and-panels.html)。
+
+## 译者注
+
+在 Elasticsearch 发布 1.4 版后，使用 kibana3 访问 ES1.4 集群，会显示如下错误：
+
+![](./img/cors.jpg)
+
+这是因为 ES1.4 增强了权限管理。你需要在 ES 配置文件 elasticsearch.yml 中添加下列配置并重启服务后才能正常访问：
+
+```yaml
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+```
+
+记住 kibana3 页面也要刷新缓存才行。
+
+此外，如果你可以很明确自己 kibana 以外没有其他 http 访问，可以把 kibana 的网址写在 `http.cors.allow-origin` 参数的值中。比如：
+
+```yaml
+http.cors.allow-origin: "/https?:\/\/kbndomain/"
+```
