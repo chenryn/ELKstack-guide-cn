@@ -10,6 +10,10 @@
 
     用于计算 facet 的字段名称。
 
+* script
+
+    用于提交 facet 的 scriptField 脚本字符串。系我的 fork 中新增的功能，仅在 fmode 为 script 时生效。
+
 * exclude
 
     要从结果数据中排除掉的 terms
@@ -74,7 +78,11 @@
 
 * tmode
 
-    Facet 模式：terms 或者 terms_stats
+    Facet 模式：terms 或者 terms_stats。
+
+* fmode
+
+    Field 模式：normal 或者 script。我的 fork 中新增参数，normal 行为和原版一致，选择 script 时，scriptField 参数生效。
 
 * tstat
 
@@ -135,3 +143,21 @@ terms 面板可以使用多个风格来显示数据。
 注意这个表格只有单列数据，使用配置里定义的排序，不像 table 面板。
 
 如果你需要同时看多种统计数据，则应该使用 [stats 面板](./stats.md)。
+
+### script field
+
+在 fmode 选择 script 的时候，可以填写 script 脚本字符串获取脚本化字段结果做聚合。
+
+在 scriptField 输入框中输入
+
+    doc['path.raw'].value
+
+的时候，效果完全等价于直接在 Field 输入框中输入
+
+    path.raw
+
+因为 script 和 analyzer 的次序关系，**务必使用带有 "not_analyzed" 属性的字段**。否则一条数据中只会有一个分词结果参与后续聚合运算。
+
+支持的 script 语法，请参阅 ES 官方文档：<http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-scripting.html#_document_fields>
+
+需要注意的是，出于安全考虑，ES 1.4 以下 大多建议关闭动态脚本运行的支持；在 1.4 新增了沙箱运行并设置为默认。所以，建议在 ES 1.4 的前提下使用该特性。

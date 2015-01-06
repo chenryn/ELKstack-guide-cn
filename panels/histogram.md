@@ -10,7 +10,7 @@ histogram 面板用以显示时间序列图。它包括好几种模式和变种�
 
 * mode
 
-    用于 Y 轴的值。除了 count 以外，其他 `mode` 设置都要求定义 `value_field` 参数。可选值为：count, mean, max, min, total。
+    用于 Y 轴的值。除了 count 以外，其他 `mode` 设置都要求定义 `value_field` 参数。可选值为：count, mean, max, min, total。我的 fork 中新增了一个可选值为 uniq。
 
 * time_field
 
@@ -237,6 +237,16 @@ histogram 面板用以显示时间序列图。它包括好几种模式和变种�
     另一个有用的功能，假如你的日志量实在太大，被迫采用抽样日志的方式，可以在 Kibana 上填写 `Scale` 。比如百分之一的抽样日志，`Scale` 框就写 100，带宽数据就会在展示的时候自动翻 100 倍显示出来。
 
     ![histogram panel total scale](../img/hist-total-scale.png)
+
+  * uniq
+
+    ES 从 1.1 版本开始通过 HyperLogLog++ 算法支持[去重统计](http://www.elasticsearch.org/blog/count-elasticsearch/)聚合。在用 Aggregation API 重写了 histogram panel 后，也可以支持了。
+
+    ![histogram uniq config](../img/hist-uniq-conf.png)
+
+    常用场景比如：UV 统计。效果如下：
+
+    ![histogram uniq](../img/hist-uniq.png)
 
 * 风格(Style)配置
 

@@ -35,6 +35,7 @@ Kibana 因其丰富的图表类型和漂亮的前端界面，被很多人理解�
 ## 参阅
 
 * [Elasticsearch 权威指南](http://fuxiaopang.gitbooks.io/learnelasticsearch/)
+* [精通 Elasticsearch](http://shgy.gitbooks.io/mastering-elasticsearch/)
 * [Logstash 最佳实践](https://www.gitbook.io/book/chenryn/logstash-best-practice)
 * [The Logstash Book](http://www.logstashbook.com/)
 
