@@ -16,7 +16,7 @@ Bettermap 之所以叫 bettermap 是因为还没有更好(better)的名字。Bet
 
 * size
 
-    用来绘制地图的数据集大小
+    用来绘制地图的数据集大小。默认是 1000。注意：table panel 默认是展示最近 500 条，跟这里的大小不一致，可能引起误解。
 
 * spyable
 

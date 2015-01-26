@@ -120,7 +120,7 @@ table 面板左侧，是字段列表多选区域。字段分为 *_all* 和 *curr
 
 ![](../img/table-micropanel.png)
 
-小面板上虽然只显示一个很小范围内的数据统计，但是点击小面板底部的 **TERMS** 下拉菜单选项，生成的 term panel 浮层数据却都是基于整个搜索结果的。这部分的内容介绍。请阅读 [term panel](./terms.md) 章节。
+小面板上虽然只显示一个很小范围内(即size * pages，默认是 500)的数据统计，但是点击小面板底部的 **TERMS** 下拉菜单选项，生成的 term panel 浮层数据却都是基于整个搜索结果的。这部分的内容介绍。请阅读 [term panel](./terms.md) 章节。
 
 * 排序
 
@@ -138,6 +138,6 @@ elasticsearch 作为一种搜索引擎，很贴心的提供了高亮功能。Kib
 
 ### paging
 
-考虑到同时展示太多内容，一来对 elasticsearch 压力较大，二来影响页面展示效果和渲染性能。table 面板使用 scroll 方式逐页显示数据。这里可以定义显示每页显示多少条数据，可以翻多少页。
+考虑到同时展示太多内容，一来对 elasticsearch 压力较大，二来影响页面展示效果和渲染性能。
 
 ![](../img/table-paging.png)
