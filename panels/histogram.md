@@ -18,7 +18,7 @@ histogram 面板用以显示时间序列图。它包括好几种模式和变种�
 
 * value_field
 
-    如果 `mode` 设置为 mean, max, min 活着 total，Y 轴字段。必须是数值型。
+    如果 `mode` 设置为 mean, max, min 或者 total，Y 轴字段。必须是数值型。
 
 * x-axis
 
