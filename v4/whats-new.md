@@ -1,43 +1,43 @@
-Kibana 4 provides dozens of new features that enable you to compose questions, get answers, and solve problems like never before. It has a brand-new look and feel and improved workflows for discovering and visualizing your data and building and sharing dashboards.
+Kibana 4 提供了一系列新特性，让你在找问题，解决问题的时候前所未有的简单。它有一个全新的界面，而且优化了搜索和展示数据，构建和分析仪表板的工作流程。
 
-## key features
+## 关键特性
 
-* New data search and discovery interface
-* Unified visualization builder for your favorite visualizations and some brand new ones:
-  * Area Chart
-  * Data Table
-  * Line Chart
-  * Markdown Text Widget
-  * Pie Chart (including "doughnut" charts)
-  * Raw Document Widget
-  * Single Metric Widget
-  * Tile Map
-  * Vertical Bar Chart
-* Drag and drop dashboard builder that enables you to quickly add, rearrange, resize, and remove visualizations
-* Advanced aggregation-based analytics capabilities, including support for:
-  * Unique counts (cardinality)
-  * Non-date histograms
-  * Ranges
-  * Significant terms
-  * Percentiles
-* Expressions-based scripted fields enable you to perform ad-hoc analysis by performing computations on the fly
+* 全新的数据搜索和发现界面
+* 统一的可视化构建器，用以构建你喜欢和新加入的那些图表：
+  * 区块图
+  * 数据表格
+  * 折线图
+  * Markdown 文本挂件
+  * 饼图(包括甜圈图)
+  * 原始文档挂件
+  * 单数值挂件
+  * 贴片地图
+  * 垂直柱状图
+* 可拖拽的仪表板构建方式，让你可以快速添加，删除可视化，已经修改其大小和长宽比
+* 基于聚合接口的高级分析能力，现在支持：
+  * 去重统计(cardinality)
+  * 非时间的直方图
+  * 范围统计(Ranges)
+  * 关键词(Significant terms)
+  * 百分比(Percentiles)
+* 基于 Lucene Expressions 的脚本化字段让你可以完成临时计算任务
 
-## improvements
+## 优化
 
-* Ability to save searches and visualizations enables you to link searches to visualizations and add the same visualization to multiple dashboards
-* Visualizations support an unlimited number of nested aggregations so you can display new types of visualizations, such as "doughnut" charts
-* New URL format eliminates the need for templated and scripted dashboards
-* Better mobile experience
-* Faster dashboard loading due to a reduction in the number HTTP calls needed to load the page
-* SSL encryption for client requests as well as requests to and from Elasticsearch
-* Search result highlighting
-* Easy to access and export the data behind any visualization:
-  * View in a table or view as JSON
-  * Export in CSV format
-  * See the Elasticsearch request and response
-* Share and embed individual visualizations as well as dashboards
+* 可以保存搜索和可视化，这样你可以再多个仪表板上链接和使用同一个搜索构建的可视化
+* 可视化支持不限次数的层叠聚合，这样你可以生成新的可视化样式，比如双层甜圈图
+* 替换模板化和脚本化仪表板需求的新 URL 格式
+* 更好的移动端体验
+* 更快的仪表板加载速度，因为我们消减了发出的 HTTP 请求数量
+* 客户端请求和发往 Elasticsearch 的请求都可以有 SSL 加密
+* 搜索结果高亮
+* 可以很容易访问和导出可视化背后的数据：
+  * 可以在表格中查看，也可以用 JSON 格式
+  * 导出成 CSV 格式
+  * 查看 Elasticsearch 请求和响应
+* 跟仪表板一样，可以分享和嵌入独立的可视化部分
 
-## nuts and bolts
+## 其他细节
 
-* Ships with its own webserver and uses Node.js on the backend—installation binaries are provided for Linux, Windows, and Mac OS
-* Uses the D3 framework to display visualizations
+* 自带网页服务器，用 Node.js 作为后端 —— 发布有 Linux，Windows 和 Mac OS 的二进制文件分发
+* 用 D3 框架做可视化效果

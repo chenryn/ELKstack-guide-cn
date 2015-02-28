@@ -1,44 +1,44 @@
-You can set up Kibana and start exploring your Elasticsearch indices in minutes. All you need is:
+你可以在几分钟内安装好 Kibana 然后开始探索你的 Elasticsearch 索引。你要的就是：
 
-* Elasticsearch 1.4.4 or later
-* A modern web browser - [Supported Browsers](http://www.elasticsearch.com/support/matrix?_ga=1.149082614.1575542547.1409213558).
-* Information about your Elasticsearch installation:
-  * URL of the Elasticsearch instance you want to connect to.
-  * Which Elasticsearch indices you want to search.
+* Elasticsearch 1.4.4 或者更新的版本
+* 一个现代浏览器 - [支持的浏览器列表](http://www.elasticsearch.com/support/matrix?_ga=1.149082614.1575542547.1409213558).
+* 有关你的 Elasticsearch 集群的信息：
+  * 你想要连接 Elasticsearch 实例的 URL
+  * 你想搜索哪些 Elasticsearch 索引
 
-> If your Elasticsearch installation is protected by [Shield](http://www.elasticsearch.org/overview/shield/) see [Shield with Kibana 4](https://www.elasticsearch.org/guide/en/shield/current/_shield_with_kibana_4.html) for additional setup instructions.
+> 如果你的 Elasticsearch 是被 [Shield](http://www.elasticsearch.org/overview/shield/) 保护着的，阅读 [Shield with Kibana 4](https://www.elasticsearch.org/guide/en/shield/current/_shield_with_kibana_4.html) 学习额外的安装说明。
 
-## install and start kibanaedit
+## 安装并启动 kibana
 
-To get Kibana up and running:
+要安装启动 Kibana:
 
-1. Download the [Kibana 4 binary package](http://www.elasticsearch.org/overview/kibana/installation/) for your platform.
-2. Extract the `.zip` or `tar.gz` archive file.
-3. Run Kibana from the install directory: `bin/kibana` (Linux/MacOSX) or `bin\kibana.bat` (Windows).
+1. 下载对应平台的 [Kibana 4 二进制包](http://www.elasticsearch.org/overview/kibana/installation/)
+2. 解压 `.zip` 或 `tar.gz` 压缩文件
+3. 在安装目录里运行: `bin/kibana` (Linux/MacOSX) 或 `bin\kibana.bat` (Windows)
 
-That’s it! Kibana is now running on port 5601.
+完毕！Kibana 现在运行在 5601 端口了。
 
-## connect kibana with elasticsearchedit
+## 让 kibana 连接到 elasticsearch
 
-Before you can start using Kibana, you need to tell it which Elasticsearch indices you want to explore. The first time you access Kibana, you are prompted to define an *index pattern* that matches the name of one or more of your indices. That’s it. That’s all you need to configure to start using Kibana. You can add index patterns at any time from the [Settings tab](http://www.elasticsearch.org/guide/en/kibana/current/settings.html#settings-create-pattern).
+在开始用 Kibana 之前，你需要告诉它你打算探索哪个 Elasticsearch 索引。第一次访问 Kibana 的时候，你会被要求定义一个 *index pattern* 用来匹配一个或者多个索引名。好了。这就是你需要做的全部工作。以后你还可以随时从 [Settings tab](http://www.elasticsearch.org/guide/en/kibana/current/settings.html#settings-create-pattern) 页面添加更多的 index pattern。
 
-> By default, Kibana connects to the Elasticsearch instance running on `localhost`. To connect to a different Elasticsearch instance, modify the Elasticsearch URL in the `kibana.yml` configuration file and restart Kibana. For information about using Kibana with your production nodes, see [Using Kibana in a Production Environment](./production.md).
+> 默认情况下，Kibana 会连接运行在 `localhost` 的 Elasticsearch。要连接其他 Elasticsearch 实例，修改 `kibana.yml` 里的 Elasticsearch URL，然后重启 Kibana。如何在生产环境下使用 Kibana，阅读 [Using Kibana in a Production Environment](./production.md).
 
-To configure the Elasticsearch indices you want to access with Kibana:
+要从 Kibana 访问的 Elasticsearch 索引的配置方法：
 
-1. Point your browser at port 5601 to access the Kibana UI. For example, `localhost:5601` or `http://YOURDOMAIN.com:5601`.
-![](http://www.elasticsearch.org/guide/en/kibana/current/images/Start-Page.jpg)
-2. Specify an index pattern that matches the name of one or more of your Elasticsearch indices. By default, Kibana guesses that you’re you’re working with data being fed into Elasticsearch by Logstash. If that’s the case, you can use the default `logstash-*` as your index pattern. The asterisk (*) matches zero or more characters in an index’s name. If your Elasticsearch indices follow some other naming convention, enter an appropriate pattern. The "pattern" can also simply be the name of a single index.
-3. Select the index field that contains the timestamp that you want to use to perform time-based comparisons. Kibana reads the index mapping to list all of the fields that contain a timestamp. If your index doesn’t have time-based data, disable the `Index contains time-based events` option.
-4. If new indices are generated periodically and have a timestamp appended to the name, select the `Use event times to create index names` option and select the `Index pattern interval`. This improves search performance by enabling Kibana to search only those indices that could contain data in the time range you specify. This is primarily applicable if you are using Logstash to feed data into Elasticsearch.
-5. Click `Create` to add the index pattern. This first pattern is automatically configured as the default. When you have more than one index pattern, you can designate which one to use as the default from `Settings > Indices`.
+1. 从浏览器访问 Kibana 界面。也就是说访问比如 `localhost:5601` 或者 `http://YOURDOMAIN.com:5601`。
+   ![](http://www.elasticsearch.org/guide/en/kibana/current/images/Start-Page.jpg)
+2. 制定一个可以匹配一个或者多个 Elasticsearch 索引的 index pattern 。默认情况下，Kibana 认为你要访问的是通过 Logstash 导入 Elasticsearch 的数据。这时候你可以用默认的 `logstash-*` 作为你的 index pattern。通配符(*) 匹配索引名中零到多个字符。如果你的 Elasticsearch 索引有其他命名约定，输入合适的 pattern。pattern 也开始是最简单的单个索引的名字。
+3. 选择一个包含了时间戳的索引字段，可以用来做基于时间的处理。Kibana 会读取索引的映射，然后列出所有包含了时间戳的字段(译者注：实际是字段类型为 date 的字段，而不是“看起来像时间戳”的字段)。如果你的索引没有基于时间的数据，关闭 `Index contains time-based events` 参数。
+4. 如果一个新索引是定期生成，而且索引名中带有时间戳，选择 `Use event times to create index names` 选项，然后再选择 `Index pattern interval`。这可以提高搜索性能，Kibana 会至搜索你指定的时间范围内的索引。在你用 Logstash 输出数据给 Elasticsearch 的情况下尤其有效。
+5. 点击 `Create` 添加 index pattern。第一个被添加的 pattern 会自动被设置为默认值。如果你有多个 index pattern 的时候，你可以在 `Settings > Indices` 里设置具体哪个是默认值。
 
-Voila! Kibana is now connected to your Elasticsearch data. Kibana displays a read-only list of fields configured for the matching index.
+好了。Kibana 现在连接上你的 Elasticsearch 数据了。Kibana 会显示匹配上的索引里的字段名的只读列表。
 
-## start exploring your data!
+## 开始探索你的数据！
 
-You’re ready to dive in to your data:
+你可以开始下钻你的数据了：
 
-* Search and browse your data interactively from the [Discover](./discover.md) page.
-* Chart and map your data from the [Visualize](./visualize.md) page.
-* Create and view custom dashboards from the [Dashboard](./dashboard.md) page.
+* 在 [Discover](./discover.md) 页搜索和浏览你的数据。
+* 在 [Visualize](./visualize.md) 页转换数据成图表。
+* 在 [Dashboard](./dashboard.md) 页创建定制自己的仪表板。

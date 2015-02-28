@@ -1,18 +1,18 @@
-When you set up Kibana in a production environment, rather than on your local machine, you need to consider:
+当你准备在生产环境使用 Kibana 的时候，比起在本机运行，你需要多考虑一些：
 
-* Where you are going to run Kibana.
-* Whether you need to encrypt communications to and from Kibana.
-* If you need to control access to your data.
+* 在哪运行 kibana
+* 是否需要加密 Kibana 出入的流量
+* 是否需要控制访问数据的权限
 
-## deployment considerations
+## 部署的考虑
 
-How you deploy Kibana largely depends on your use case. If you are the only user, you can run Kibana on your local machine and configure it to point to whatever Elasticsearch instance you want to interact with. Conversely, if you have a large number of heavy Kibana users, you might need to load balance across multiple Kibana instances that are all connected to the same Elasticsearch instance.
+你怎么部署 Kibana 取决于你的运用场景。如果就是自己用，在本机运行 Kibana 然后配置一下指向到任意你想交互的 Elasticsearch 实例即可。如果你有一大批 Kibana 重度用户，可能你需要部署多个 Kibana 实例，指向同一个 Elasticsearch ，然后前面加一个负载均衡。
 
-While Kibana isn’t terribly resource intensive, we still recommend running Kibana on its own node, rather than on one of your Elasticsearch nodes.
+虽然 Kibana 不是资源密集型的应用，我们依然建议你单独用一个节点来运行 Kibana，而不是泡在 Elasticsearch 节点上。
 
-## configuring kibana to work with shield
+## 配置 Kibana 和 shield 一起工作
 
-If you are using Shield to authenticate Elasticsearch users, you need to provide Kibana with user credentials so it can access the `.kibana` index. The Kibana user needs permission to perform the following actions on the `.kibana` index:
+如果你在用 Shield 做 Elasticsearch 用户认证，你需要给 Kibana 提供用户凭证，这样它才能访问 `.kibana` 索引。Kibana 用户需要由权限访问 `.kibana` 索引里以下操作：
 
     '.kibana':
           - indices:admin/create
@@ -29,38 +29,38 @@ If you are using Shield to authenticate Elasticsearch users, you need to provide
           - indices:data/write/update
           - indices:admin/create
 
-For more information about configuring access in Shield, see [Shield with Kibana 4](https://www.elasticsearch.org/guide/en/shield/current/_shield_with_kibana_4.html) in the Shield documentation.
+更多配置 Shield 的内容，请阅读 [Shield with Kibana 4](https://www.elasticsearch.org/guide/en/shield/current/_shield_with_kibana_4.html)。
 
-To configure credentials for Kibana, set the `kibana_elasticsearch_username` and `kibana_elasticsearch_password` properties in `kibana.yml`:
+要配置 Kibana 的凭证，设置 `kibana.yml` 里的 `kibana_elasticsearch_username` 和 `kibana_elasticsearch_password` 选项即可：
 
     # If your Elasticsearch is protected with basic auth:
     kibana_elasticsearch_username: kibana4
     kibana_elasticsearch_password: kibana4
 
-## enabling ssl
+## 开启 ssl
 
-Kibana supports SSL encryption for both client requests and the requests the Kibana server sends to Elasticsearch.
+Kibana 同时支持对客户端请求以及 Kibana 服务器发往 Elasticsearch 的请求做 SSL 加密。
 
-To encrypt communications between the browser and the Kibana server, you configure the `ssl_key_file` and `ssl_cert_file` properties in `kibana.yml`:
+要加密浏览器到 Kibana 服务器之间的通信，配置 `kibana.yml` 里的 `ssl_key_file` 和 `ssl_cert_file` 参数：
 
     # SSL for outgoing requests from the Kibana Server (PEM formatted)
     ssl_key_file: /path/to/your/server.key
     ssl_cert_file: /path/to/your/server.crt
 
-If you are using Shield or a proxy that provides an HTTPS endpoint for Elasticsearch, you can configure Kibana to access Elasticsearch via HTTPS so communications between the Kibana server and Elasticsearch are encrypted.
+如果你在用 Shield 或者其他提供 HTTPS 的代理服务器保护 Elasticsearch，你可以配置 Kibana 通过 HTTPS 方式访问 Elasticsearch，这样 Kibana 服务器和 Elasticsearch 之间的通信也是加密的。
 
-To do this, you specify the HTTPS protocol when you configure the Elasticsearch URL in `kibana.yml`:
+要做到这点，你需要在 `kibana.yml` 里配置 Elasticsearch 的 URL 时指明是 HTTPS 协议：
 
     elasticsearch: "https://<your_elasticsearch_host>.com:9200"
 
-If you are using a self-signed certificate for Elasticsearch, set the `ca` property in `kibana.yml` to specify the location of the PEM file. Setting the ca property lets you leave the `verify_ssl` option enabled.
+如果你给 Elasticsearch 用的是自己签名的证书，请在 `kibana.yml` 里设定 `ca` 参数指明 PEM 文件位置，这也意味着开启了 `verify_ssl` 参数：
 
     # If you need to provide a CA certificate for your Elasticsarech instance, put
     # the path of the pem file here.
     ca: /path/to/your/ca/cacert.pem
 
-## controlling access
+## 控制访问权限
 
-You can use [Elasticsearch Shield](http://www.elasticsearch.org/overview/shield/) (Shield) to control what Elasticsearch data users can access through Kibana. Shield provides index-level access control. If a user isn’t authorized to run the query that populates a Kibana visualization, the user just sees an empty visualization.
+你可以用 [Elasticsearch Shield](http://www.elasticsearch.org/overview/shield/) 来控制用户通过 Kibana 可以访问到的 Elasticsearch 数据。Shield 提供了索引级别的访问控制。如果一个用户没被许可运行这个请求，那么它在 Kibana 可视化界面上只能看到一个空白。
 
-To configure access to Kibana using Shield, you create one or more Shield roles for Kibana using the `kibana4` default role as a starting point. For more information, see [Using Shield with Kibana 4](http://www.elasticsearch.org/guide/en/shield/current/_shield_with_kibana_4.html).
+要配置 Kibana 使用 Shield，你要位 Kibana 创建一个或者多个 Shield 角色(role)，以 `kibana4` 作为开头的默认角色。更详细的做法，请阅读 [Using Shield with Kibana 4](http://www.elasticsearch.org/guide/en/shield/current/_shield_with_kibana_4.html)。
