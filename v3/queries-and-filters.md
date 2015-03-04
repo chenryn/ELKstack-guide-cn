@@ -6,13 +6,13 @@
 
 * 在自己电脑上安装好了 Elasticsearch
 * 在自己电脑上搭建好了网站服务器，并把 Kibana 发行包解压到了发布目录里
-* 读过 [Using Kibana for the first time](http://www.elasticsearch.org/guide/en/kibana/current/using-kibana-for-the-first-time.html) 并且按照文章内容准备好了存有莎士比亚文集的索引
+* 读过 [Using Kibana for the first time](http://www.elasticsearch.org/guide/en/kibana/3.0/using-kibana-for-the-first-time.html) 并且按照文章内容准备好了存有莎士比亚文集的索引
 
 ## 我们的仪表板
 
-我们的仪表板像下面这样，可以搜索莎士比亚文集的内容。如果你喜欢本章截图的这种仪表板样式，你可以[下载导出的仪表板纲要(dashboard schema)](http://www.elasticsearch.org/guide/en/kibana/current/snippets/plays.json)
+我们的仪表板像下面这样，可以搜索莎士比亚文集的内容。如果你喜欢本章截图的这种仪表板样式，你可以[下载导出的仪表板纲要(dashboard schema)](http://www.elasticsearch.org/guide/en/kibana/3.0/snippets/plays.json)
 
-![image](http://www.elasticsearch.org/guide/en/kibana/current/tutorials/queries_filters/plays.png)
+![image](http://www.elasticsearch.org/guide/en/kibana/3.0/tutorials/queries_filters/plays.png)
 
 ## 请求
 
@@ -68,42 +68,42 @@ line_id:[30000 TO 80000] AND havoc
 
 点击请求输入框右侧的 + 号，即可添加一个新的请求框。
 
-![image](http://www.elasticsearch.org/guide/en/kibana/current/tutorials/queries_filters/Addquery.png)
+![image](http://www.elasticsearch.org/guide/en/kibana/3.0/tutorials/queries_filters/Addquery.png)
 
 点击完成后你应该看到的是这样子
 
-![image](http://www.elasticsearch.org/guide/en/kibana/current/tutorials/queries_filters/split.png)
+![image](http://www.elasticsearch.org/guide/en/kibana/3.0/tutorials/queries_filters/split.png)
 
 在左边，绿色输入框，输入 `"to be"` 然后右边，黄色输入框，输入 `"not to be"`。这就会搜索每个包含有 `"to be"` 或者 `"not to be"` 内容的文档，然后显示在我们的 hits 饼图上。我们可以看到原先一个大大的绿色圆形变成下面这样：
 
-![image](http://www.elasticsearch.org/guide/en/kibana/current/tutorials/queries_filters/pieslice.png)
+![image](http://www.elasticsearch.org/guide/en/kibana/3.0/tutorials/queries_filters/pieslice.png)
 
 **移除请求**
 
 要移除一个请求，移动鼠标到这个请求输入框上，然后会出现一个 x 小图标，点击小图标即可：
 
-![image](http://www.elasticsearch.org/guide/en/kibana/current/tutorials/queries_filters/remove.png)
+![image](http://www.elasticsearch.org/guide/en/kibana/3.0/tutorials/queries_filters/remove.png)
 
 ## 颜色和图例
 
 Kibana 会自动给你的请求分配一个可用的颜色，不过你也可以手动设置颜色。点击请求框左侧的彩色圆点，就可以弹出请求设置下拉框。这里面可以修改请求的颜色，或者设置为这个请求设置一个新的图例文字：
 
-![image](http://www.elasticsearch.org/guide/en/kibana/current/tutorials/queries_filters/settings.png)
+![image](http://www.elasticsearch.org/guide/en/kibana/3.0/tutorials/queries_filters/settings.png)
 
 ## 过滤
 
 很多 Kibana 图表都是交互式的，可以用来过滤你的数据视图。比如，点击你图表上的第一个条带，你会看到一些变动。整个图变成了一个大大的绿色条带。这是因为点击的时候，就添加了一个过滤规则，要求匹配 `play_name` 字段里的单词。
 
-![image](http://www.elasticsearch.org/guide/en/kibana/current/tutorials/queries_filters/comedyoferrors.png)
+![image](http://www.elasticsearch.org/guide/en/kibana/3.0/tutorials/queries_filters/comedyoferrors.png)
 
 你要问了“在哪里过滤了”？
 
 答案就藏在过滤(FILTERING)标签上出现的白色小星星里。点击这个标签，你会发现在 *filtering* 面板里已经添加了一个过滤规则。在 *filtering* 面板里，可以添加，编辑，固定，删除任意过滤规则。很多面板都支持添加过滤规则，包括表格(table)，直方图(histogram)，地图(map)等等。
 
-![image](http://www.elasticsearch.org/guide/en/kibana/current/tutorials/queries_filters/filteradded.png)
+![image](http://www.elasticsearch.org/guide/en/kibana/3.0/tutorials/queries_filters/filteradded.png)
 
 过滤规则也可以自己点击 + 号手动添加。
 
 ## 更多阅读
 
-你现在已经可以处理过滤和请求了，你可能很好奇在 [Kibana schema](http://www.elasticsearch.org/guide/en/kibana/current/_dashboard_schema.html) 里，他们是怎么存在的。如果你还想知道如何通过 URL 参数来添加请求和过滤，欢迎阅读 [Templated and Scripted Dashboards](http://www.elasticsearch.org/guide/en/kibana/current/templated-and-scripted-dashboards.html)
+你现在已经可以处理过滤和请求了，你可能很好奇在 [Kibana schema](http://www.elasticsearch.org/guide/en/kibana/3.0/_dashboard_schema.html) 里，他们是怎么存在的。如果你还想知道如何通过 URL 参数来添加请求和过滤，欢迎阅读 [Templated and Scripted Dashboards](http://www.elasticsearch.org/guide/en/kibana/3.0/templated-and-scripted-dashboards.html)

@@ -2,7 +2,7 @@
 
 Kibana 支持通过模板或者更高级的脚本来动态的创建仪表板。你先创建一个基础的仪表板，然后通过参数来改变它，比如通过 URL 插入一个新的请求或者过滤规则。
 
-模板和脚本都必须存储在磁盘上，目前不支持存储在 Elasticsearch 里。同时它们也必须是通过编辑或创建纲要生成的。所以我们强烈建议阅读 [The Kibana Schema Explained](http://www.elasticsearch.org/guide/en/kibana/current/_dashboard_schema.html)
+模板和脚本都必须存储在磁盘上，目前不支持存储在 Elasticsearch 里。同时它们也必须是通过编辑或创建纲要生成的。所以我们强烈建议阅读 [The Kibana Schema Explained](http://www.elasticsearch.org/guide/en/kibana/3.0/_dashboard_schema.html)
 
 ## 仪表板目录
 

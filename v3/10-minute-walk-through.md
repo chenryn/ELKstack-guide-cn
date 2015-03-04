@@ -38,7 +38,7 @@ curl -XPUT http://localhost:9200/shakespeare -d '
 ';
 ```
 
-很棒，我们这就创建好了索引。现在需要做的时导入数据。莎士比亚全集的内容我们已经整理成了 elasticsearch 批量 导入所需要的格式，你可以通过[shakeseare.json](http://www.elasticsearch.org/guide/en/kibana/current/snippets/shakespeare.json)下载。
+很棒，我们这就创建好了索引。现在需要做的时导入数据。莎士比亚全集的内容我们已经整理成了 elasticsearch 批量 导入所需要的格式，你可以通过[shakeseare.json](http://www.elasticsearch.org/guide/en/kibana/3.0/snippets/shakespeare.json)下载。
 
 用如下命令导入数据到你本地的 elasticsearch 进程中。这可能需要一点时间，莎士比亚可是著作等身的大文豪！
 
@@ -50,11 +50,11 @@ curl -XPUT localhost:9200/_bulk --data-binary @shakespeare.json
 
 现在你数据在手，可以干点什么了。打开浏览器，访问已经发布了 Kibana 的本地服务器。
 
-![Welcome Page](http://www.elasticsearch.org/guide/en/kibana/current/tutorials/intro/intro.png)
+![Welcome Page](http://www.elasticsearch.org/guide/en/kibana/3.0/tutorials/intro/intro.png)
 
 如果你解压路径无误(译者注：使用 github 源码的读者记住发布目录应该是 `kibana/src/` 里面)，你已经就可以看到上面这个可爱的欢迎页面。点击 Sample Dashboard 链接
 
-![Sample Dashboard](http://www.elasticsearch.org/guide/en/kibana/current/tutorials/intro/sample_shakespeare.png)
+![Sample Dashboard](http://www.elasticsearch.org/guide/en/kibana/3.0/tutorials/intro/sample_shakespeare.png)
 
 好了，现在显示的就是你的 sample dashboard！如果你是用新的 elasticsearch 进程开始本教程的，你会看到一个百分比占比很重的饼图。这里显示的是你的索引中，文档类型的情况。如你所见，99% 都是 lines，只有少量的 acts 和scenes。
 
@@ -64,7 +64,7 @@ curl -XPUT localhost:9200/_bulk --data-binary @shakespeare.json
 
 Kibana 允许使用者采用 Lucene Query String 语法搜索 Elasticsearch 中的数据。请求可以在页面顶部的请求输入框中书写。
 
-![Sample Dashboard](http://www.elasticsearch.org/guide/en/kibana/current/tutorials/intro/query.png)
+![Sample Dashboard](http://www.elasticsearch.org/guide/en/kibana/3.0/tutorials/intro/query.png)
 
 在请求框中输入如下内容。然后查看表格中的前几行内容。
 
@@ -72,9 +72,9 @@ Kibana 允许使用者采用 Lucene Query String 语法搜索 Elasticsearch 中�
 friends, romans, countrymen
 ```
 
-![Sample Dashboard](http://www.elasticsearch.org/guide/en/kibana/current/tutorials/intro/firsttable.png)
+![Sample Dashboard](http://www.elasticsearch.org/guide/en/kibana/3.0/tutorials/intro/firsttable.png)
 
-关于搜索请求的语法，请阅读 [Queries and Filters](http://www.elasticsearch.org/guide/en/kibana/current/working-with-queries-and-filters.html)。
+关于搜索请求的语法，请阅读 [Queries and Filters](http://www.elasticsearch.org/guide/en/kibana/3.0/working-with-queries-and-filters.html)。
 
 ## 配置另一个索引
 
@@ -82,15 +82,15 @@ friends, romans, countrymen
 
 配置索引，点击右上角的配置按钮：
 
-![Sample Dashboard](http://www.elasticsearch.org/guide/en/kibana/current/tutorials/intro/configicon.png)
+![Sample Dashboard](http://www.elasticsearch.org/guide/en/kibana/3.0/tutorials/intro/configicon.png)
 
 在这里，你可以设置你的索引为 `shakespeare` ，这样 Kibana 就只会搜索 `shakespeare` 索引的内容了。
 
-![Sample Dashboard](http://www.elasticsearch.org/guide/en/kibana/current/tutorials/intro/indexconfigure.png)
+![Sample Dashboard](http://www.elasticsearch.org/guide/en/kibana/3.0/tutorials/intro/indexconfigure.png)
 
 ## 下一步
 
-恭喜你，你已经学会了安装和配置 Kibana，算是正式下水了！下一步，打开我们的视频和其他教程学习更高级的技能吧。现在，你可以尝试在一个空白仪表板上添加自己的面板。这方面的内容，请阅读 [Rows and Panels](http://www.elasticsearch.org/guide/en/kibana/current/rows-and-panels.html)。
+恭喜你，你已经学会了安装和配置 Kibana，算是正式下水了！下一步，打开我们的视频和其他教程学习更高级的技能吧。现在，你可以尝试在一个空白仪表板上添加自己的面板。这方面的内容，请阅读 [Rows and Panels](http://www.elasticsearch.org/guide/en/kibana/3.0/rows-and-panels.html)。
 
 ## 译者注
 

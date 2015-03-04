@@ -4,9 +4,9 @@ Kibana 仪表板可以很容易的在浏览器中创建出来，而且绝大多�
 
 注意：本节内容只针对高级用户。JSON 语法非常严格，多一个逗号，少一个大括号，都会导致你的仪表板无法加载。
 
-![image](http://www.elasticsearch.org/guide/en/kibana/current/tutorials/dashboard_schema/schema_dashboard.png)
+![image](http://www.elasticsearch.org/guide/en/kibana/3.0/tutorials/dashboard_schema/schema_dashboard.png)
 
-我们会用上面这个仪表板作为示例。你可以导出任意的仪表板纲要，点击右上角的保存按钮，指向高级(Advanced)菜单，然后点击导出纲要(Export Schema)。示例使用的纲要文件可以在这里下载： [schema.json](http://www.elasticsearch.org/guide/en/kibana/current/snippets/schema.json)
+我们会用上面这个仪表板作为示例。你可以导出任意的仪表板纲要，点击右上角的保存按钮，指向高级(Advanced)菜单，然后点击导出纲要(Export Schema)。示例使用的纲要文件可以在这里下载： [schema.json](http://www.elasticsearch.org/guide/en/kibana/3.0/snippets/schema.json)
 
 因为仪表板是由特别长的 JSON 文档组成的，我们只能分成一段段的内容，分别介绍每段的作用和目的。
 
@@ -82,7 +82,7 @@ Kibana 仪表板可以很容易的在浏览器中创建出来，而且绝大多�
   "pulldowns": [
 ```
 
-垂幕是一种特殊的面板。或者说，是一个特殊的可以用来放面板的地方。在垂幕里的面板就跟在行里的一样，区别就是不能设置 span 宽度。垂幕里的面板永远都是全屏宽度。此外，垂幕里的面板也不可以吧被使用者移动或编辑。所以垂幕特别适合放置输入框。垂幕的属性是一个由面板对象构成的数组。关于特定的面板，请阅读 [Kibana Panels](http://www.elasticsearch.org/guide/en/kibana/current/panels.html)
+垂幕是一种特殊的面板。或者说，是一个特殊的可以用来放面板的地方。在垂幕里的面板就跟在行里的一样，区别就是不能设置 span 宽度。垂幕里的面板永远都是全屏宽度。此外，垂幕里的面板也不可以吧被使用者移动或编辑。所以垂幕特别适合放置输入框。垂幕的属性是一个由面板对象构成的数组。关于特定的面板，请阅读 [Kibana Panels](http://www.elasticsearch.org/guide/en/kibana/3.0/panels.html)
 
 ```
     {
@@ -198,7 +198,7 @@ Kibana 仪表板可以很容易的在浏览器中创建出来，而且绝大多�
 
 **面板数组**
 
-行的 `panels` 数组属性包括有一个以自己出现次序排序的面板对象的列表。各特定面板本身的属性列表和说明，阅读 [Kibana Panels](http://www.elasticsearch.org/guide/en/kibana/current/panels.html)
+行的 `panels` 数组属性包括有一个以自己出现次序排序的面板对象的列表。各特定面板本身的属性列表和说明，阅读 [Kibana Panels](http://www.elasticsearch.org/guide/en/kibana/3.0/panels.html)
 
 ```
       "panels": [
