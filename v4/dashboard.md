@@ -1,75 +1,75 @@
-A Kibana *dashboard* displays a set of saved visualizations in groups that you can arrange freely. You can save a dashboard to share or reload at a later time.
+一个 Kibana *dashboard* 能让你自由排列一组已保存的可视化。然后你可以保存这个仪表板，用来分享或者重载。
 
-Sample dashboard. ![Example dashboard](http://www.elasticsearch.org/guide/en/kibana/current/images/NYCTA-Dashboard.jpg)
+简单的仪表板像这样。![Example dashboard](http://www.elasticsearch.org/guide/en/kibana/current/images/NYCTA-Dashboard.jpg)
 
-## getting started
+## 开始
 
-You need at least one saved ![visualization](http://www.elasticsearch.org/guide/en/kibana/current/visualize.html) to use a dashboard.
+要用仪表板，你需要至少有一个已保存的 [visualization](http://www.elasticsearch.org/guide/en/kibana/current/visualize.html)。
 
-### building a new dashboard
+### 创建一个新的仪表板
 
-The first time you click the **Dashboard** tab, Kibana displays an empty dashboard.
+你第一次点击 **Dashboard** 标签的时候，Kibana 会显示一个空白的仪表板
 
 ![New Dashboard screen](http://www.elasticsearch.org/guide/en/kibana/current/images/NewDashboard.jpg)
 
-Build your dashboard by adding visualizations.
+通过添加可视化的方式来构建你的仪表板。
 
-### adding visualizations to a dashboard
+### 添加可视化到仪表板上
 
-To add a visualization to the dashboard, click the **Add Visualization** ![Plus](http://www.elasticsearch.org/guide/en/kibana/current/images/AddVis.png) button in the toolbar panel. Select a saved visualization from the list. You can filter the list of visualizations by typing a filter string into the **Visualization Filter** field.
+要添加可视化到仪表板上，点击工具栏面板上的 **Add Visualization** ![Plus](http://www.elasticsearch.org/guide/en/kibana/current/images/AddVis.png) 按钮。从列表中选择一个已保存的可视化。你可以在 **Visualization Filter** 里输入字符串来过滤想要找的可视化。
 
-The visualization you select appears in a *container* on your dashboard.
+由你选择的这个可视化会出现在你仪表板上的一个*容器(container)*里。
 
-> If you see a message about the container’s height or width being too small, [resize the container](http://www.elasticsearch.org/guide/en/kibana/current/dashboard.html#resizing-containers).
+> 如果你觉得容器的高度和宽度不合适，可以[调整容器大小](http://www.elasticsearch.org/guide/en/kibana/current/dashboard.html#resizing-containers)。
 
-### saving dashboards
+### 保存仪表板
 
-To save the dashboard, click the **Save Dashboard** button in the toolbar panel, enter a name for the dashboard in the **Save As** field, and click the **Save** button.
+要保存仪表板，点击工具栏面板上的 **Save Dashboard** 按钮，在 **Save As** 栏输入仪表板的名字，然后点击 **Save** 按钮。
 
-### loading a saved dashboard
+### 加载已保存仪表板
 
-Click the **Load Saved Dashboard** button to display a list of existing dashboards. The saved dashboard selector includes a text field to filter by dashboard name and a link to the **Object Editor** for managing your saved dashboards. You can also access the **Object Editor** by clicking **Settings > Edit Saved Objects**.
+点击 **Load Saved Dashboard** 按钮显示已存在的仪表板列表。已保存仪表板选择器包括了一个文本栏可以通过仪表板的名字做过滤，还有一个链接到 **Object Editor** 而已管理你的已保存仪表板。你也可以直接点击 **Settings > Edit Saved Objects** 来访问 **Object Editor**。
 
-### sharing dashboards
+### 分享仪表板
 
-You can share dashboards with other users. You can share a direct link to the Kibana dashboard or embed the dashboard in your Web page.
+你可以分享仪表板给其他用户。可以直接分享 Kibana 的仪表板链接，也可以嵌入到你的网页里。
 
-> A user must have Kibana access in order to view embedded dashboards.
+> 用户必须有 Kibana 的访问权限才能看到嵌入的仪表板。
 
-Click the **Share** button to display HTML code to embed the dashboard in another Web page, along with a direct link to the dashboard. Click the copy button ![Copy](http://www.elasticsearch.org/guide/en/kibana/current/images/Clipboard.png) next to either option to copy the code or the link to your clipboard.
+点击 **Share** 按钮显示 HTML 代码，就可以嵌入仪表板到其他网页里。还带有一个指向仪表板的链接。点击复制按钮![Copy](http://www.elasticsearch.org/guide/en/kibana/current/images/Clipboard.png) 可以复制代码，或者链接到你的黏贴板。
 
-### embedding dashboards
+### 嵌入仪表板
 
-To embed a dashboard, copy the embed code from the *Share* display into your external web application.
+要嵌入仪表板，从 *Share* 页里复制出嵌入代码，然后粘贴进你外部网页应用内即可。
 
-## customizing dashboard elements
+## 定制仪表板元素
 
-The visualizations in your dashboard are stored in resizable *containers* that you can arrange on the dashboard. This section discusses customizing these containers.
+仪表板里的可视化都存在可以调整大小的*容器*里。接下来会讨论一下容器。
 
-### moving containers
+### 移动容器
 
-Click and hold a container’s header to move the container around the dashboard. Other containers will shift as needed to make room for the moving container. Release the mouse button to confirm the container’s new location.
+点击并按住容器的顶部，就可以拖动容器到仪表板任意位置。其他容器会在必要的时候自动移动，给你在拖动的这个容器空出位置。松开鼠标，容器就会固定在当前停留位置。
 
-### resizing containers
+### 改变容器大小
 
-Move the cursor to the bottom right corner of the container until the cursor changes to point at the corner. After the cursor changes, click and drag the corner of the container to change the container’s size. Release the mouse button to confirm the new container size.
+移动光标到容器的右下角，等光标变成指向拐角的方向，点击并按住鼠标，拖动改变容器的大小。松开鼠标，容器就会固定成当前大小。
 
-### removing containers
+### 删除容器
 
-Click the x icon at the top right corner of a container to remove that container from the dashboard. Removing a container from a dashboard does not delete the saved visualization in that container.
+点击容器右上角的 x 图标删除容器。从仪表板删除容器，并不会同时删除掉容器里用到的已存可视化。
 
-### viewing detailed information
+### 查看详细信息
 
-To display the raw data behind the visualization, click the bar at the bottom of the container. Tabs with detailed information about the raw data replace the visualization, as in this example:
+要显示可视化背后的原始数据，点击容器地步的条带。可视化会被有关原始数据详细信息的几个标签替换掉。如下所示：
 
-Table. A representation of the underlying data, presented as a paginated data grid. You can sort the items in the table by clicking on the table headers at the top of each column. ![images/NYCTA-Table.jpg](http://www.elasticsearch.org/guide/en/kibana/current/images/NYCTA-Table.jpg)
+表格(Table)。底层数据的分页展示。你可以通过点击每列顶部的方式给该列数据排序。![images/NYCTA-Table.jpg](http://www.elasticsearch.org/guide/en/kibana/current/images/NYCTA-Table.jpg)
 
-Request. The raw request used to query the server, presented in JSON format. ![images/NYCTA-Request.jpg](http://www.elasticsearch.org/guide/en/kibana/current/images/NYCTA-Request.jpg)
+请求(Request)。发送到服务器的原始请求，以 JSON 格式展示。![images/NYCTA-Request.jpg](http://www.elasticsearch.org/guide/en/kibana/current/images/NYCTA-Request.jpg)
 
-Response. The raw response from the server, presented in JSON format. ![images/NYCTA-Response.jpg](http://www.elasticsearch.org/guide/en/kibana/current/images/NYCTA-Response.jpg)
+响应(Response)。从服务器返回的原始响应，以 JSON 格式展示。![images/NYCTA-Response.jpg](http://www.elasticsearch.org/guide/en/kibana/current/images/NYCTA-Response.jpg)
 
-Statistics. A summary of the statistics related to the request and the response, presented as a data grid. The data grid includes the query duration, the request duration, the total number of records found on the server, and the index pattern used to make the query. ![images/NYCTA-Statistics.jpg](http://www.elasticsearch.org/guide/en/kibana/current/images/NYCTA-Statistics.jpg)
+统计值(Statistics)。和请求响应相关的一些统计值，以数据网格的方式展示。数据报告，请求时间，响应时间，返回的记录条目数，匹配请求的索引模式(index pattern)。![images/NYCTA-Statistics.jpg](http://www.elasticsearch.org/guide/en/kibana/current/images/NYCTA-Statistics.jpg)
 
-## changing the visualization
+## 修改可视化
 
-Click the *Edit* button ![Pencil button](http://www.elasticsearch.org/guide/en/kibana/current/images/EditVis.png) at the top right of a container to open the visualization in the [Visualize](./visualize.md) page.
+点击容器右上角的 *Edit* 按钮 ![Pencil button](http://www.elasticsearch.org/guide/en/kibana/current/images/EditVis.png) 在 [Visualize](./visualize.md) 页打开可视化编辑。
