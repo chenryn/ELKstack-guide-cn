@@ -1,159 +1,161 @@
-You can interactively explore your data from the Discover page. You have access to every document in every index that matches the selected index pattern. You can submit search queries, filter the search results, and view document data. You can also see the number of documents that match the search query and get field value statistics. If a time field is configured for the selected index pattern, the distribution of documents over time is displayed in a histogram at the top of the page.
+你可以在 Discover 页交互式探索你的数据。你可以访问到匹配得上你选择的索引模式的每个索引的每条记录。你可以提交搜索请求，过滤搜索结果，然后查看文档数据。你还可以看到匹配搜索请求的文档总数，获取字段值的统计情况。如果索引模式配置了时间字段，文档的时序分布情况会在页面顶部以柱状图的形式展示出来。
 
 ![](http://www.elasticsearch.org/guide/en/kibana/current/images/Discover-Start-Annotated.jpg)
 
-## setting the time filter
+## 设置时间过滤器
 
-The Time Filter restricts the search results to a specific time period. You can set a time filter if your index contains time-based events and a time-field is configured for the selected index pattern.
+时间过滤器(Time Filter)限制搜索结果在一个特定的时间周期内。如果你的索引包含的是时序诗句，而且你为所选的索引模式配置了时间字段，那么就就可以设置时间过滤器。
 
-By default the time filter is set to the last 15 minutes. You can use the Time Picker to change the time filter or select a specific time interval or time range in the histogram at the top of the page.
+默认的时间过滤器设置为最近 15 分钟。你可以用页面顶部的时间选择器(Time Picker)来修改时间过滤器，或者选择一个特定的时间间隔，或者直方图的时间范围。
 
-To set a time filter with the Time Picker:
+要用时间选择器来修改时间过滤器：
 
-1. Click the Time Filter displayed in the upper right corner of the menu bar to open the Time Picker.
-2. To set a quick filter, simply click one of the shortcut links.
-3. To specify a relative Time Filter, click Relative and enter the relative start time. You can specify the relative start time as any number of seconds, minutes, hours, days, months, or years ago.
-4. To specify an absolute Time Filter, click Absolute and enter the start date in the From field and the end date in the To field.
-5. Click the caret at the bottom of the Time Picker to hide it.
+1. 点击菜单栏右上角显示的 Time Filter 打开时间选择器。
+2. 快速过滤，直接选择一个短链接即可。
+3. 要指定相对时间过滤，点击 Relative 然后输入一个相对的开始时间。可以是任意数字的秒、分、小时、天、月甚至年之前。
+4. 要指定绝对时间过滤，点击 Absolute 然后在 From 框内输入开始日期，To 框内输入结束日期。
+5. 点击时间选择器底部的箭头隐藏选择器。
 
-To set a Time Filter from the histogram, do one of the following:
+要从住房图上设置时间过滤器，有以下几种方式：
 
-* Click the bar that represents the time interval you want to zoom in on.
-* Click and drag to view a specific timespan. You must start the selection with the cursor over the background of the chart—the cursor changes to a plus sign when you hover over a valid start point.
-You can use the browser Back button to undo your changes.
+* 想要放大那个时间间隔，点击对应的柱体。
+* 单击并拖拽一个时间区域。注意需要等到光标变成加号，才意味着这是一个有效的起始点。
 
-## searching your data
+你可以用浏览器的后退键来回退你的操作。
 
-You can search the indices that match the current index pattern by submitting a search from the Discover page. You can enter simple query strings, use the Lucene [query syntax](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html), or use the full JSON-based [Elasticsearch Query DSL](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl.html).
+## 搜索数据
 
-When you submit a search, the histogram, Documents table, and Fields list are updated to reflect the search results. The total number of hits (matching documents) is shown in the upper right corner of the histogram. The Documents table shows the first five hundred hits. By default, the hits are listed in reverse chronological order, with the newest documents shown first. You can reverse the sort order by by clicking on the Time column header. You can also sort the table using the values in any indexed field. For more information, see [Sorting the Documents Table](http://www.elasticsearch.org/guide/en/kibana/current/discover.html#sorting).
+在 Discover 页提交一个搜索，你就可以搜索匹配当前索引模式的索引数据了。你可以直接输入简单的请求字符串，也就是用 Lucene [query syntax](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html)，也可以用完整的基于 JSON 的 [Elasticsearch Query DSL](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl.html)。
 
-To search your data:
+当你提交搜索的时候，直方图，文档表格，字段列表，都会自动反映成搜索的结果。hits(匹配的文档)总数会在直方图的右上角显示。文档表格显示前 500 个匹配文档。默认的，文档倒序排列，最新的文档最先显示。你可以通过点击时间列的头部来反转排序。事实上，所有建了索引的字段，都可以用来排序。更多细节，请阅读 [Sorting the Documents Table](http://www.elasticsearch.org/guide/en/kibana/current/discover.html#sorting)。
 
-1. Enter a query string in the Search field:
-  * To perform a free text search, simply enter a text string. For example, if you’re searching web server logs, you could enter `safari` to search all fields for the term `safari`.
-  * To search for a value in a specific field, you prefix the value with the name of the field. For example, you could enter `status:200` to limit the results to entries that contain the value `200` in the `status` field.
-  * To search for a range of values, you can use the bracketed range syntax, `[START_VALUE TO END_VALUE]`. For example, to find entries that have 4xx status codes, you could enter status:`[400 TO 499]`.
-  * To specify more complex search criteria, you can use the Boolean operators `AND`, `OR`, and `NOT`. For example, to find entries that have 4xx status codes and have an extension of `php` or `html`, you could enter `status:[400 TO 499] AND (extension:php OR extension:html)`.
+要搜索你的数据：
 
-> These examples use the Lucene query syntax. You can also submit queries using the Elasticsearch Query DSL. For examples, see [query string syntax](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax) in the Elasticsearch Reference.
+1. 在搜索框内输入请求字符串：
+  * 简单的文本搜索，直接输入文本字符串。比如，如果你在搜索网站服务器日志，你可以输入 `safari` 来搜索各字段中的 `safari` 单词。
+  * 要搜索特定字段中的值，则在值前加上字段名。比如，你可以输入 `status:200` 来限制搜索结果都是在 `status` 字段里有 `200` 内容。
+  * 要搜索一个值的范围，你可以用范围查询语法，`[START_VALUE TO END_VALUE]`。比如，要查找 4xx 的状态码，你可以输入 `status:[400 TO 499]`。
+  * 要指定更复杂的搜索标准，你可以用布尔操作符 `AND`, `OR`, 和 `NOT`。比如，要查找 4xx 的状态码，还是 `php` 或 `html` 结尾的数据，你可以输入 `status:[400 TO 499] AND (extension:php OR extension:html)`。
 
-2. Press `Enter` or click the `Search` button to submit your search query.
+> 这些例子都用了 Lucene query syntax。你也可以提交 Elasticsearch Query DSL 式的请求。更多示例，请阅读 Elasticsearch 文档中的 [query string syntax](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax)。
 
-## starting a new search
+2. 点击回车键，或者点击 `Search` 按钮提交你的搜索请求。
 
-To clear the current search and start a new search, click the New Search button in the Discover toolbar.
+## 开始一个新的搜索
+
+要清除当前搜索或开始一个新搜索，点击 Discover 工具栏的 New Search 按钮。
 
 ![](http://www.elasticsearch.org/guide/en/kibana/current/images/Discover-New-Search.jpg)
 
-## saving a search
+## 保存搜索
 
-You can reload saved searches on the Discover page and use them as the basis of [visualizations](http://www.elasticsearch.org/guide/en/kibana/current/visualize.html). Saving a search saves both the search query string and the currently selected index pattern.
+你可以在 Discover 页加载已保存的搜索，也可以用作 [visualizations](http://www.elasticsearch.org/guide/en/kibana/current/visualize.html) 的基础。保存一个搜索，意味着同时保存下了搜索请求字符串和当前选择的索引模式。
 
-To save the current search:
+要保存当前搜索：
 
-1. Click the `Save Search` button ![Save Search button](http://www.elasticsearch.org/guide/en/kibana/current/images/SaveButton.jpg) in the Discover toolbar.
-2. Enter a name for the search and click `Save`.
+1. 点击 Discover 工具栏的 `Save Search` 按钮 ![Save Search button](http://www.elasticsearch.org/guide/en/kibana/current/images/SaveButton.jpg)。
+2. 输入一个名称，点击 `Save`。
 
-## loading a saved search
+## 加载一个已存搜索
 
-To load a saved search:
+要加载一个已保存的搜索：
 
-1. Click the `Load Search` button ![Load Search button](http://www.elasticsearch.org/guide/en/kibana/current/images/LoadButton.jpg) in the Discover toolbar.
-2. Select the search you want to load.
+1. 点击 Discover 工具栏的 `Load Search` 按钮 ![Load Search button](http://www.elasticsearch.org/guide/en/kibana/current/images/LoadButton.jpg)。
+2. 选择你要加载的搜索。
 
-If the saved search is associated with a different index pattern than is currently selected, loading the saved search also changes the selected index pattern.
+如果已保存的搜索关联到跟你当前选择的索引模式不一样的其他索引上，加载这个搜索也会切换当前的已选索引模式。
 
-## changing which indices you’re searching
+## 改变你搜索的索引
 
-When you submit a search request, the indices that match the currently-selected index pattern are searched. The current index pattern is shown below the search field. To change which indices you are searching, select a different index pattern.
+当你提交一个搜索请求，匹配当前的已选索引模式的索引都会被搜索。当前模式模式会显示在搜索栏下方。要改变搜索的索引，需要选择另外的模式模式。
 
-To select a different index pattern:
+要选择另外的索引模式：
 
-1. Click the `Settings` button ![Settings button](http://www.elasticsearch.org/guide/en/kibana/current/images/SettingsButton.jpg) in the Discover toolbar.
-2. Select the pattern you want to use from the Index Pattern list.
+1. 点击 Discover 工具栏的 `Settings` 按钮 ![Settings button](http://www.elasticsearch.org/guide/en/kibana/current/images/SettingsButton.jpg)。
+2. 从索引模式列表中选取你打算采用的模式。
 
-For more information about index patterns, see [Creating an Index Pattern](http://www.elasticsearch.org/guide/en/kibana/current/settings.html#settings-create-pattern).
+关于索引模式的更多细节，请阅读 [Creating an Index Pattern](http://www.elasticsearch.org/guide/en/kibana/current/settings.html#settings-create-pattern)。
 
-## automatically refreshing the page
+## 自动刷新页面
 
-You can configure a refresh interval to automatically refresh the Discover page with the latest index data. This periodically resubmits the search query.
+亦可以配置一个刷新间隔来自动刷新 Discover 页面的最新索引数据。这回定期重新提交一次搜索请求。
 
-When a refresh interval is set, it is displayed to the left of the Time Filter in the menu bar.
+设置刷新间隔后，会显示在菜单栏时间过滤器的左边。
 
-To set the refresh interval:
+要设置刷新间隔：
 
-1. Click the `Time Filter` ![Time Filter](http://www.elasticsearch.org/guide/en/kibana/current/images/TimeFilter.jpg) in the upper right corner of the menu bar.
-2. Click the `Refresh Interval` tab.
-3. Choose a refresh interval from the list.
+1. 点击菜单栏右上角的 `Time Filter` ![Time Filter](http://www.elasticsearch.org/guide/en/kibana/current/images/TimeFilter.jpg)。
+2. 点击 `Refresh Interval` 标签。
+3. 从列表中选择一个刷新间隔。
 
-## filtering by field
+## 按字段过滤
 
-You can filter the search results to display only those documents that contain a particular value in a field. You can also create negative filters that exclude documents that contain the specified field value.
+你可以过滤搜索结果，只显示在某字段中包含了特定值的文档。也可以创建反向过滤器，排除掉包含特定字段值的文档。
 
-You can add filters from the Fields list or from the Documents table. When you add a filter, it is displayed in the filter bar below the search query. From the filter bar, you can enable or disable a filter, invert the filter (change it from a positive filter to a negative filter and vice-versa), toggle the filter on or off, or remove it entirely.
+你可以从字段列表或者文档表格里添加过滤器。当你添加好一个过滤器后，它会显示在搜索请求下方的过滤栏里。从过滤栏里你可以编辑或者关闭一个过滤器，转换过滤器(从正向改成反向，反之亦然)，切换过滤器开关，或者完全移除掉它。
 
-To add a filter from the Fields list:
+要从字段列表添加过滤器：
 
-1. Click the name of the field you want to filter on. This displays the top five values for that field. To the right of each value, there are two magnifying glass buttons—one for adding a regular (positive) filter, and one for adding a negative filter.
-2. To add a positive filter, click the `Positive Filter` button ![Positive Filter Button](http://www.elasticsearch.org/guide/en/kibana/current/images/PositiveFilter.jpg). This filters out documents that don’t contain that value in the field.
-3. To add a negative filter, click the `Negative Filter` button ![Negative Filter Button](http://www.elasticsearch.org/guide/en/kibana/current/images/NegativeFilter.jpg). This excludes documents that contain that value in the field.
+1. 点击你想要过滤的字段名。会显示这个字段的前 5 名数据。每个数据的右侧，有两个小按钮 —— 一个用来添加常规(正向)过滤器，一个用来添加反向过滤器。
+2. 要添加正向过滤器，点击 `Positive Filter` 按钮 ![Positive Filter Button](http://www.elasticsearch.org/guide/en/kibana/current/images/PositiveFilter.jpg)。这个会过滤掉在本字段不包含这个数据的文档。
+3. 要添加反向过滤器，点击 `Negative Filter` 按钮 ![Negative Filter Button](http://www.elasticsearch.org/guide/en/kibana/current/images/NegativeFilter.jpg)。这个会过滤掉在本字段包含这个数据的文档。
 
-To add a filter from the Documents table:
+要从文档表格添加过滤器：
 
-1. Expand a document in the Documents table by clicking the `Expand` button ![Expand Button](http://www.elasticsearch.org/guide/en/kibana/current/images/ExpandButton.jpg) to the left of the document’s entry in the first column (the first column is usually Time). To the right of each field name, there are two magnifying glass buttons—one for adding a regular (positive) filter, and one for adding a negative filter.
-2. To add a positive filter based on the document’s value in a field, click the `Positive Filter` button ![Positive Filter Button](http://www.elasticsearch.org/guide/en/kibana/current/images/PositiveFilter.jpg). This filters out documents that don’t contain the specified value in that field.
-3. To add a negative filter based on the document’s value in a field, click the `Negative Filter` button ![Negative Filter Button](http://www.elasticsearch.org/guide/en/kibana/current/images/NegativeFilter.jpg). This excludes documents that contain the specified value in that field.
+1. 点击表格第一列(通常都是时间)文档内容左侧的 `Expand` 按钮 ![Expand Button](http://www.elasticsearch.org/guide/en/kibana/current/images/ExpandButton.jpg) 展开文档表格中的文档。每个字段名的右侧，有两个小按钮 —— 一个用来添加常规(正向)过滤器，一个用来添加反向过滤器。
+2. 要添加正向过滤器，点击 `Positive Filter` 按钮 ![Positive Filter Button](http://www.elasticsearch.org/guide/en/kibana/current/images/PositiveFilter.jpg)。这个会过滤掉在本字段不包含这个数据的文档。
+3. 要添加反向过滤器，点击 `Negative Filter` 按钮 ![Negative Filter Button](http://www.elasticsearch.org/guide/en/kibana/current/images/NegativeFilter.jpg)。这个会过滤掉在本字段包含这个数据的文档。
 
-## viewing document data
+## 查看文档数据
 
-When you submit a search query, the 500 most recent documents that match the query are listed in the Documents table. You can configure the number of documents shown in the table by setting the `discover:sampleSize` property in [Advanced Settings](./settings.md#advanced-options). By default, the table shows the localized version of the time field specified in the selected index pattern and the document `_source`. You can [add fields to the Documents table](http://www.elasticsearch.org/guide/en/kibana/current/discover.html#adding-columns) from the Fields list. You can [sort the listed documents](http://www.elasticsearch.org/guide/en/kibana/current/discover.html#sorting) by any indexed field that’s included in the table.
+当你提交一个搜索请求，最近的 500 个搜索结果会显示在文档表格里。你可以在 [Advanced Settings](./settings.md#advanced-options) 里通过 `discover:sampleSize` 属性配置表格里具体的文档数量。默认的，表格会显示当前选择的索引模式中定义的时间字段内容(转换成本地时区)以及 `_source` 文档。你可以从字段列表[添加字段到文档表格](http://www.elasticsearch.org/guide/en/kibana/current/discover.html#adding-columns)。还可以用表格里包含的任意已建索引的字段来[排序列出的文档](http://www.elasticsearch.org/guide/en/kibana/current/discover.html#sorting)。
 
-To view a document’s field data:
+要查看一个文档的字段数据：
 
-1. Click the `Expand` button ![Expand Button](http://www.elasticsearch.org/guide/en/kibana/current/images/ExpandButton.jpg) to the left of the document’s entry in the first column (the first column is usually Time). Kibana reads the document data from Elasticsearch and displays the document fields in a table. The table contains a row for each field that contains the name of the field, add filter buttons, and the field value.
-2. To view the original JSON document (pretty-printed), click the `JSON` tab.
-3. To view the document data as a separate page, click the link. You can bookmark and share this link to provide direct access to a particular document.
-4. To collapse the document details, click the `Collapse` button ![Collapse Button](http://www.elasticsearch.org/guide/en/kibana/current/images/CollapseButton.jpg).
+1. 点击表格第一列(通常都是时间)文档内容左侧的 `Expand` 按钮 ![Expand Button](http://www.elasticsearch.org/guide/en/kibana/current/images/ExpandButton.jpg)。Kibana 从 Elasticsearch 读取数据然后在表格中显示文档字段。这个表格每行是一个字段的名字、过滤器按钮和字段的值。
+2. 要查看原始 JSON 文档(格式美化过的)，点击 `JSON` 标签。
+3. 要在单独的页面上查看文档内容，点击链接。你可以添加书签或者分享这个链接，以直接访问这条特定文档。
+4. 收回文档细节，点击 `Collapse` 按钮 ![Collapse Button](http://www.elasticsearch.org/guide/en/kibana/current/images/CollapseButton.jpg)。
 
-## sorting the document list
+## 文档列表排序
 
-You can sort the documents in the Documents table by the values in any indexed field. If a time field is configured for the selected index pattern, by default the documents are sorted in reverse chronological order.
+你可以用任意已建索引的字段排序文档表格中的数据。如果当前索引模式配置了时间字段，默认会使用该字段倒序排列文档。
 
-To change the sort order:
+要改变排序方式：
 
-* Click the name of the field you want to sort by. The fields you can use for sorting have a sort button to the right of the field name. Clicking the field name a second time reverses the sort order.
+* 点击想要用来排序的字段名。能用来排序的字段在字段名右侧都有一个排序按钮。再次点击字段名，就会反向调整排序方式。
 
-## adding field columns to the documents table
+## 给文档表格添加字段列
 
 By default, the Documents table shows the localized version of the time field specified in the selected index pattern and the document `_source`. You can add fields to the table from the Fields list.
+默认的，文档表格会显示当前选择的索引模式中定义的时间字段内容(转换成本地时区)以及 `_source` 文档。你可以从字段列表添加字段到文档表格。
 
-To add field columns to the Documents table:
+要添加字段列到文档表格：
 
-1. Mouse over a field in the Fields list and click its `add` button ![Add Field Button](http://www.elasticsearch.org/guide/en/kibana/current/images/AddFieldButton.jpg).
-2. Repeat until you’ve added all the fields you want to display in the Documents table.
+1. 移动鼠标到字段列表的字段上，点击它的 `add` 按钮 ![Add Field Button](http://www.elasticsearch.org/guide/en/kibana/current/images/AddFieldButton.jpg)。
+2. 重复操作直到你添加完所有你想移除的字段。
 
-The added field columns replace the `_source` column in the Documents table. The added fields are also listed in the Selected Fields section at the top of the field list.
+添加的字段会替换掉文档表格里的 `_source` 列。同时还会显示在字段列表顶部的 `Selected Fields` 区域里。
 
-To rearrange the field columns in the table, mouse over the header of the column you want to move and click the Move button.
+要重排表格中的字段列，移动鼠标到你要移动的列顶部，点击移动过按钮。
 
 ![](http://www.elasticsearch.org/guide/en/kibana/current/images/Discover-MoveColumn.jpg)
 
-## removing field columns from the documents table
+## 从文档表格删除字段列
 
-To remove field columns from the Documents table:
+要从文档表格删除字段列：
 
-1. Mouse over the field you want to remove in the `Selected Fields` section of the Fields list and click its `remove` button ![Remove Field Button](http://www.elasticsearch.org/guide/en/kibana/current/images/RemoveFieldButton.jpg).
-2. Repeat until you’ve removed all the fields you want to drop from the Documents table.
+1. 移动鼠标到字段列表的 `Selected Fields` 区域里你想要移除的字段上，然后点击它的 `remove` 按钮 ![Remove Field Button](http://www.elasticsearch.org/guide/en/kibana/current/images/RemoveFieldButton.jpg)。
+2. 重复操作直到你移除完所有你想移除的字段。
 
-## viewing field data statistics
+## 查看字段数据统计
 
-From the field list, you can see how many documents in the Documents table contain a particular field, what the top 5 values are, and what percentage of documents contain each value.
+从字段列表，你可以看到文档表格里有多少数据包含了这个字段，排名前 5 的值是什么，以及包含各个值的文档的占比。
 
-To view field data statistics:
+要查看字段数据统计：
 
-* Click the name of a field in the Fields list. The field can be anywhere in the Fields list—Selected Fields, Popular Fields, or the list of other fields.
+* 点击字段列表里一个字段的名字。这个字段可以在字段列表的任意位置 —— 已选字段(Selected Fields)，常用字段(Popular Fields)，或其他字段。
 
 ![](http://www.elasticsearch.org/guide/en/kibana/current/images/Discover-FieldStats.jpg)
 
-> To create a visualization based on the field, click the Visualize button below the field statistics.
+> 要基于这个字段创建可视化，点击字段统计下方的 Visualize 按钮。
