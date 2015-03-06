@@ -45,4 +45,4 @@ Kibana 因其丰富的图表类型和漂亮的前端界面，被很多人理解�
 
 *欢迎捐赠，作者支付宝账号：<rao.chenlin@gmail.com>*
 
-![ercode](img/alipay.png)
+![ercode](v3/img/alipay.png)
