@@ -10,7 +10,7 @@ query 搜索框支持三种请求类型：
 
 * lucene
 
-这也是默认的类型，使用要点就是请求语法。语法说明见：<http://www.elasticsearch.org/guide/en/elasticsearch/reference/3.0/query-dsl-query-string-query.html#query-string-syntax>
+这也是默认的类型，使用要点就是请求语法。语法说明见：<http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax>
 
 * regex
 
