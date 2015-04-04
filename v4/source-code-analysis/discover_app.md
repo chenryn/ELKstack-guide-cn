@@ -15,7 +15,7 @@
 
 ## plugins/discover/ components/field_chooser/field_chooser.js
 
-* 提供 discFieldChooser 这个 angular directive，其中监听 "fields" 并调用 calculateFields 计算常用字段排行，监听 "data" 并调用 `$scope.details()` 方法，提供 `$scope.runAgg()` 方法。方法中，根据字段的类型不同，分别可能使用 `date_histogram`/`geohash_grid`/`terms` 聚合函数，创建可视化模型，然后带着当前页这些设定(前面说过，各 app 之间通过 sessionStorage 共享了状态的)跳转到 "/visualize/create" 页面，相当于是这三个常用聚合的快速可视化操作。
+* 提供 discFieldChooser 这个 angular directive，其中监听 "fields" 并调用 calculateFields 计算常用字段排行，监听 "data" 并调用 `$scope.details()` 方法，提供 `$scope.runAgg()` 方法。方法中，根据字段的类型不同，分别可能使用 `date_histogram`/`geohash_grid`/`terms` 聚合函数，创建可视化模型，然后带着当前页这些设定——前面说过，各 app 之间通过 globalState 共享状态，也就是 URL 中的 `?_a=(...)`。各 app 会通过 `rison.decode($location.search()._a)` 和 `rison.encode($location.search()._a)` 设置和读取——跳转到 "/visualize/create" 页面，相当于是这三个常用聚合的快速可视化操作。
 * 加载 `plugins/discover/components/field_chooser/lib/field_calculator.js` ，提供 `fieldCalculator.getFieldValueCounts()` 方法，在 `$scope.details()` 中读取被点击的字段值的情况。
 * 加载 `plugins/discover/components/field_chooser/discover_field.js`，提供 discoverField 这个 angular directive，用于弹出浮层展示零时的 visualize(调用上一条提供的 `$scope.details()` 方法)，同时给被点击的字段加常用度；加载 `plugins/discover/components/field_chooser/lib/detail_views/string.html` 网页，用于浮层效果。网页中对 indexed 或 scripted 类型的字段，可以调用前面提到的 `runAgg()` 方法。
 * 加载并渲染 `plugins/discover/components/field_chooser/field_chooser.html` 网页。网页中使用了上一条提供的 discover-field 标签。

@@ -48,7 +48,7 @@
        * [搜索页](v4/source-code-analysis/discover_app.md)
        * [可视化页](v4/source-code-analysis/visualize_app.md)
        * [仪表板页](v4/source-code-analysis/dashboard_app.md)
-       * [设置页](v4/source-code-analysis/setting_app.md)
+       * [设置页](v4/source-code-analysis/settings_app.md)
        * [.kibana 索引数据结构](v4/source-code-analysis/kibana_index.md)
 * [捐赠名单](donors.md)
 

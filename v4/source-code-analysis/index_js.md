@@ -12,17 +12,17 @@ kibana 4 主页入口，分析方法跟 kibana 3 一样，看 index.html 和 req
 
 `components/config/config.js` 主要是从 kibana index 里的 "config" type 中读取 "kbnVersion" id 的数据。这个 "kbnVersion" 是源代码(index.js)里的一个常量，在 grunt 编译时会生成的。
 
-`plugins/kibana/_init` 里监听 `application.load` 事件，触发 `couries.start()` 函数。
+`plugins/kibana/_init` 里监听 `application.load` 事件，触发 `courier.start()` 函数。
 
 `plugins/kibana/_apps` 提供路径记忆(lastPath)功能，这点在 kibana4 user guide 上被专门提到过；然后初始化 `registry/apps`，并循环调用 `assignPaths` 和 `getShow` 方法。
 
 `plugins/kibana/_timepicker` 提供时间选择器页面。
 
-## couries 概述
+## courier 概述
 
-`components/couries/couries.js` 中，加载 `index_pattern` 和 `saved_objects`，启动 searchLooper 和 docLooper；设置整个页面的定期刷新。
+`components/courier/courier.js` 中，加载 `index_pattern` 和 `saved_objects`，启动 searchLooper 和 docLooper；设置整个页面的定期刷新。
 
-**couries** 是一个非常重要的东西，除了上行提到的这几个以外，目录下还有 docSource 和 searchSource ，可以简单理解为 kibana 跟 ES 之间的一个 object mapper。
+**courier** 是一个非常重要的东西，除了上行提到的这几个以外，目录下还有 docSource 和 searchSource ，可以简单理解为 kibana 跟 ES 之间的一个 object mapper。其中和 ES 的实际交互，是调用了 `services/es.js` 里定义的 service，当然里面内容超级简单，就是加载官方的 elasticsearch.js 库，然后初始化一个最简的 esFactory 客户端，包括超时都设成了 0，把这个控制交给 server 端。
 
 searchLooper, docLooper 则是限制在 `_request_queue` 里的 Looper 对象，分别给 `Looper.start` 方法传递 FetchStrategyForSearch, FetchStrategyForDoc，对应 ES 的 `/_msearch` 和 `/_mget` 请求。这两个在 `components/courier/fetch/strategy/search.js` 和 `components/courier/fetch/strategy/doc.js` 里定义。
 
