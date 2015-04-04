@@ -2,19 +2,30 @@
 
 包括有以下 type：
 
-### config
+## config
 
 _id 为 kibana4 的 version。内容主要是 defaultIndex，设置默认的 index_pattern.
 
-### search
+## search
 
 _id 为 discover 上保存的搜索名称。内容主要是 title，column，sort 和 kibanaSavedObjectMeta。kibanaSavedObjectMeta 内是一个 searchSourceJSON，保存搜索 json 的字符串。
 
-### visualization
+## visualization
 
 _id 为 visualize 上保存的可视化名称。内容包括 title，savedSearchId，kibanaSavedObjectMeta 和 visState。其中 visState 里保存了 聚合 json 的字符串。如果绑定了已保存的搜索，那么把其在 search 类型里的 _id 存在 savedSearchId 字段里，如果是从新搜索开始的，那么把搜索 json 的字符串直接存在自己的 kibanaSavedObjectMeta 的 searchSourceJSON 里。
 
-### index-pattern
+## dashboard
+
+_id 为 dashboard 上保存的仪表盘名称。内容包括 title, panelsJSON 和 kibanaSavedObjectMeta。其中 panelsJSON 是一个数组，每个元素是一个 panel 的属性定义。定义包括有：
+
+* type: 具体加载的 app 类型，就默认来说，肯定就是 search 或者 visualization 之一。
+* id: 具体加载的 app 的保存 id。也就是上面说过的，它们在各自类型下的 `_id` 内容。
+* size_x: panel 的 X 轴长度。Kibana 4 采用 [gridster 库](http://gridster.net/)做挂件的动态划分，默认为 3。
+* size_y: panel 的 Y 轴长度。默认为 2。
+* col: panel 的左边侧起始位置。Kibana 4 指定 col 最大为 12。每行第一个 panel 的 col 就是 1，假如它的 size_x 是 4，那么第二个 panel 的 col 就是 5。
+* row: panel 位于第几行。gridster 默认的 row 最大为 15。
+
+## index-pattern
 
 _id 为 setting 中设置的 index pattern。内容主要是匹配该模式的所有索引的全部字段与字段映射。如果是基于时间的索引模式，还会有主时间字段 timeFieldName 和时间间隔 intervalName 两个字段。
 
