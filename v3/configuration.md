@@ -22,9 +22,9 @@ config.js 是 Kibana 核心配置的地方。文件里包括得参数都是必�
 default_route: /dashboard/elasticsearch/WebLogs,
 ```
 
-**kibana-int**
+**kibana_index**
 
-默认用来保存 Kibana 相关对象，比如仪表板，的 Elasticsearch 索引名称。
+用来保存 Kibana 相关对象，比如仪表板，的 Elasticsearch 索引名称。默认为 `kibana-int`。
 
 **panel_name**
 
