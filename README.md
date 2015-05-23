@@ -1,48 +1,26 @@
-# 简介
+# 介绍
 
-Kibana 是一个使用 Apache 开源协议的 Elasticsearch 分析和搜索仪表板。已经历经了 v1, v2, v3, v4 个版本，分别采用了 PHP，Ruby，AngularJS，JRuby，NodeJS 等不同语言编写。本书主要介绍 v3 和 v4 的使用。
+## 历史沿革
 
-## 注释
+Logstash 项目诞生于 2009 年 8 月 2 日。其作者是世界著名的运维工程师乔丹西塞(JordanSissel)，乔丹西塞当时是著名虚拟主机托管商 DreamHost 的员工，还发布过非常棒的软件打包工具 fpm，并主办着一年一度的 sysadmin advent calendar(advent calendar 文化源自基督教氛围浓厚的 Perl 社区，在每年圣诞来临的 12 月举办，从 12 月 1 日起至 12 月 24 日止，每天发布一篇小短文介绍主题相关技术)。
 
-本书原始内容来源[Elasticsearch 官方指南 Kibana 部分](http://www.elasticsearch.org/guide/en/kibana/current/index.html)，并对 [v3](http://www.elasticsearch.org/guide/en/kibana/3.0/index.html) 的 panel 部分加以截图注释。在有时间的前提下，将会添加更多关于 kibana 源码解析和第三方 panel 的介绍。
+*小贴士：Logstash 动手很早，对比一下，scribed 诞生于 2008 年，flume 诞生于 2010 年，Graylog2 诞生于 2010 年，Fluentd 诞生于 2011 年。*
 
-## 译作者的话
+scribed 在 2011 年进入半死不活的状态，大大激发了其他各种开源日志收集处理框架的蓬勃发展，Logstash 也从 2011 年开始进入 commit 密集期并延续至今。
 
-Kibana 因其丰富的图表类型和漂亮的前端界面，被很多人理解成一个统计工具。而我个人认为，ELK 这一套体系，不应该和 Hadoop 体系同质化。定期的离线报表，不是 Elasticsearch 专长所在(多花费分词、打分这些步骤在高负载压力环境上太奢侈了)，也不应该由 Kibana 来完成(每次刷新都是重新计算)。Kibana 的使用场景，应该集中在两方面：
+作为一个系出名门的产品，Logstash 的身影多次出现在 Sysadmin Weekly 上，它和它的小伙伴们 Elasticsearch、Kibana 直接成为了和商业产品 Splunk 做比较的开源项目(乔丹西塞曾经在博客上承认设计想法来自 AWS 平台上最大的第三方日志服务商 Loggy，而 Loggy 两位创始人都曾是 Splunk 员工)。
 
-* 实时监控
+2013 年，Logstash 被 Elasticsearch 公司收购，ELK stack 正式成为官方用语(虽然还没正式命名)。Elasticsearch 本身 也是近两年最受关注的大数据项目之一，三次融资已经超过一亿美元。在 Elasticsearch 开发人员的共同努力下，Logstash 的发布机制，插件架构也愈发科学和合理。
 
-  通过 histogram 面板，配合不同条件的多个 queries 可以对一个事件走很多个维度组合出不同的时间序列走势。时间序列数据是最常见的监控报警了。
+### 小贴士
 
-* 问题分析
+* elasticsearch 项目开始于 2010 年，其实比 logstash 还晚；
+* 目前我们看到的 angularjs 版本 kibana 其实原名叫 elasticsearch-dashboard，kibana 原先是 RoR 框架的另一个项目，但作者是同一个人，换句话说，kibana 比 logstash 还早就进了 elasticsearch 名下。
 
-  通过 Kibana 的交互式界面可以很快的将异常时间或者事件范围缩小到秒级别或者个位数。期望一个完美的系统可以给你自动找到问题原因并且解决是不现实的，能够让你三两下就从 TB 级的数据里看到关键数据以便做出判断就很棒了。这时候，一些非 histogram 的其他面板还可能会体现出你意想不到的价值。全局状态下看似很普通的结果，可能在你锁定某个范围的时候发生剧烈的反方向的变化，这时候你就能从这个维度去重点排查。而表格面板则最直观的显示出你最关心的字段，加上排序等功能。入库前字段切分好，对于排错分析真的至关重要。
+## 社区文化
 
-*以上是我在和同事就 ES 跟 Hadoop 对比的谈话中形成的思路。特此留笔。2014 年 8 月 28 日*
+日志收集处理框架这么多，像 scribe 是 facebook 出品，flume 是 apache 基金会项目，都算声名赫赫。但 logstash 因乔丹西塞的个人性格，形成了一套独特的社区文化。每一个在 google groups 的 logstash-users 组里问答的人都会看到这么一句话：
 
----------------
+**Remember: if a new user has a bad time, it's a bug in logstash.**
 
-关于 elk 的用途，我想还可以参照其对应的商业产品 splunk 的场景：
-
-> 使用 Splunk 的意义在于使信息收集和处理智能化。而其操作智能化表现在：
->
-> 1. 搜索，通过下钻数据排查问题，通过分析根本原因来解决问题；
-> 2. 实时可见性，可以将对系统的检测和警报结合在一起，便> 于跟踪 SLA 和性能问题；
-> 3. 历史分析，可以从中找出趋势和历史模式，行为基线和阈值，生成一致性报告。
-
-*——2014 年 11 月 17 日摘自 Peter Zadrozny, Raghu Kodali 著/唐宏，陈健译《Splunk大数据分析》*
-
-## 参阅
-
-* [Elasticsearch 权威指南](http://fuxiaopang.gitbooks.io/learnelasticsearch/)
-* [精通 Elasticsearch](http://shgy.gitbooks.io/mastering-elasticsearch/)
-* [Logstash 最佳实践](https://www.gitbook.io/book/chenryn/logstash-best-practice)
-* [The Logstash Book](http://www.logstashbook.com/)
-
-## 进度
-
-[![Build Status](https://www.gitbook.io/button/status/book/chenryn/kibana-guide-cn)](https://www.gitbook.io/book/chenryn/kibana-guide-cn/activity)
-
-*欢迎捐赠，作者支付宝账号：<rao.chenlin@gmail.com>*
-
-![ercode](v3/img/alipay.png)
+所以，logstash 是一个开放的，极其互助和友好的大家庭。有任何问题，尽管在 github issue，Google groups，Freenode#logstash channel 上发问就好！
