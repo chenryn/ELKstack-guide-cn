@@ -12,6 +12,12 @@ scribed 在 2011 年进入半死不活的状态，大大激发了其他各种开
 
 2013 年，Logstash 被 Elasticsearch 公司收购，ELK stack 正式成为官方用语(虽然还没正式命名)。Elasticsearch 本身 也是近两年最受关注的大数据项目之一，三次融资已经超过一亿美元。在 Elasticsearch 开发人员的共同努力下，Logstash 的发布机制，插件架构也愈发科学和合理。
 
+2015 年初，Elasticsearch 公司召开了第一次全球用户大会 Elastic{ON}15。诸多 IT 巨头纷纷赞助，参会，演讲。会后，Elasticsearch 公司宣布改名 Elastic，公司官网也变成 <http://elastic.co/>。这意味着 Elasticsearch 的发展方向，不再限于搜索业务，也就是说，ELKstack 等机器数据和 IT 服务领域成为官方更加注意的方向。随后几个月，专注监控报警的 Watcher 发布 beta 版，社区有名的网络抓包工具 Packetbeat 也在前几天被 Elastic 公司收购。
+
+ELKstack 已经成为最近一年 IT 服务领域最为瞩目的大数据分析套件。
+
+—— 2015 年 5 月 28 日
+
 ### 小贴士
 
 * elasticsearch 项目开始于 2010 年，其实比 logstash 还晚；
