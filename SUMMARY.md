@@ -87,7 +87,7 @@
        * [CRUD](elasticsearch/api/CRUD.md)
        * [search/api](elasticsearch/search.md)
        * [script](elasticsearch/api/script.md)
-       * [Perl客户端reindex](elasticsearch/api/reindex.md)
+       * [reindex](elasticsearch/api/reindex.md)
        * [spark streaming交互](elasticsearch/api/spark.md)
    * [扩展和测试方案](elasticsearch/testing.md)
    * [mapping和template定制](elasticsearch/template.md)
