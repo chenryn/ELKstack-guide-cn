@@ -109,6 +109,7 @@
            * [/_all/_stats](elasticsearch/monitor/api/all-stats.md)
            * [/_cluster/pending_tasks](elasticsearch/monitor/api/pending-tasks.md)
            * [/_cat/shards](elasticsearch/monitor/api/shards.md)
+       * [性能日志](elasticsearch/monitor/logging.md)
        * [实时bigdesk方案](elasticsearch/monitor/bigdesk.md)
        * [官方marvel方案](elasticsearch/monitor/marvel.md)
        * [zabbix trapper方案](elasticsearch/monitor/zabbix.md)
