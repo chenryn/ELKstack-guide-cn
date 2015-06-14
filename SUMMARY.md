@@ -108,7 +108,7 @@
            * [/_cluster/stats](elasticsearch/monitor/api/cluster-stats.md)
            * [/_all/_stats](elasticsearch/monitor/api/all-stats.md)
            * [/_cluster/pending_tasks](elasticsearch/monitor/api/pending-tasks.md)
-           * [/_cat/shards](elasticsearch/monitor/api/shards.md)
+           * [cat 接口的命令行使用](elasticsearch/monitor/api/cat-cmd.md)
        * [性能日志](elasticsearch/monitor/logging.md)
        * [实时bigdesk方案](elasticsearch/monitor/bigdesk.md)
        * [官方marvel方案](elasticsearch/monitor/marvel.md)
