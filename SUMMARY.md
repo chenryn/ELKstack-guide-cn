@@ -15,7 +15,6 @@
            * [stdin](logstash/plugins/input/stdin.md)
            * [syslog](logstash/plugins/input/syslog.md)
            * [tcp](logstash/plugins/input/tcp.md)
-           * [scribe](logstash/plugins/input/scribe.md)
        * [codec配置](logstash/plugins/codec/README.md)
            * [json](logstash/plugins/codec/json.md)
            * [multiline](logstash/plugins/codec/multiline.md)

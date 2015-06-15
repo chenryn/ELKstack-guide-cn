@@ -43,3 +43,27 @@ bin/plugin update logstash-input-tcp
 ```
 
 即可。
+
+## 本地插件安装
+
+`bin/plugin` 不单可以通过 rubygems 平台安装插件，还可以读取本地路径的 gem 文件。这对自定义插件或者无外接网络的环境都非常有效：
+
+```
+bin/plugin install /path/to/logstash-filter-crash.gem
+```
+
+执行成功以后。你会发现，logstash-1.5.0 目录下的 Gemfile 文件最后会多出一段内容：
+
+```
+gem "logstash-filter-crash", "1.1.0", :path => "vendor/local_gems/d354312c/logstash-filter-mweibocrash-1.1.0"
+```
+
+同时 Gemfile.jruby-1.9.lock 文件开头也会多出一段内容：
+
+```
+PATH
+  remote: vendor/local_gems/d354312c/logstash-filter-crash-1.1.0
+  specs:
+    logstash-filter-crash (1.1.0)
+      logstash-core (>= 1.4.0, < 2.0.0)
+```
