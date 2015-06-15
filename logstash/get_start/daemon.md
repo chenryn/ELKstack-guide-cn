@@ -75,11 +75,11 @@ yum -y install supervisord --enablerepo=epel
 [program:elkpro_1]
 environment=LS_HEAP_SIZE=5000m
 directory=/opt/logstash
-command=/opt/logstash/bin/logstash -f /etc/logstash/pro1.conf --pluginpath /opt/logstash/plugins/ -w 10 -l /var/log/logstash/pro1.log
+command=/opt/logstash/bin/logstash -f /etc/logstash/pro1.conf -w 10 -l /var/log/logstash/pro1.log
 [program:elkpro_2]
 environment=LS_HEAP_SIZE=5000m
 directory=/opt/logstash
-command=/opt/logstash/bin/logstash -f /etc/logstash/pro2.conf --pluginpath /opt/logstash/plugins/ -w 10 -l /var/log/logstash/pro2.log
+command=/opt/logstash/bin/logstash -f /etc/logstash/pro2.conf -w 10 -l /var/log/logstash/pro2.log
 ```
 
 然后启动 `service supervisord start` 即可。

@@ -150,6 +150,8 @@ output {
 
 可以写自己的插件，然后用 `bin/logstash --pluginpath /path/to/own/plugins` 加载它们。
 
+*小贴士：如果你使用的 Logstash 版本高于 1.5.0-rc3，该参数已经被取消，请阅读[插件开发](../develop.md)章节，改成本地 gem 插件安装形式。*
+
 * --verbose
 
 输出一定的调试日志。
