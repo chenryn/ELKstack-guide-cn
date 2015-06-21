@@ -127,7 +127,7 @@ Elasticsearch 支持 *geo_point* 类型， *geo distance* 聚合等等。比如�
 
 * doc_values
 
-doc_values 是 Elasticsearch 1.3 版本引入的新特性。启用该特性的字段，索引写入的时候会在磁盘上构建 fielddata。而过去，fielddata 是固定只能使用内存的。在请求范围加大的时候，很容易触发 OOM 报错：
+doc_values 是 Elasticsearch 1.0 版本引入的新特性。启用该特性的字段，索引写入的时候会在磁盘上构建 fielddata。而过去，fielddata 是固定只能使用内存的。在请求范围加大的时候，很容易触发 OOM 或者 circuit breaker 报错：
 
 > ElasticsearchException[org.elasticsearch.common.breaker.CircuitBreakingException: Data too large, data for field [@timestamp] would be larger than limit of [639015321/609.4mb]]
 
