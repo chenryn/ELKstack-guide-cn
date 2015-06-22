@@ -1,54 +1,46 @@
-# logging
+# 日志记录
 
-Elasticsearch emits a number of logs, which are placed in `$ES_HOME/logs`. The default logging level is INFO. It provides a moderate amount of information, but is designed to be rather light so that your logs are not enormous.
+Elasticsearch 作为一个服务，本身也会记录很多日志信息。默认情况下，日志都放在 `$ES_HOME/logs/` 目录里。
 
-When debugging problems, particularly problems with node discovery (since this often depends on finicky network configurations), it can be helpful to bump up the logging level to DEBUG.
-
-You could modify the logging.yml file and restart your nodes—but that is both tedious and leads to unnecessary downtime. Instead, you can update logging levels through the cluster-settings API that we just learned about.
-
-To do so, take the logger you are interested in and prepend logger. to it. Let’s turn up the discovery logging:
+日志级别可以通过 `elasticsearch.yml` 配置设置，也可以通过 `/_cluster/settings` 接口动态调整。比如说，如果你的节点一直无法正确的加入集群，你可以将集群自动发现方面的日志级别修改成 DEBUG，来关注这方面的问题：
 
 ```
-PUT /_cluster/settings
+# curl -XPUT http://127.0.0.1:9200/_cluster/settings -d'
 {
     "transient" : {
         "logger.discovery" : "DEBUG"
     }
-}
+}'
 ```
 
-While this setting is in effect, Elasticsearch will begin to emit DEBUG-level logs for the discovery module.
+## 性能日志
 
-Tip
-Avoid TRACE. It is extremely verbose, to the point where the logs are no longer useful.
+除了进程状态的日志输出，ES 还支持跟性能相关的日志输出。针对数据写入，检索，读取三个阶段，都可以设置具体的慢查询阈值，以及不同的输出等级。
 
-## Slowlog
+此外，慢查询日志是针对索引级别的设置。除了在 `elasticsearch.yml` 中设置以及通过 `/_cluster/settings` 接口配置一组集群各索引共用的参数以外，还可以针对每个索引设置不同的参数。比如说，
 
-There is another log called the slowlog. The purpose of this log is to catch queries and indexing requests that take over a certain threshold of time. It is useful for hunting down user-generated queries that are particularly slow.
-
-By default, the slowlog is not enabled. It can be enabled by defining the action (query, fetch, or index), the level that you want the event logged at (WARN, DEBUG, and so forth) and a time threshold.
-
-This is an index-level setting, which means it is applied to individual indices:
+比如说，我们可以先设置集群共同的参数：
 
 ```
-PUT /my_index/_settings
-{
-    "index.search.slowlog.threshold.query.warn" : "10s", 
-    "index.search.slowlog.threshold.fetch.debug": "500ms", 
-    "index.indexing.slowlog.threshold.index.info": "5s" 
-}
-```
-
-You can also define these thresholds in your elasticsearch.yml file. Indices that do not have a threshold set will inherit whatever is configured in the static config.
-
-Once the thresholds are set, you can toggle the logging level like any other logger:
-
-```
-PUT /_cluster/settings
+# curl -XPUT http://127.0.0.1:9200/_cluster/settings -d'
 {
     "transient" : {
-        "logger.index.search.slowlog" : "DEBUG", 
-        "logger.index.indexing.slowlog" : "WARN" 
+        "logger.index.search.slowlog" : "DEBUG",
+        "logger.index.indexing.slowlog" : "WARN",
+        "index.search.slowlog.threshold.query.debug" : "10s",
+        "index.search.slowlog.threshold.fetch.debug": "500ms",
+        "index.indexing.slowlog.threshold.index.warn": "5s"
     }
+}'
+```
+
+然后针对某个比较大的索引，调高设置：
+
+```
+# curl -XPUT http://127.0.0.1:9200/logstash-wwwlog-2015.06.21/_settings -d'
+{
+    "index.search.slowlog.threshold.query.warn" : "10s",
+    "index.search.slowlog.threshold.fetch.debug": "500ms",
+    "index.indexing.slowlog.threshold.index.info": "10s"
 }
 ```
