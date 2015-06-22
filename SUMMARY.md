@@ -81,7 +81,6 @@
        * [segment merge对写入性能的影响](elasticsearch/principle/indexing-performance.md)
        * [routing和replica的读写过程](elasticsearch/principle/route-and-replica.md)
        * [shard的allocate控制](elasticsearch/principle/shard-allocate.md)
-       * [查询的执行过程](elasticsearch/principle/query.md)
        * [自动发现的配置](elasticsearch/principle/auto-discovery.md)
    * [接口使用示例](elasticsearch/api/README.md)
        * [CRUD](elasticsearch/api/CRUD.md)
