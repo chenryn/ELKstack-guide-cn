@@ -97,7 +97,7 @@
        * [bulk提交](elasticsearch/performance/bulk.md)
        * [gateway配置](elasticsearch/performance/gateway.md)
        * [集群状态维护](elasticsearch/performance/cluster-state.md)
-       * [filter缓存](elasticsearch/performance/filter-cache.md)
+       * [缓存](elasticsearch/performance/cache.md)
        * [fielddata](elasticsearch/performance/fielddata.md)
        * [curator工具](elasticsearch/performance/curator.md)
    * [监控方案](elasticsearch/monitor/README.md)
