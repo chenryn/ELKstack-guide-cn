@@ -49,3 +49,13 @@ output {
    }
 }
 ```
+
+## 推荐 Kibana dashboard
+
+社区已经有人根据 ossec 的常见需求，制作有 dashboard 可以直接从 Kibana3 页面加载使用。
+
+![](https://raw.githubusercontent.com/magenx/Logstash/master/Kibana%203%20%20%20OSSEC%20MONITORING%20DASHBOARD.png)
+
+dashboard 的 JSON 文件见：<https://github.com/magenx/Logstash/raw/master/kibana/kibana_dashboard.json>
+
+加载方式，请阅读本书稍后 Kibana 章节相关内容。
