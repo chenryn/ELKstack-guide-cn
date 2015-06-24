@@ -93,6 +93,7 @@
    * [映射与模板的定制](elasticsearch/template.md)
    * [puppet-elasticsearch模块的使用](elasticsearch/puppet.md)
    * [计划内停机升级的操作流程](elasticsearch/upgrade.md)
+   * [Shield 权限管理](elasticsearch/shield.md)
    * [性能优化](elasticsearch/performance/README.md)
        * [bulk提交](elasticsearch/performance/bulk.md)
        * [gateway配置](elasticsearch/performance/gateway.md)
