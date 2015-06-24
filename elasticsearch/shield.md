@@ -114,25 +114,6 @@ shield:
 
 > ([INFO ][shield.authc.ldap.support] [Vishanti] role mappings file [/opt/elasticsearch/config/shield/group_to_role_mapping.yml] changed for realm [ldap/ldaprealm]. updating mappings...)
 
-## 配置Kibana4
-
-1. 在ES集群中创建属于 *kibana4_server* 角色的用户，如: kibanaserver
-
-```
-# ./bin/shield/esusers useradd kibanaserver -r kibana4_server
-```
-
-2. 修改角色权限定义文件 `roles.yml`，注释掉 `kibana4.indicies.*` 配置段。将默认允许访问所有索引的权限改为根据用户所属角色授予权限
-
-3. 修改kibana.yml配置，启用并配置认证相关配置，启动Kibana
-
-```
-kibana_elasticsearch_username: kibanaserver
-kibana_elasticsearch_password: the_password
-```
-
 ## 测试
 
-1. `curl -u username http://127.0.0.1:9200/`
-2. web 访问 kibana4
-
+`curl -u username http://127.0.0.1:9200/`
