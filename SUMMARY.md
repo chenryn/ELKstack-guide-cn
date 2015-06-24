@@ -112,7 +112,7 @@
        * [实时bigdesk方案](elasticsearch/monitor/bigdesk.md)
        * [官方marvel方案](elasticsearch/monitor/marvel.md)
        * [zabbix trapper方案](elasticsearch/monitor/zabbix.md)
-   * [ES在运维监控领域的其他玩法](elasticsearch/other.md)
+   * [ES在运维监控领域的其他玩法](elasticsearch/other/README.md)
        * [percolator api和watcher报警](elasticsearch/other/percolator.md)
        * [packetbeat抓包分析](elasticsearch/other/packetbeat.md)
        * [时序数据库](elasticsearch/other/rrd.md)
