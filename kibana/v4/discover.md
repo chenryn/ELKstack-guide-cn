@@ -88,6 +88,12 @@
 2. 点击 `Refresh Interval` 标签。
 3. 从列表中选择一个刷新间隔。
 
+要想自动刷新数据，点击 ![images/autorefresh.png](https://www.elastic.co/guide/en/kibana/current/images/autorefresh.png) **Auto-refresh** 按钮然后选择一个自动刷新间隔：
+
+![images/autorefresh-intervals.png](https://www.elastic.co/guide/en/kibana/current/images/autorefresh-intervals.png)
+
+开启自动刷新后，Kibana 的顶部栏会出现一个暂停按钮和自动刷新的间隔：![images/autorefresh-pause.png](https://www.elastic.co/guide/en/kibana/current/images/autorefresh-pause.png)。点击 **Pause** 按钮可以暂停自动刷新。
+
 ## 按字段过滤
 
 你可以过滤搜索结果，只显示在某字段中包含了特定值的文档。也可以创建反向过滤器，排除掉包含特定字段值的文档。
@@ -106,16 +112,39 @@
 2. 要添加正向过滤器，点击 `Positive Filter` 按钮 ![Positive Filter Button](http://www.elasticsearch.org/guide/en/kibana/current/images/PositiveFilter.jpg)。这个会过滤掉在本字段不包含这个数据的文档。
 3. 要添加反向过滤器，点击 `Negative Filter` 按钮 ![Negative Filter Button](http://www.elasticsearch.org/guide/en/kibana/current/images/NegativeFilter.jpg)。这个会过滤掉在本字段包含这个数据的文档。
 
+## 过滤器(Filter)的协同工作方式
+
+在 Kibana 的任意页面创建过滤器后，就会在搜索输入框的下方，出现一个绿色椭圆形的过滤条件：
+
+![](https://www.elastic.co/guide/en/kibana/current/images/filter-sample.png)
+
+鼠标移动到过滤条件上，会显示下面几个图标：
+
+![images/filter-allbuttons.png](https://www.elastic.co/guide/en/kibana/current/images/filter-allbuttons.png)
+
+* 过滤器开关 ![images/filter-enable.png](https://www.elastic.co/guide/en/kibana/current/images/filter-enable.png)
+  点击这个图标，可以在不移除过滤器的情况下关闭过滤条件。再次点击则重新打开。被禁用的过滤器是条纹状的灰色，要求包含(相当于 Kibana3 里的 must)的过滤条件显示为绿色，要求排除(相当于 Kibana3 里的 mustNot)的过滤条件显示为红色。
+* 过滤器图钉 ![images/filter-pin.png](https://www.elastic.co/guide/en/kibana/current/images/filter-pin.png)
+  点击这个图标*钉住*过滤器。被钉住的过滤器，可以横贯 Kibana 各个标签生效。比如在 *Visualize* 标签页钉住一个过滤器，然后切换到 *Discover* 或者 *Dashboard* 标签页，过滤器依然还在。注意：如果你钉住了过滤器，然后发现检索结果为空，注意查看当前标签页的索引模式是不是跟过滤器匹配。
+* 过滤器反转 ![images/filter-toggle.png](https://www.elastic.co/guide/en/kibana/current/images/filter-toggle.png)
+  点击这个图标*反转*过滤器。默认情况下，过滤器都是包含型，显示为绿色，只有匹配过滤条件的结果才会显示。反转成排除型过滤器后，显示的是*不*匹配过滤器的检索项，显示为红色。
+* 移除过滤器 ![images/filter-delete.png](https://www.elastic.co/guide/en/kibana/current/images/filter-delete.png)
+  点击这个图标删除过滤器。
+
+想要对当前页所有过滤器统一执行上面的某个操作，点击 ![images/filter-actions.png](https://www.elastic.co/guide/en/kibana/current/images/filter-actions.png) **Global Filter Actions** 按钮，然后再执行操作即可。
+
 ## 查看文档数据
 
 当你提交一个搜索请求，最近的 500 个搜索结果会显示在文档表格里。你可以在 [Advanced Settings](./settings.md#advanced-options) 里通过 `discover:sampleSize` 属性配置表格里具体的文档数量。默认的，表格会显示当前选择的索引模式中定义的时间字段内容(转换成本地时区)以及 `_source` 文档。你可以从字段列表[添加字段到文档表格](http://www.elasticsearch.org/guide/en/kibana/current/discover.html#adding-columns)。还可以用表格里包含的任意已建索引的字段来[排序列出的文档](http://www.elasticsearch.org/guide/en/kibana/current/discover.html#sorting)。
 
-要查看一个文档的字段数据：
+要查看一个文档的字段数据，点击表格第一列(通常都是时间)文档内容左侧的 `Expand` 按钮 ![Expand Button](http://www.elasticsearch.org/guide/en/kibana/current/images/ExpandButton.jpg)。Kibana 从 Elasticsearch 读取数据然后在表格中显示文档字段。这个表格每行是一个字段的名字、过滤器按钮和字段的值。
 
-1. 点击表格第一列(通常都是时间)文档内容左侧的 `Expand` 按钮 ![Expand Button](http://www.elasticsearch.org/guide/en/kibana/current/images/ExpandButton.jpg)。Kibana 从 Elasticsearch 读取数据然后在表格中显示文档字段。这个表格每行是一个字段的名字、过滤器按钮和字段的值。
-2. 要查看原始 JSON 文档(格式美化过的)，点击 `JSON` 标签。
-3. 要在单独的页面上查看文档内容，点击链接。你可以添加书签或者分享这个链接，以直接访问这条特定文档。
-4. 收回文档细节，点击 `Collapse` 按钮 ![Collapse Button](http://www.elasticsearch.org/guide/en/kibana/current/images/CollapseButton.jpg)。
+![](https://www.elastic.co/guide/en/kibana/current/images/Expanded-Document.png)
+
+1. 要查看原始 JSON 文档(格式美化过的)，点击 **JSON** 标签。
+2. 要在单独的页面上查看文档内容，点击链接。你可以添加书签或者分享这个链接，以直接访问这条特定文档。
+3. 收回文档细节，点击 **Collapse** 按钮 ![Collapse Button](http://www.elasticsearch.org/guide/en/kibana/current/images/CollapseButton.jpg)。
+4. To toggle a particular field’s column in the Documents table, click the ![Add Column](https://www.elastic.co/guide/en/kibana/current/images/add-column-button.png) **Toggle column in table** button.
 
 ## 文档列表排序
 

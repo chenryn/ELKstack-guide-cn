@@ -50,6 +50,6 @@ logstash 从什么位置开始读取文件数据，默认是结束位置，也�
 
 1. 通常你要导入原有数据进 Elasticsearch 的话，你还需要 [filter/date](../filter/date.md) 插件来修改默认的"@timestamp" 字段值。稍后会学习这方面的知识。
 2. *FileWatch* 只支持文件的**绝对路径**，而且会不自动递归目录。所以有需要的话，请用数组方式都写明具体哪些文件。
-3. *LogStash::Inputs::File* 只是在进程运行的注册阶段初始化一个 *FileWatch* 对象。所以它不能支持类似 fluentd 那样的 `path => "/path/to/%{+yyyy/MM/dd/hh}.log"` 写法。达到相同目的，你只能写成 `path => "/path/to/*/*/*/*.log"`。
+3. *LogStash::Inputs::File* 只是在进程运行的注册阶段初始化一个 *FileWatch* 对象。所以它不能支持类似 fluentd 那样的 `path => "/path/to/%{+yyyy/MM/dd/hh}.log"` 写法。达到相同目的，你只能写成 `path => "/path/to/*/*/*/*.log"`。FileWatch 模块提供了一个稍微简单一点的写法：`/path/to/**/*.log`，用 `**` 来缩写表示递归全部子目录。
 4. `start_position` 仅在该文件从未被监听过的时候起作用。如果 sincedb 文件中已经有这个文件的 inode 记录了，那么 logstash 依然会从记录过的 pos 开始读取数据。所以重复测试的时候每回需要删除 sincedb 文件。
 5. 因为 windows 平台上没有 inode 的概念，Logstash 某些版本在 windows 平台上监听文件不是很靠谱。windows 平台上，推荐考虑使用 nxlog 作为收集端，参阅本书[稍后](../ecosystem/nxlog.md)章节。
