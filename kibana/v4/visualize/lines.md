@@ -18,6 +18,8 @@
     [extended stats](http://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-extendedstats-aggregation.html) 聚合返回一个数值字段数据的标准差。从下拉菜单选择一个字段。
 * Percentile
     [percentile](http://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-percentile-rank-aggregation.html) 聚合返回一个数值字段中值的百分比分布。从下拉菜单选择一个字段，然后在 **Percentiles** 框内指定范围。点击 **X** 移除一个百分比框，点击 **+ Add Percent** 添加一个百分比框。
+* Percentile Rank
+    [percentile ranks](http://www.elastic.co/guide/en/elasticsearch/reference/current//search-aggregations-metrics-percentile-rank-aggregation.html) 聚合返回一个数值字段中你指定值的百分位排名。从下拉菜单选择一个字段，然后在 **Values** 框内指定一到多个百分位排名值。点击 **X** 移除一个百分比框，点击 **+Add** 添加一个数值框。
 
 你可以点击 **+ Add Aggregation** 按键添加一个聚合。
 
@@ -35,6 +37,10 @@
     标准 [histogram](http://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-histogram-aggregation.html) 基于数值字段创建。为这个字段指定一个整数间隔。勾选 **Show empty buckets** 让直方图中包含空的间隔。
 * Range
     通过 [range](http://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-range-aggregation.html) 聚合。你可以为一个数值字段指定一系列区间。点击 **Add Range** 添加一堆区间端点。点击红色 **(x)** 符号移除一个区间。
+* Date Range
+    [date range](http://www.elastic.co/guide/en/elasticsearch/reference/current//search-aggregations-bucket-daterange-aggregation.html) 聚合计算你指定的时间区间内的值。你可以使用 [date math](http://www.elastic.co/guide/en/elasticsearch/reference/current//mapping-date-format.html#date-math) 表达式指定区间。点击 **Add Range** 添加新的区间端点。点击红色 **(/)** 符号移除区间。
+* IPv4 Range
+    [IPv4 range](http://www.elastic.co/guide/en/elasticsearch/reference/current//search-aggregations-bucket-iprange-aggregation.html) 聚合用来指定 IPv4 地址的区间。点击 **Add Range** 添加新的区间端点。点击红色 **(/)** 符号移除区间。
 * Terms
     [terms](http://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-terms-aggregation.html) 聚合允许你指定展示一个字段的首尾几个元素，排序方式可以是计数或者其他自定义的metric。
 * Filters
@@ -71,9 +77,32 @@
 
 多选框可以用来控制以下行为：
 
+* Y 轴比例
+    可以给图形的 Y 轴选择 **linear**, **log** 或 **square root** 三种比例。你可以给指数变化的数据采用 log 函数比例显示，比如复利图表；也可以用平方根(square root)比例显示数值变化差异极大的数据集。这种可变性本身也算变量的一种的数据，又叫异方差数据。比如，身高和体重的数据集，在较矮的区间变化是很小的，但是在较高另一个区间，数据集就是异方差式的。
+* Smooth Lines
+    勾选该项，将图中的数据点用平滑曲线连接。注意：平滑曲线在高峰低谷处给人的印象与实际值有较大偏差。
+* Show Connecting Lines
+    勾选该项，将图中的数据点用折线连接。
+* Show Circles
+    勾选该项，将图中的数据点绘制成一个小圆圈。
+* Current time marker
+    对时序数据，勾选该项可以在当前时刻位置标记一条红线。
+* Set Y-Axis Extents
+    勾选该项，然后在 **y-max** 和 **y-min** 框里输入数值限定 Y 轴为指定数值。
 * Show Tooltip
     勾选该项显示工具栏。
 * Show Legend
     勾选该项在图形右侧显示图例。
 * Scale Y-Axis to Data Bounds
     默认的 Y 轴长度为 0 到数据集的最大值。勾选该项改变 Y 轴的最大和最小值为数据集的返回值。
+
+更新选项后，点击绿色 **Apply changes** 按钮更新你的可视化界面，或者灰色 **Discard changes** 按钮保持原状。
+
+## 气泡图(Bubble Charts)
+
+通过以下步骤，可以转换折线图成气泡图：
+
+1. 为 Y 轴点击 **Add Metrics** 然后选择 **Dot Size**。
+2. 从下拉框里选择一个 metric 聚合函数。
+3. 在 **Options** 标签里，去掉 **Show Connecting Lines** 的勾选。
+4. 点击 **Apply changes** 按钮。
