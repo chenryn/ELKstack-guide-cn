@@ -44,7 +44,7 @@
    * [场景示例](logstash/examples/README.md)
        * [nginx访问日志](logstash/examples/nginx-access.md)
        * [nginx错误日志](logstash/examples/nginx-error.md)
-       * [syslog日志](logstash/examples/syslog.md)
+       * [postfix日志](logstash/examples/postfix.md)
        * [ossec日志](logstash/examples/ossec.md)
        * [windows系统日志](logstash/examples/windows.md)
        * [Java日志](logstash/examples/java.md)
