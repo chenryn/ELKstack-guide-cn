@@ -9,3 +9,4 @@
 * 感谢 林鹏 完成 ossec 场景介绍章节。
 * 感谢 cameluo 完成 shield 介绍章节。
 * 感谢 tuxknight 指出 hdfs 章节笔误。
+* 感谢 lemontree 完成 marvel 介绍章节。
