@@ -4,7 +4,7 @@
 
 本节以 zabbix 为例，介绍如何使用监控系统完成 Elasticsearch 的监控报警。
 
-github 上有好几个版本的 ESZabbix 仓库，都源自 Elastic 公司员工 unigeek 最早的贡献。但是当时 Elasticsearch 还没有官方 python 客户端，所以监控程序都是用的是 pyes 库。对于最新版的 ES 来说，已经不推荐使用了。
+github 上有好几个版本的 ESZabbix 仓库，都源自 Elastic 公司员工 untergeek 最早的贡献。但是当时 Elasticsearch 还没有官方 python 客户端，所以监控程序都是用的是 pyes 库。对于最新版的 ES 来说，已经不推荐使用了。
 
 这里推荐一个修改使用了官方 `elasticsearch.py` 库的衍生版。GitHub 地址见：<https://github.com/Wprosdocimo/Elasticsearch-zabbix>。
 

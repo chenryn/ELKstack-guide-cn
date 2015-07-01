@@ -142,7 +142,7 @@
            * [nginx访问日志](kibana/v3/examples/nginx-access.md)
            * [php慢函数日志](kibana/v3/examples/php-slow.md)
            * [mysql慢查询日志](kibana/v3/examples/mysql-slow.md)
-       * [自定义dashboard功能](kibana/v3/advanced.md)
+       * [自定义dashboard功能](kibana/v3/advanced/README.md)
            * [schema简介](kibana/v3/advanced/schema.md)
            * [template用法](kibana/v3/advanced/template.md)
            * [scripted用法](kibana/v3/advanced/scripted.md)
