@@ -62,13 +62,12 @@ input {
 
 这个正则还可以用 grok 表达式，稍后你就会学习这方面的内容。
 
-
 ## Log4J 的另一种方案
 
 说到应用程序日志，log4j 肯定是第一个被大家想到的。使用 `codec/multiline` 也确实是一个办法。
 
-不过，如果你本事就是开发人员，或者可以推动程序修改变更的话，logstash 还提供了另一种处理 log4j 的方式：[input/log4j](http://logstash.net/docs/1.4.2/inputs/log4j)。与 `codec/multiline` 不同，这个插件是直接调用了 `org.apache.log4j.spi.LoggingEvent` 处理 TCP 端口接收的数据。
+不过，如果你本事就是开发人员，或者可以推动程序修改变更的话，logstash 还提供了另一种处理 log4j 的方式：[input/log4j](http://logstash.net/docs/1.4.2/inputs/log4j)。与 `codec/multiline` 不同，这个插件是直接调用了 `org.apache.log4j.spi.LoggingEvent` 处理 TCP 端口接收的数据。稍后章节会详细讲述 log4j 的用法。
 
 ## 推荐阅读
 
-<https://github.com/elasticsearch/logstash/blob/master/patterns/java>
+<https://github.com/logstash-plugins/logstash-patterns-core/blob/master/patterns/java>

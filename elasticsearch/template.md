@@ -47,6 +47,22 @@ Elasticsearch 是一个 schema-less 的系统，但 schema-less 并不代表 no 
 
 没错，这里只需要单独写这个新字段的内容就够了。ES 会自动合并进去。
 
+## 删除映射
+
+删除数据并不代表会删除数据的映射。比如：
+
+```
+# curl -XDELETE http://127.0.0.1:9200/logstash-2015.06.21/syslog
+```
+
+删除了索引下 syslog 的全部数据，但是 syslog 的映射还在。删除映射(同时也就删掉了数据)的命令是：
+
+```
+# curl -XDELETE http://127.0.0.1:9200/logstash-2015.06.21/_mapping/syslog
+```
+
+当然，如果删除整个索引，那映射也是同时被清除的。
+
 ## 核心类型
 
 mapping 中主要就是针对字段设置类型以及类型相关参数。那么，我们首先来了解一下 Elasticsearch 支持的核心类型：
