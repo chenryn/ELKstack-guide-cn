@@ -16,9 +16,25 @@ rsyslog 从 v7 版本开始带有 *omelasticsearch* 插件可以直接写入数�
 
 而 normalize 语法说明见: <http://www.liblognorm.com/files/manual/index.html?sampledatabase.htm>
 
-类似的还有 mmjsonparse 组件。
+类似的还有 mmfields 和 mmjsonparse 组件。注意，mmjsonparse 要求被解析的 MSG 必须以 `@CEE:`开头，解析之后的字符串为 JSON。使用示例见:<http://blog.sematext.com/2013/05/28/structured-logging-with-rsyslog-and-elasticsearch/>
 
-使用示例见:<http://blog.sematext.com/2013/05/28/structured-logging-with-rsyslog-and-elasticsearch/>
+此外，rsyslog 从 v6 版本开始，设计了一套 rainerscript 作为配置中的 DSL。利用 rainerscript 中的函数，也可以做到一些数据解析和逻辑判断：
+
+* tolower
+* cstr
+* cnum
+* wrap
+* replace
+* field
+* re_extract
+* re_match
+* contains
+* if-else
+* foreach
+* lookup
+* set/reset/unset
+
+详细说明见：<http://www.rsyslog.com/doc/v8-stable/rainerscript/functions.html>
 
 ## rsyslog 与 logstash 合作
 
@@ -48,9 +64,11 @@ Ruleset( name="forwardRuleSet" ) {
 }
 ```
 
-## rsyslog v8 版的 omelasticsearch
+如果 rsyslog 仅是作为 shipper 角色运行，环境中有单独的消息队列可用，rsyslog 也有对应的 omkafka, omredis, omzmq 插件可用。
 
-如果你使用的是最新的 v8.4 版 rsyslog，其中有一个新加入的 mmexternal 模块。该模块是在 v7 的 omprog 模块基础上发展出来的，可以让你使用任意脚本，接收标准输入，自行处理以后再输出回来，而 rsyslog 接收到这个输出再进行下一步处理，这就解决了前面提到的 “normalize 语法太简单”的问题！
+## rsyslog v8 版的 mmexternal 模块
+
+如果你使用的是 v8.4 及以上版本的 rsyslog，其中有一个新加入的 mmexternal 模块。该模块是在 v7 的 omprog 模块基础上发展出来的，可以让你使用任意脚本，接收标准输入，自行处理以后再输出回来，而 rsyslog 接收到这个输出再进行下一步处理，这就解决了前面提到的 “normalize 语法太简单”的问题！
 
 下面是使用 rsyslog 的 mmexternal 和 omelasticsearch 完成 Nginx 访问日志直接解析存储的配置。
 
@@ -71,24 +89,24 @@ template(name="logstash-index" type="list") {
 template( name="nginx-log" type="string" string="%msg%\n" )
 if ( $syslogfacility-text == 'local6' and $programname startswith 'wb-www-access-' and not ($msg contains '/2/remind/unread_count' or $msg contains '/2/remind/group_unread') ) then
 {
-    action( type="mmexternal" binary="/usr/local/bin/rsyslog-nginx-elasticsearch.py" interface.input="fulljson" )
+    action( type="mmexternal" binary="/usr/local/bin/rsyslog-nginx-elasticsearch.py" interface.input="fulljson" forcesingleinstance="on" )
     action( type="omelasticsearch"
             template="nginx-log"
             server="eshost.example.com"
+            bulkmode="on"
+            dynSearchIndex="on"
             searchIndex="logstash-index"
             searchType="nginxaccess"
-            asyncrepl="on"
-            bulkmode="on"
             queue.type="linkedlist"
-            queue.size="10000"
-            queue.dequeuebatchsize="2000"
-            dynSearchIndex="on"
+            queue.size="50000"
+            queue.dequeuebatchsize="5000"
+            queue.dequeueslowdown="100000"
     )
     stop
 }
 ```
 
-其中调用的 python 脚本示例如下：
+其中调用的 python 脚本示例如下(注意只是做示例，脚本中的 split 功能其实可以用 rsyslog 的 mmfields 插件完成)：
 
 ```python
 #! /usr/bin/python
@@ -172,4 +190,4 @@ sys.stdout.flush()
 
 **慎用提示**
 
-从实际运行效果看，rsyslog 对 mmexternal 的程序没有最大并发数限制！所以如果你发送的数据量较大的事情，rsyslog 并不会像普通的转发模式那样缓冲在磁盘队列上，而是**持续 fork 出新的 mmexternal 程序**，几千个进程后，你的服务器就挂了！！
+mmexternal 是基于 direct mode 的，所以如果你发送的数据量较大时，rsyslog 并不会像 linkedlist mode 那样缓冲在磁盘队列上，而是**持续 fork 出新的 mmexternal 程序**，几千个进程后，你的服务器就挂了！！所以，务必开启 `forcesingleinstance` 选项。

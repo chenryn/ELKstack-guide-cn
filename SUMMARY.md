@@ -55,7 +55,6 @@
            * [logstash-input-heartbeat方式](logstash/performance/monitor/heartbeat.md)
            * [jmx启动参数方式](logstash/performance/monitor/jmx.md)
    * [扩展方案](logstash/scale/README.md)
-       * [logstash shipper方案](logstash/scale/shipper.md)
        * [通过redis传输](logstash/scale/redis/README.md)
            * [input/output配置](logstash/scale/redis/logstash_config.md)
            * [直接接收](logstash/scale/redis/direct.md)
