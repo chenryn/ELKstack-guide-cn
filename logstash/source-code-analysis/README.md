@@ -1,6 +1,6 @@
-# 为什么用 JRuby？能用 MRI 运行么？
+# 源码解析
 
-对日志处理框架有一些了解的都知道，大多数框架都是用 Java 写的，毕竟做大规模系统 Java 有天生优势。而另一个新生代 fluentd 则是标准的 Ruby 产品(即 Matz's Ruby Interpreter)。logstash 选用 JRuby 来实现，似乎有点两头不讨好啊？
+Logstash 和过去很多日志收集系统比，优势就在于其源码是用 Ruby 写的，所以插件开发相当容易。现在已经有两百多个插件可供选择。但是，随之而来的问题就是：大多数框架都用 Java 写，毕竟做大规模系统 Java 有天生优势。而另一个新生代 fluentd 则是标准的 Ruby 产品(即 Matz's Ruby Interpreter)。logstash 为什么选用 JRuby 来实现，似乎有点两头不讨好啊？
 
 乔丹西塞曾经多次著文聊过这个问题。为了避凑字数的嫌，这里罗列他的 gist 地址：
 
@@ -19,4 +19,8 @@
 
 事实上，时至今日，多种 Ruby 实现的痕迹(到处都有 RUBY_ENGINE 变量判断)依然遍布 logstash 代码各处，作者也力图保证尽可能多的代码能在 MRI 上运行。
 
-作为简单的指示，在和插件无关的核心代码中，只有 LogStash::Event 里生成 `@timestamp`字段时用了 Java 的 joda 库为 JRuby 仅有的。稍微修改成 Ruby 自带的 Time 库，即可在 MRI 上运行起来。而主要插件中，也只有 filters/date 和 outputs/elasticsearch 是 Java 相关的。
+作为简单的提示，在和插件无关的核心代码中，只有 LogStash::Event 里生成 `@timestamp`字段时用了 Java 的 joda 库为 JRuby 仅有的。稍微修改成 Ruby 自带的 Time 库，即可在 MRI 上运行起来。而主要插件中，也只有 filters/date 和 outputs/elasticsearch 是 Java 相关的。
+
+另一个温馨预警，Logstash 被 Elastic.co 收购以后，又有另一种讨论中的发展方向，就是把 logstash 的 core 部分代码，尽量的 JVM 通用化，未来，可以用 JRuby，Jython、Scala，Groovy，Clojure 和 Java 等任意 JVM 平台语言写 Logstash 插件。
+
+这就是开源软件的多样性未来，让我们拭目以待吧~
