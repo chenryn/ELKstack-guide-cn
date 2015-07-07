@@ -1,6 +1,28 @@
-# logstash 配置
+# 通过kafka传输
 
-## Input 配置示例
+Kafka 是一个高吞吐量的分布式发布订阅日志服务。目前已经在各大公司中广泛使用。和之前采用 Redis 做轻量级消息队列不同，Kafka 利用磁盘作队列，所以也就无所谓消息缓冲时的磁盘问题。此外，如果公司内部已有 Kafka 服务在运行，logstash 也可以快速接入，免去重复建设的麻烦。
+
+如果打算新建 Kafka 系统的，请参考 Kafka 官方入门文档：<http://kafka.apache.org/documentation.html#quickstart>
+
+## logstash-1.4 安装方式
+
+logstash 从 1.5 版本开始才集成了 Kafka 支持。如果你使用的还是 1.4 版本，需要自己单独安装 logstash-kafka 插件。插件地址见：<https://github.com/joekiller/logstash-kafka>。
+
+插件本身内容非常简单，其主要依赖同一作者写的 [jruby-kafka](https://github.com/joekiller/jruby-kafka) 模块。需要注意的是：**该模块仅支持 Kafka-0.8 版本。如果是使用 0.7 版本 kafka 的，将无法直接使 jruby-kafka 该模块和 logstash-kafka 插件。**
+
+安装按照官方文档完全自动化的安装。或是可以通过以下方式手动自己安装插件，不过重点注意的是 **kafka 的版本**，上面已经指出了。
+
+1. 下载 logstash 并解压重命名为 `./logstash-1.4.0` 文件目录。
+2. 下载 kafka 相关组件，以下示例选的为 [kafka_2.8.0-0.8.1.1-src](https://www.apache.org/dyn/closer.cgi?path=/kafka/0.8.1.1/kafka-0.8.1.1-src.tgz)，并解压重命名为 `./kafka_2.8.0-0.8.1.1`。
+3. 从 [releases](https://github.com/joekiller/logstash-kafka/releases) 页下载 logstash-kafka v0.4.2 版，并解压重命名为 `./logstash-kafka-0.4.2`。
+4. 从 `./kafka_2.8.0-0.8.1.1/libs` 目录下复制所有的 jar 文件拷贝到 `./logstash-1.4.0/vendor/jar/kafka_2.8.0-0.8.1.1/libs` 下，其中你需要创建 `kafka_2.8.0-0.8.1.1/libs` 相关文件夹及目录。
+5. 分别复制 `./logstash-kafka-0.4.2/logstash` 里的 `inputs` 和 `outputs` 下的 `kafka.rb`，拷贝到对应的 `./logstash-1.4.0/lib/logstash` 里的 `inputs` 和 `outputs` 对应目录下。
+6. 切换到 `./logstash-1.4.0` 目录下，现在需要运行 logstash-kafka 的 gembag.rb 脚本去安装 jruby-kafka 库，执行以下命令： `GEM_HOME=vendor/bundle/jruby/1.9 GEM_PATH= java -jar vendor/jar/jruby-complete-1.7.11.jar --1.9 ../logstash-kafka-0.4.2/gembag.rb ../logstash-kafka-0.4.2/logstash-kafka.gemspec`。
+7. 现在可以使用 logstash-kafka 插件运行 logstash 了。
+
+## logstash 配置
+
+### Input 配置示例
 
 以下配置可以实现对 kafka 读取端(consumer)的基本使用。
 
@@ -15,11 +37,11 @@ input {
         reset_beginning => false # boolean (optional)， default: false
         consumer_threads => 5  # number (optional)， default: 1
         decorate_events => true # boolean (optional)， default: false
-        }
     }
+}
 ```
 
-## Input 解释
+### Input 解释
 
 消费端的一些比较有用的配置项：
 
@@ -49,7 +71,7 @@ logstash 启动后从什么位置开始读取数据，默认是结束位置，�
 
 以上是相对重要参数的使用示例，更多参数可以选项可以跟据 <https://github.com/joekiller/logstash-kafka/blob/master/README.md> 查看 input 默认参数。
 
-## 注意
+#### 注意
 
 1.想要使用多个 logstash 端协同消费同一个 `topic` 的话，那么需要把两个或是多个 logstash 消费端配置成相同的 `group_id` 和 `topic_id`， 但是前提是要把**相应的 topic 分多个 partitions (区)**，多个消费者消费是无法保证消息的消费顺序性的。
 
@@ -57,7 +79,7 @@ logstash 启动后从什么位置开始读取数据，默认是结束位置，�
 
 总结:保证消息的顺序，那就用一个 **partition**。 **kafka 的每个 partition 只能同时被同一个 group 中的一个 consumer 消费**。
 
-## Output 配置
+### Output 配置
 
 以下配置可以实现对 kafka 写入端 (producer) 的基本使用。
 
@@ -73,7 +95,7 @@ logstash 启动后从什么位置开始读取数据，默认是结束位置，�
 }
 ```
 
-## Output 解释
+### Output 解释
 
 生产的可设置性还是很多的，设置其实更多，以下是更多的设置：
 
@@ -90,9 +112,7 @@ logstash 启动后从什么位置开始读取数据，默认是结束位置，�
 消息的确认模式:
 
 > 可以设置为 0: 生产者不等待 broker 的回应，只管发送.会有最低能的延迟和最差的保证性(在服务器失败后会导致信息丢失)
->
 > 可以设置为 1: 生产者会收到 leader 的回应在 leader 写入之后.(在当前 leader 服务器为复制前失败可能会导致信息丢失)
->
 > 可以设置为 -1: 生产者会收到 leader 的回应在全部拷贝完成之后。
 
 * partitioner_class
