@@ -89,3 +89,7 @@ curl -XPOST 127.0.0.1:9200/_cluster/reroute -d '{
   ]
 }'
 ```
+
+## filter 控制
+
+<https://www.elastic.co/guide/en/elasticsearch/reference/master/shard-allocation-filtering.html>
