@@ -179,6 +179,7 @@
            * [visualize解析](kibana/v4/source-code-analysis/visualize_app.md)
            * [dashboard解析](kibana/v4/source-code-analysis/dashboard_app.md)
            * [setting解析](kibana/v4/source-code-analysis/settings_app.md)
+   * [Kibana报表](kibana/phantomjs.md)
 * [推荐阅读](see-also.md)
 * [合作名单](contributors.md)
 * [捐赠名单](donors.md)
