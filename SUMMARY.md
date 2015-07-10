@@ -110,7 +110,7 @@
        * [时序数据库](elasticsearch/other/rrd.md)
        * [Etsy的Kale异常检测](elasticsearch/other/kale.md)
 * [Kibana](kibana/README.md)
-   * [k3和k4的功能简介和对比](kibana/difference.md)
+   * [k3和k4的对比](kibana/difference.md)
    * [k3](kibana/v3/README.md)
        * [kibana3入门](kibana/v3/simple.md)
        * [dashboard的保存和载入](kibana/v3/saving-and-loading.md)
