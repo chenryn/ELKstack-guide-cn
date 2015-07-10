@@ -6,6 +6,14 @@ percentile agg 请求示例如下：
 
 ```
 # curl -XPOST http://127.0.0.1:9200/logstash-2014.07.11/_search -d '{
+    "aggs" : {
+        "request_time_percentiles" : {
+            "percentiles" : {
+                "field" : "request_time", 
+                "percents" : [50,75,90,99]
+            }
+        }
+    }
 }'
 ```
 
@@ -21,6 +29,54 @@ percentile agg 请求示例如下：
 1. 直接使用 angularjs 框架的 `$.http` 对象，手拼 JSON 请求体。把 kibana 当做 curl 来处理得了。
 
 ```
+      request = {
+        'stats': {
+          'filter': JSON.parse($scope.ejs.QueryFilter(
+            $scope.ejs.FilteredQuery(
+              boolQuery,
+              filterSrv.getBoolFilter(filterSrv.ids())
+            )
+          ).toString(), true),
+          'aggs': {
+            'stats': {
+              'percentiles': {
+                'field': $scope.panel.field,
+                'percents': $scope.modes
+              }
+            }
+          }
+        }
+      };
+
+      $.each(queries, function (i, q) {
+        var query = $scope.ejs.BoolQuery();
+        query.should(querySrv.toEjsObj(q));
+        var qname = 'stats_'+i;
+        var aggsquery = {};
+        aggsquery[qname] = {
+          'percentiles': {
+            'field': $scope.panel.field,
+            'percents': $scope.modes
+          }
+        };
+        request[qname] = {
+          'filter': JSON.parse($scope.ejs.QueryFilter(
+            $scope.ejs.FilteredQuery(
+              query,
+              filterSrv.getBoolFilter(filterSrv.ids())
+            )
+          ).toString(), true),
+          'aggs': aggsquery
+        };
+      });
+
+      $scope.inspector = angular.toJson({aggs:request},true);
+
+      results = $http({
+        url: config.elasticsearch + '/' + dashboard.indices + '/_search?size=0',
+        method: "POST",
+        data: { aggs: request }
+      });
 ```
 
 2. 统一升级整个 kibana3 的基础依赖库版本，然后采用 agg 接口方法。
@@ -87,7 +143,7 @@ Kibana3 提供了一个 service 叫 `esVersion`，所以我们可以直接这样
 
 ### 浮点数排序
 
-percentile Aggregation 返回的数据中，强制保留了百分数的小数点后一位，这导致在 js 处理中会把小数点当做是属性调用的操作符，Kibana 提供的表头点击自动排序表格数据功能也就失效了。所以需要在 `module.js` 中修改小数点为 `_`，而在 `module.html` 展示渲染的时候再替换回小数点。
+percentile Aggregation 返回的数据中，强制保留了百分数的小数点后一位，这导致在 js 处理中会把小数点当做是属性调用的操作符，Kibana 提供的表头点击自动排序表格数据功能也就失效了。所以需要替换掉 sort_field 里的小数点。
 
 `module.js` 中：
 
@@ -97,13 +153,15 @@ percentile Aggregation 返回的数据中，强制保留了百分数的小数点
               var obj = _.clone(q);
               obj.label = alias;
               obj.Label = alias.toLowerCase(); //sort field
-              obj.value = {};
-              obj.Value = {};
-              var data = results.aggregations['stats_'+i]['stats_'+i]['values'];
-              for ( var keys in data ) {
-                obj.value[parseInt(keys)] = data[keys];
-                obj.Value[parseInt(keys)] = data[keys]; //sort field
-              };
+              obj.value = results.aggregations['stats_'+i]['stats_'+i]['values'];
+              obj.Value = results.aggregations['stats_'+i]['stats_'+i]['values']; //sort field
+              var _V = {}
+              for ( var k in obj.Value ) {
+                  var v =  obj.Value[k];
+                  k = k.replace('.','');
+                  _V[k] = v;
+              }
+              obj.Value = _V;
               return obj;
             });
             $scope.data = {
@@ -116,6 +174,18 @@ percentile Aggregation 返回的数据中，强制保留了百分数的小数点
 `module.html` 中：
 
 ```
+      <thead>
+        <tr>
+         <th><a href="" ng-click="set_sort('label')" ng-class="{'icon-chevron-down': panel.sort_field == 'label' && panel.sort_reverse == true, 'icon-chevron-up': panel.sort_field == 'label' && panel.sort_reverse == false}"> {{panel.label_name}} </a></th>
+         <th ng-repeat="stat in modes" ng-show="panel.show[stat]">
+          <a href=""
+            ng-click="set_sort(stat)"
+            ng-class="{'icon-chevron-down': panel.sort_field == stat.replace('.','') && panel.sort_reverse == true, 'icon-chevron-up': panel.sort_field == stat.replace('.','') && panel.sort_reverse == false}">
+            {{stat}}%
+          </a>
+          </th>
+        </tr>
+      </thead>
 ```
 
 ### query alias 的中文支持

@@ -4,12 +4,19 @@ ELKstack 本身作为一个实时数据检索聚合的系统，在定期报表�
 
 FireFox 有插件用来截全网页图。不过如果作为定期的工作，这么搞还是比较麻烦的，需要脚本化下来。这时候就可以用上 phantomjs 软件了。phantomjs 是一个基于 webkit 引擎做的 js 脚本库。可以通过 js 程序操作 webkit 浏览器引擎，实现各种浏览器功能。
 
-因为用了 webkit ，所以软件编译起来挺麻烦的，建议是直接从官方下载二进制包用。
+phantomjs 在 Linux 平台上没有二进制分发包，所以必须源代码编译：
 
 ```
+# yum -y install gcc gcc-c++ make flex bison gperf ruby \
+  openssl-devel freetype-devel fontconfig-devel libicu-devel sqlite-devel \
+  libpng-devel libjpeg-devel
+# git clone git://github.com/ariya/phantomjs.git
+# cd phantomjs
+# git checkout 2.0
+# ./build.sh
 ```
 
-想要给 kibana 页面截图，几行代码就够了：
+想要给 kibana 页面截图，几行代码就够了。`capture-kibana.js` 示例如下：
 
 ```
 var page = require('webpage').create();
@@ -29,7 +36,7 @@ page.open(address, function (status) {
 });
 ```
 
-然后运行 `` 命令，就能得到截图生成的 kibana.png 图片了。
+然后运行 `phantomjs capture-kibana.js` 命令，就能得到截图生成的 kibana.png 图片了。
 
 这里两个要点：
 
