@@ -42,8 +42,8 @@ http://your_host/index.html#/dashboard/elasticsearch/MYDASHBOARD
 http://your_host/index.html#/dashboard/file/MYDASHBOARD.json
 ```
 
-`MYDASHBOARD.json` 就是磁盘上文件的名字。注意路径中得 `/#dashboard/file/` 看起来跟之前访问保存在 Elasticsearch 里的仪表板很类似，不过这里访问的是文件而不是 elasticsearch。导出的仪表板纲要的详细信息，阅读 [The Dashboard Schema Explained](http://www.elasticsearch.org/guide/en/kibana/3.0/_dashboard_schema.html)
+`MYDASHBOARD.json` 就是磁盘上文件的名字。注意路径中得 `/#dashboard/file/` 看起来跟之前访问保存在 Elasticsearch 里的仪表板很类似，不过这里访问的是文件而不是 elasticsearch。导出的仪表板纲要的详细信息，阅读稍后 [scheme 简介小节](./advanced/schema.md)。
 
 ## 下一步
 
-你现在知道怎么保存，加载和访问仪表板了。你可能想知道怎么通过 URL 传递参数来访问，这样可以在其他应用中直接链接过来。请阅读 [Templated and Scripted Dashboards](http://www.elasticsearch.org/guide/en/kibana/3.0/templated-and-scripted-dashboards.html)
+你现在知道怎么保存，加载和访问仪表板了。你可能想知道怎么通过 URL 传递参数来访问，这样可以在其他应用中直接链接过来。请阅读稍后 [scripted 用法](./advanced/scripted.md) 和 [template 用法](./advanced/template.md) 两节。

@@ -74,7 +74,7 @@ friends, romans, countrymen
 
 ![Sample Dashboard](http://www.elasticsearch.org/guide/en/kibana/3.0/tutorials/intro/firsttable.png)
 
-关于搜索请求的语法，请阅读 [Queries and Filters](http://www.elasticsearch.org/guide/en/kibana/3.0/working-with-queries-and-filters.html)。
+关于搜索请求的语法，请阅读稍后 [Query 和 Filtering 小节](./dashboard/queries-and-filters.md)。
 
 ## 配置另一个索引
 
@@ -90,9 +90,9 @@ friends, romans, countrymen
 
 ## 下一步
 
-恭喜你，你已经学会了安装和配置 Kibana，算是正式下水了！下一步，打开我们的视频和其他教程学习更高级的技能吧。现在，你可以尝试在一个空白仪表板上添加自己的面板。这方面的内容，请阅读 [Rows and Panels](http://www.elasticsearch.org/guide/en/kibana/3.0/rows-and-panels.html)。
+恭喜你，你已经学会了安装和配置 Kibana，算是正式下水了！下一步，打开我们的视频和其他教程学习更高级的技能吧。现在，你可以尝试在一个空白仪表板上添加自己的面板。这方面的内容，请阅读稍后 [row 和 panel 小节](./dashboard/rows-and-panels.md)。
 
-## 译者注
+## 译注
 
 在 Elasticsearch 发布 1.4 版后，使用 kibana3 访问 ES1.4 集群，会显示如下错误：
 
