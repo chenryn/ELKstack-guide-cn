@@ -230,3 +230,5 @@ percentile Aggregation 返回的数据中，强制保留了百分数的小数点
 最终的 percentile 面板界面与 stats 面板界面类似。
 
 ![percentile aggr](http://ww4.sinaimg.cn/large/3dbd9afatw1eh4kh2se8lj209m093aai.jpg)
+
+percentile panel 完整版代码，见：<https://github.com/chenryn/kibana/src/app/panels/percentiles>。

@@ -54,6 +54,8 @@ bettermap 面板是为了解决 map 面板地图种类太少且不方便大批�
 
 ![leaflet chinese](../img/bettermap-gaode.png)
 
+注：最近，高德地图的 API 出现问题，该 provider 已经无法使用。
+
 ## 其他
 
 leaflet 库有丰富的[插件资源](http://leafletjs.com/plugins.html)。比如
@@ -61,6 +63,8 @@ leaflet 库有丰富的[插件资源](http://leafletjs.com/plugins.html)。比�
 * [热力图](http://www.patrick-wied.at/static/heatmapjs/example-heatmap-leaflet.html)
 
 ![leaflet heap](../img/bettermap-heap.png)
+
+注：热力图插件最终在 Kibana4.1 中，作为 tile map 的新 option 加入了。
 
 *小贴士：其实 Kibana 官方效果的标记集群也是插件实现的，叫[markercluster](https://github.com/Leaflet/Leaflet.markercluster)*
 

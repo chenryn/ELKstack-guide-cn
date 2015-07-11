@@ -173,3 +173,5 @@ terms 面板中，设计有 fmode 和 tmode ，分别控制 terms 和 term_stats
 属性编辑界面效果如下：
 
 ![](https://github.com/chenryn/kibana/raw/master/docs/chenryn_img/range-setting.jpg)
+
+ranges panel 完整代码，见 <https://github.com/chenryn/kibana/src/app/panels/ranges>。
