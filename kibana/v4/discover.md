@@ -1,4 +1,6 @@
-你可以在 Discover 页交互式探索你的数据。你可以访问到匹配得上你选择的索引模式的每个索引的每条记录。你可以提交搜索请求，过滤搜索结果，然后查看文档数据。你还可以看到匹配搜索请求的文档总数，获取字段值的统计情况。如果索引模式配置了时间字段，文档的时序分布情况会在页面顶部以柱状图的形式展示出来。
+# discover 功能
+
+Discover 标签页用于交互式探索你的数据。你可以访问到匹配得上你选择的索引模式的每个索引的每条记录。你可以提交搜索请求，过滤搜索结果，然后查看文档数据。你还可以看到匹配搜索请求的文档总数，获取字段值的统计情况。如果索引模式配置了时间字段，文档的时序分布情况会在页面顶部以柱状图的形式展示出来。
 
 ![](http://www.elasticsearch.org/guide/en/kibana/current/images/Discover-Start-Annotated.jpg)
 
@@ -27,7 +29,7 @@
 
 在 Discover 页提交一个搜索，你就可以搜索匹配当前索引模式的索引数据了。你可以直接输入简单的请求字符串，也就是用 Lucene [query syntax](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html)，也可以用完整的基于 JSON 的 [Elasticsearch Query DSL](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl.html)。
 
-当你提交搜索的时候，直方图，文档表格，字段列表，都会自动反映成搜索的结果。hits(匹配的文档)总数会在直方图的右上角显示。文档表格显示前 500 个匹配文档。默认的，文档倒序排列，最新的文档最先显示。你可以通过点击时间列的头部来反转排序。事实上，所有建了索引的字段，都可以用来排序。更多细节，请阅读 [Sorting the Documents Table](http://www.elasticsearch.org/guide/en/kibana/current/discover.html#sorting)。
+当你提交搜索的时候，直方图，文档表格，字段列表，都会自动反映成搜索的结果。hits(匹配的文档)总数会在直方图的右上角显示。文档表格显示前 500 个匹配文档。默认的，文档倒序排列，最新的文档最先显示。你可以通过点击时间列的头部来反转排序。事实上，所有建了索引的字段，都可以用来排序，稍后会详细说明。
 
 要搜索你的数据：
 
@@ -37,7 +39,7 @@
   * 要搜索一个值的范围，你可以用范围查询语法，`[START_VALUE TO END_VALUE]`。比如，要查找 4xx 的状态码，你可以输入 `status:[400 TO 499]`。
   * 要指定更复杂的搜索标准，你可以用布尔操作符 `AND`, `OR`, 和 `NOT`。比如，要查找 4xx 的状态码，还是 `php` 或 `html` 结尾的数据，你可以输入 `status:[400 TO 499] AND (extension:php OR extension:html)`。
 
-> 这些例子都用了 Lucene query syntax。你也可以提交 Elasticsearch Query DSL 式的请求。更多示例，请阅读 Elasticsearch 文档中的 [query string syntax](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax)。
+> 这些例子都用了 Lucene query syntax。你也可以提交 Elasticsearch Query DSL 式的请求。更多示例，参见之前 [Elasticsearch 章节](../../elasticsearch/api/search.md)。
 
 2. 点击回车键，或者点击 `Search` 按钮提交你的搜索请求。
 
@@ -49,7 +51,7 @@
 
 ## 保存搜索
 
-你可以在 Discover 页加载已保存的搜索，也可以用作 [visualizations](http://www.elasticsearch.org/guide/en/kibana/current/visualize.html) 的基础。保存一个搜索，意味着同时保存下了搜索请求字符串和当前选择的索引模式。
+你可以在 Discover 页加载已保存的搜索，也可以用作 [visualizations](./visualize.md) 的基础。保存一个搜索，意味着同时保存下了搜索请求字符串和当前选择的索引模式。
 
 要保存当前搜索：
 
@@ -74,7 +76,7 @@
 1. 点击 Discover 工具栏的 `Settings` 按钮 ![Settings button](http://www.elasticsearch.org/guide/en/kibana/current/images/SettingsButton.jpg)。
 2. 从索引模式列表中选取你打算采用的模式。
 
-关于索引模式的更多细节，请阅读 [Creating an Index Pattern](http://www.elasticsearch.org/guide/en/kibana/current/settings.html#settings-create-pattern)。
+关于索引模式的更多细节，请阅读稍后 [Setting 功能小节](./settings.md)。
 
 ## 自动刷新页面
 
@@ -135,7 +137,7 @@
 
 ## 查看文档数据
 
-当你提交一个搜索请求，最近的 500 个搜索结果会显示在文档表格里。你可以在 [Advanced Settings](./settings.md#advanced-options) 里通过 `discover:sampleSize` 属性配置表格里具体的文档数量。默认的，表格会显示当前选择的索引模式中定义的时间字段内容(转换成本地时区)以及 `_source` 文档。你可以从字段列表[添加字段到文档表格](http://www.elasticsearch.org/guide/en/kibana/current/discover.html#adding-columns)。还可以用表格里包含的任意已建索引的字段来[排序列出的文档](http://www.elasticsearch.org/guide/en/kibana/current/discover.html#sorting)。
+当你提交一个搜索请求，最近的 500 个搜索结果会显示在文档表格里。你可以在 **Advanced Settings** 里通过 `discover:sampleSize` 属性配置表格里具体的文档数量。默认的，表格会显示当前选择的索引模式中定义的时间字段内容(转换成本地时区)以及 `_source` 文档。你可以从字段列表*添加字段到文档表格*。还可以用表格里包含的任意已建索引的字段来*排序列出的文档*。
 
 要查看一个文档的字段数据，点击表格第一列(通常都是时间)文档内容左侧的 `Expand` 按钮 ![Expand Button](http://www.elasticsearch.org/guide/en/kibana/current/images/ExpandButton.jpg)。Kibana 从 Elasticsearch 读取数据然后在表格中显示文档字段。这个表格每行是一个字段的名字、过滤器按钮和字段的值。
 

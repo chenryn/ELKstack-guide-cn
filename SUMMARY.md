@@ -153,7 +153,7 @@
        * [用agg接口开发一个percentile panel](kibana/v3/aggs.md)
    * [k4](kibana/v4/README.md)
        * [安装、配置和运行](kibana/v4/setup.md)
-       * [在nginx代理后的配置方式](kibana/v4/production.md)
+       * [生产环境部署](kibana/v4/production.md)
        * [discover功能](kibana/v4/discover.md)
        * [各visualize功能](kibana/v4/visualize/README.md)
            * [area](kibana/v4/visualize/area.md)

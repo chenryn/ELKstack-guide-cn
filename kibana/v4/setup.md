@@ -1,4 +1,6 @@
-你可以在几分钟内安装好 Kibana 然后开始探索你的 Elasticsearch 索引。你要的就是：
+# 安排、配置和运行
+
+Kibana4 安装方式依然简单，你可以在几分钟内安装好 Kibana 然后开始探索你的 Elasticsearch 索引。只需要预备：
 
 * Elasticsearch 1.4.4 或者更新的版本
 * 一个现代浏览器 - [支持的浏览器列表](http://www.elasticsearch.com/support/matrix?_ga=1.149082614.1575542547.1409213558).
@@ -6,7 +8,7 @@
   * 你想要连接 Elasticsearch 实例的 URL
   * 你想搜索哪些 Elasticsearch 索引
 
-> 如果你的 Elasticsearch 是被 [Shield](http://www.elasticsearch.org/overview/shield/) 保护着的，阅读 [Shield with Kibana 4](https://www.elasticsearch.org/guide/en/shield/current/_shield_with_kibana_4.html) 学习额外的安装说明。
+> 如果你的 Elasticsearch 是被 [Shield](http://www.elasticsearch.org/overview/shield/) 保护着的，阅读[生产环境部署章节](./production.md)相关内容学习额外的安装说明。
 
 ## 安装并启动 kibana
 
@@ -20,9 +22,9 @@
 
 ## 让 kibana 连接到 elasticsearch
 
-在开始用 Kibana 之前，你需要告诉它你打算探索哪个 Elasticsearch 索引。第一次访问 Kibana 的时候，你会被要求定义一个 *index pattern* 用来匹配一个或者多个索引名。好了。这就是你需要做的全部工作。以后你还可以随时从 [Settings tab](http://www.elasticsearch.org/guide/en/kibana/current/settings.html#settings-create-pattern) 页面添加更多的 index pattern。
+在开始用 Kibana 之前，你需要告诉它你打算探索哪个 Elasticsearch 索引。第一次访问 Kibana 的时候，你会被要求定义一个 *index pattern* 用来匹配一个或者多个索引名。好了。这就是你需要做的全部工作。以后你还可以随时从 [Settings 标签页](./settings.md)添加更多的 index pattern。
 
-> 默认情况下，Kibana 会连接运行在 `localhost` 的 Elasticsearch。要连接其他 Elasticsearch 实例，修改 `kibana.yml` 里的 Elasticsearch URL，然后重启 Kibana。如何在生产环境下使用 Kibana，阅读 [Using Kibana in a Production Environment](./production.md).
+> 默认情况下，Kibana 会连接运行在 `localhost` 的 Elasticsearch。要连接其他 Elasticsearch 实例，修改 `kibana.yml` 里的 Elasticsearch URL，然后重启 Kibana。如何在生产环境下使用 Kibana，阅读[生产环境部署章节](./production.md)。
 
 要从 Kibana 访问的 Elasticsearch 索引的配置方法：
 

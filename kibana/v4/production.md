@@ -1,3 +1,5 @@
+# 生产环境部署
+
 Kibana4 是是一个完整的 web 应用。使用时，你需要做的只是打开浏览器，然后输入你运行 Kibana 的机器地址然后加上端口号。比如说：`localhost:5601` 或者 `http://YOURDOMAIN.com:5601`。
 
 但是当你准备在生产环境使用 Kibana4 的时候，比起在本机运行，就需要多考虑一些问题：
@@ -63,7 +65,7 @@ Nginx 只能加密和管理浏览器到服务器端的请求，而 Kibana4 到 E
           - indices:data/write/update
           - indices:admin/create
 
-更多配置 Shield 的内容，请阅读 [Shield with Kibana 4](https://www.elasticsearch.org/guide/en/shield/current/_shield_with_kibana_4.html)。
+更多配置 Shield 的内容，请阅读官网的 [Shield with Kibana 4](https://www.elasticsearch.org/guide/en/shield/current/_shield_with_kibana_4.html)。
 
 要配置 Kibana 的凭证，设置 `kibana.yml` 里的 `kibana_elasticsearch_username` 和 `kibana_elasticsearch_password` 选项即可：
 

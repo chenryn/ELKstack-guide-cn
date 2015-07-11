@@ -1,10 +1,12 @@
-你可以用 *Visualize* 页来设计可视化。你可以保存可视化，以后再用，或者合并到 *dashboard* 里。一个可视化可以基于以下几种数据源类型：
+# 各 Visualize 功能
+
+Visualize 标签页用来设计可视化。你可以保存可视化，以后再用，或者加载合并到 *dashboard* 里。一个可视化可以基于以下几种数据源类型：
 
 * 一个新的交互式搜索
 * 一个已保存的搜索
 * 一个已保存的可视化
 
-可视化是基于 Elasticsearch 1 引入的[聚合(aggregation)](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html) 特性。
+可视化是基于 Elasticsearch 1.0 引入的[聚合(aggregation)](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html) 特性。
 
 ## 创建一个新可视化
 

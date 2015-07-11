@@ -26,3 +26,4 @@ Kibana 4 正式版 2015 年初发布，至今已近半年。但是本书依然�
 
 至于像 Kibana3 那种在浏览器端计算的功能，Kibana4 中则完全没有。ES 2.0 将会提供一种 pipeline aggregation 特性，目前猜测或许 Kibana4 会在这个 ES 新特性的基础上来实现类似功能。
 
+在界面美观方面。Kibana4 至今未提供类似 Kibana3 中的 Query 设置功能，包括 Query 别名和颜色选择器这两个常用功能都没有。直接导致目前 Kibana4 的图例几乎毫无作用。
