@@ -168,9 +168,8 @@ terms 面板中，设计有 fmode 和 tmode ，分别控制 terms 和 term_stats
 
 最终效果如下：
 
-![](https://github.com/chenryn/kibana/raw/master/src/img/chenryn_img/range-panel.jpg)
+![](https://github.com/chenryn/kibana/raw/master/docs/chenryn_img/range-panel.jpg)
 
 属性编辑界面效果如下：
 
-![](https://github.com/chenryn/kibana/raw/master/src/img/chenryn_img/range-setting.jpg)
-
+![](https://github.com/chenryn/kibana/raw/master/docs/chenryn_img/range-setting.jpg)
