@@ -1,10 +1,12 @@
 # shard 的 allocate 控制
 
-某个 shard 分配在哪个节点上，一般来说，是由 ES 自动决定的。分配动作包括有以下几种情况：
+某个 shard 分配在哪个节点上，一般来说，是由 ES 自动决定的。以下几种情况会触发分配动作：
 
 1. 新索引生成
-2. 新增副本分片
-3. 节点增减引发的数据均衡
+2. 索引的删除
+3. 新增副本分片
+4. 节点增减引发的数据均衡
+
 
 ES 提供了一系列参数详细控制这部分逻辑：
 
@@ -28,27 +30,59 @@ ES 提供了一系列参数详细控制这部分逻辑：
 1. 磁盘限额
    为了保护节点数据安全，ES 会定时(`cluster.info.update.interval`，默认 30 秒)检查一下各节点的数据目录磁盘使用情况。在达到 `cluster.routing.allocation.disk.watermark.low` (默认 85%)的时候，新索引分片就不会再分配到这个节点上了。在达到 `cluster.routing.allocation.disk.watermark.high` (默认 90%)的时候，就会触发该节点现存分片的数据均衡，把数据挪到其他节点上去。这两个值不但可以写百分比，还可以写具体的字节数。有些公司可能出于成本考虑，对磁盘使用率有一定的要求，需要适当抬高这个配置：
 
-```
-# curl -XPUT localhost:9200/_cluster/settings -d '{
-    "transient" : {
-        "cluster.routing.allocation.disk.watermark.low" : "85%",
-        "cluster.routing.allocation.disk.watermark.high" : "10gb",
-        "cluster.info.update.interval" : "1m"
-    }
-}'
-```
+	```
+	# curl -XPUT localhost:9200/_cluster/settings -d '{
+	    "transient" : {
+	        "cluster.routing.allocation.disk.watermark.low" : "85%",
+	        "cluster.routing.allocation.disk.watermark.high" : "10gb",
+	        "cluster.info.update.interval" : "1m"
+	    }
+	}'
+	```
 
 2. 热索引分片不均
    默认情况下，ES 集群的数据均衡策略是以各节点的分片总数(*indices_all_active*)作为基准的。这对于搜索服务来说无疑是均衡搜索压力提高性能的好办法。但是对于 ELKstack 场景，一般压力集中在新索引的数据写入方面。正常运行的时候，也没有问题。但是当集群扩容时，新加入集群的节点，分片总数远远低于其他节点。这时候如果有新索引创建，ES 的默认策略会导致新索引的所有主分片几乎全分配在这台新节点上。整个集群的写入压力，压在一个节点上，结果很可能是这个节点直接被压死，集群出现异常。
    所以，对于 ELKstack 场景，强烈建议大家预先计算好索引的分片数后，配置好单节点分片的限额。比如，一个 5 节点的集群，索引主分片 10 个，副本 1 份。则平均下来每个节点应该有 4 个分片，那么就配置：
 
-```
-# curl -s -XPUT http://127.0.0.1:9200/logstash-2015.05.08/_settings -d '{
-    "index": { "routing.allocation.total_shards_per_node" : "5" }
-}'
-```
+	```
+	# curl -s -XPUT http://127.0.0.1:9200/logstash-2015.05.08/_settings -d '{
+	    "index": { "routing.allocation.total_shards_per_node" : "5" }
+	}'
+	```
+	
+	注意，这里配置的是 5 而不是 4。因为我们需要预防有机器故障，分片发生迁移的情况。如果写的是 4，那么分片迁移会失败。
 
-注意，这里配置的是 5 而不是 4。因为我们需要预防有机器故障，分片发生迁移的情况。如果写的是 4，那么分片迁移会失败。
+3. 冷热数据分离(读写分离)
+	如果没有读写分离, 一个比较突出的问题是: 用户做一次大的查询的时候, 非常大量的读IO以及聚合计算导致机器Load升高, CPU使用率上升, 会阻塞新数据的写入, 这个过程甚至会持续几分钟.
+	
+	**读写分离的实施方案:**
+	- N台机器做热数据的存储, 上面只放当天的数据.  之前的数据放在另外的M台机器上.
+	- N台热数据节点上面的elasticsearc.yml中配置node.tag: hot, M台冷数据节点中配置node.tag: stale
+	- 模板中控制对新建索引添加hot tag
+	```
+		 {
+	    "order" : 0,
+	    "template" : "*",
+	    "settings" : {
+	      "index.routing.allocation.require.tag" : "hot"
+	    }
+		}
+	```
+	- 每天计划任务更新索引的配置, 将tag更改为stale, 索引会自动迁移到M台冷数据节点.
+		```
+		PUT indexname/_settings
+		{
+	   "index": {
+	      "routing": {
+	         "allocation": {
+	            "require": {
+	               "tag": "stale"
+		            }
+		         }
+		     }
+		   }
+		}
+	```
 
 ## reroute 接口
 
@@ -93,4 +127,3 @@ curl -XPOST 127.0.0.1:9200/_cluster/reroute -d '{
 ## filter 控制
 
 <https://www.elastic.co/guide/en/elasticsearch/reference/master/shard-allocation-filtering.html>
-
