@@ -5,8 +5,10 @@
 为了更加方便的做清除数据，合并 segment，备份恢复等管理任务，Elasticsearch 在提供相关 API 的同时，另外准备了一个命令行工具，叫 curator 。curator 是 Python 程序，可以直接通过 pypi 库安装：
 
 ```
-pip install curator
+pip install elasticsearch-curator
 ```
+
+*注意，是 elasticsearch-curator 不是 curator。PyPi 原先就有另一个项目叫这个名字*
 
 ## 参数介绍
 
