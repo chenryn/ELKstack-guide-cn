@@ -38,3 +38,7 @@ field 数组中，每个元素是一个字段的情况，包括字段的 type, n
 * type: 因为 Lucene expression 目前只支持对数值型字段做操作，所以目前 kibana4 页面上也不提供对这个的修改，直接默认为 “number"。
 
  对确认要使用其他 lang-plugin 的，目前来说，可以自行修改 kibana_index 里的 index-pattern 类型中的数据，修改成 `”lang”: “groovy”,”type”:”string”` 即可。页面上是可以通用的。
+
+*小贴士*
+
+在本书之前介绍 packetbeat 时提到的自带 dashboard 导入脚本，其实就是通过 `curl`命令上传这些 JSON 到 kibana_index 索引里。
