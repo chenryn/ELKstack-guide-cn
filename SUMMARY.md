@@ -88,6 +88,7 @@
        * [curator工具](elasticsearch/performance/curator.md)
    * [扩展和测试方案](elasticsearch/testing.md)
    * [多集群互联](elasticsearch/tribe.md)
+   * [别名的应用](elasticsearch/alias.md)
    * [映射与模板的定制](elasticsearch/template.md)
    * [puppet-elasticsearch模块的使用](elasticsearch/puppet.md)
    * [计划内停机升级的操作流程](elasticsearch/upgrade.md)

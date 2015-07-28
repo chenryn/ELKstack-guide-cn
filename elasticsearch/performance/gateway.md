@@ -13,6 +13,13 @@ gateway 是 ES 设计用来长期存储索引数据的接口。一般来说，�
 * gateway.expected_nodes
   该参数设置集群的预期节点总数。在达到这个总数后，即认为集群节点已经完全加载，即可开始数据恢复，不用再等待上条设置的时间。
 
+注意：gateway 中说的节点，仅包括主节点和数据节点，纯粹的 client 节点是不算在内的。如果你有更明确的选择，也可以按需求写：
+
+* gateway.recover_after_data_nodes
+* gateway.recover_after_master_nodes
+* gateway.expected_data_nodes
+* gateway.expected_master_nodes
+
 ## 共享存储上的影子副本
 
 虽然 ES 对 gateway 使用 NFS，iscsi 等共享存储的方式极力反对，但是对于较大量级的索引的副本数据，ES 从 1.5 版本开始，还是提供了一种节约成本又不特别影响性能的方式：影子副本(shadow replica)。
