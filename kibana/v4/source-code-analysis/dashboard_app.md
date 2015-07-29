@@ -4,4 +4,4 @@
 
 savedDashboards 由 `plugins/dashboard/services/saved_dashboard.js` 提供，同样也是继承 savedObject，主要内容是 `panelsJSON` 数组字段。
 
-dashboard-app 依次往下是 dashboard-grid 和 dashboard-panel 两个 directive。最后通过 `plugins/dashboard/components/panel/lib/load_panel.js` 加载 savedSearch 或者 savedVisualization。
+dashboard-app 依次往下是 dashboard-grid(在`plugins/dashboard/directives/grid.js`) 和 dashboard-panel(在`plugins/dashboard/components/panel/panel.js`) 两个 directive。最后通过 `plugins/dashboard/components/panel/lib/load_panel.js` 加载 savedSearch 或者 savedVisualization。获得的对象，传递给 `plugins/dashboard/components/panel/panel.html` 里的 visualize 和 doc-table 两个 directive。这两个正是之前在 visualize 和 discover 插件解析里提到过的，在 `components/` 底下实现。
