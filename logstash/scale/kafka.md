@@ -35,7 +35,7 @@ Kafka 是一个高吞吐量的分布式发布订阅日志服务，具有高可�
 
 ### 小提示
 
-以上概念是 logstash 的 kafka 插件的必要参数，请理解阅读，对后续使用 kafka 插件有重要作用。
+以上概念是 logstash 的 kafka 插件的必要参数，请理解阅读，对后续使用 kafka 插件有重要作用。logstash-kafka-input 插件使用的是 `High-level-consumer API`。
 
 ## 插件安装
 
@@ -91,7 +91,7 @@ input {
 
 ### Input 解释
 
-作为 Consumer 端的比较有用的配置，**请结合上述 kafka 基本概念进行设置**：
+作为 Consumer 端,插件使用的是 `High-level-consumer API`，**请结合上述 kafka 基本概念进行设置**：
 
 * group_id
 
@@ -205,7 +205,7 @@ socket 的缓存大小设置，其实就是缓冲区的大小
 
 ### 小贴士
 
-由于 logstash 的 kafka 插件使用的是 `High-level-consumer API`， 输入和输出默认 `codec`  为 json 格式。在输入和输出的时候注意下编码格式。消息传递过程中 logstash 默认会为消息编码内加入相应的时间戳和 hostname 等信息。如果不想要以上信息(一般做消息转发的情况下)，可以使用以下配置，例如:
+logstash-kafka 插件输入和输出默认 `codec`  为 json 格式。在输入和输出的时候注意下编码格式。消息传递过程中 logstash 默认会为消息编码内加入相应的时间戳和 hostname 等信息。如果不想要以上信息(一般做消息转发的情况下)，可以使用以下配置，例如:
 
 ```
  output {
