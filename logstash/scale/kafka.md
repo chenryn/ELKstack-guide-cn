@@ -1,12 +1,47 @@
 # 通过kafka传输
 
-Kafka 是一个高吞吐量的分布式发布订阅日志服务。目前已经在各大公司中广泛使用。和之前采用 Redis 做轻量级消息队列不同，Kafka 利用磁盘作队列，所以也就无所谓消息缓冲时的磁盘问题。此外，如果公司内部已有 Kafka 服务在运行，logstash 也可以快速接入，免去重复建设的麻烦。
+Kafka 是一个高吞吐量的分布式发布订阅日志服务，具有高可用、高性能、分布式、高扩展、持久性等特性。目前已经在各大公司中广泛使用。和之前采用 Redis 做轻量级消息队列不同，Kafka 利用磁盘作队列，所以也就无所谓消息缓冲时的磁盘问题。此外，如果公司内部已有 Kafka 服务在运行，logstash 也可以快速接入，免去重复建设的麻烦。
 
 如果打算新建 Kafka 系统的，请参考 Kafka 官方入门文档：<http://kafka.apache.org/documentation.html#quickstart>
 
-## logstash-1.4 安装方式
+## kafka 基本概念
 
-logstash 从 1.5 版本开始才集成了 Kafka 支持。如果你使用的还是 1.4 版本，需要自己单独安装 logstash-kafka 插件。插件地址见：<https://github.com/joekiller/logstash-kafka>。
+以下仅对相关基本概念说明，更多概念见官方文档：
+
+ - Topic
+ 主题，声明一个主题，producer指定该主题发布消息，订阅该主题的consumer对该主题进行消费
+ - Partition
+每个主题可以分为多个分区，每个分区对应磁盘上一个目录，分区可以分布在不同broker上，producer在发布消息时，可以通过指定partition key映射到对应分区，然后向该分区发布消息，在无partition key情况下，随机选取分区，一段时间内触发一次(比如10分钟)，这样就保证了同一个producer向同一partition发布的消息是顺序的。
+消费者消费时，可以指定partition进行消费，也可以使用high-level-consumer api,自动进行负载均衡，并将partition分给consumer，一个partition只能被一个consumer进行消费。
+ - Consumer
+消费者，可以多实例部署，可以批量拉取，有两类API可供选择：一个simpleConsumer，暴露所有的操作给用户，可以提交offset、fetch offset、指定partition fetch message；另外一个high-level-consumer(ZookeeperConsumerConnector)，帮助用户做基于partition自动分配的负载均衡，定期提交offset，建立消费队列等。simpleConsumer相当于手动挡，high-level-consumer相当于自动挡。
+
+ simpleConsumer：无需像high-level-consumer那样向zk注册brokerid、owner，甚至不需要提交offset到zk，可以将offset提交到任意地方比如(mysql,本地文件等)。
+
+ high-level-consumer：一个进程中可以启多个消费线程，一个消费线程即是一个consumer，假设A进程里有2个线程(consumerid分别为1，2)，B进程有2个线程(consumerid分别为1，2)，topic1的partition有5个，那么partition分配是这样的：
+
+```
+	partition1 ---> A进程consumerid1
+	partition2 ---> A进程consumerid1
+	partition3 ---> A进程consumerid2
+	partition4 ---> B进程consumer1
+	partition5 ---> B进程consumer2
+```
+
+ - Group
+ High-level-consumer可以声明group，每个group可以有多个consumer，每group各自管理各自的消费offset，各个不同group之间互不关联影响。
+
+ 由于目前版本消费的offset、owner、group都是consumer自己通过zk管理，所以group对于broker和producer并不关心，一些监控工具需要通过group来监控，simpleComsumer无需声明group。
+
+### 小提示
+
+以上概念是 logstash 的 kafka 插件的必要参数，请理解阅读，对后续使用 kafka 插件有重要作用。logstash-kafka-input 插件使用的是 `High-level-consumer API`。
+
+## 插件安装
+
+### logstash-1.4 安装
+
+如果你使用的还是 1.4 版本，需要自己单独安装 logstash-kafka 插件。插件地址见：<https://github.com/joekiller/logstash-kafka>。
 
 插件本身内容非常简单，其主要依赖同一作者写的 [jruby-kafka](https://github.com/joekiller/jruby-kafka) 模块。需要注意的是：**该模块仅支持 Kafka-0.8 版本。如果是使用 0.7 版本 kafka 的，将无法直接使 jruby-kafka 该模块和 logstash-kafka 插件。**
 
@@ -20,7 +55,20 @@ logstash 从 1.5 版本开始才集成了 Kafka 支持。如果你使用的还�
 6. 切换到 `./logstash-1.4.0` 目录下，现在需要运行 logstash-kafka 的 gembag.rb 脚本去安装 jruby-kafka 库，执行以下命令： `GEM_HOME=vendor/bundle/jruby/1.9 GEM_PATH= java -jar vendor/jar/jruby-complete-1.7.11.jar --1.9 ../logstash-kafka-0.4.2/gembag.rb ../logstash-kafka-0.4.2/logstash-kafka.gemspec`。
 7. 现在可以使用 logstash-kafka 插件运行 logstash 了。
 
-## logstash 配置
+### logstash-1.5 安装
+
+logstash 从 1.5 版本开始才集成了 Kafka 支持。1.5 版本开始所有插件的目录和命名都发生了改变，插件发布地址见：<https://github.com/logstash-plugins>。
+安装和更新插件都可以使用官方提供的方式：
+
+```
+$bin/plugin install OR $bin/plugin update
+```
+
+### 小贴士
+
+对于插件的安装和更新，默认走的Gem源为 <https://rubygems.org>,对于咱们国内网络来说是出奇的慢或是根本无法访问（爬梯子除外），在安装或是更新插件是，可以尝试修改目录下 `Gemfile` 文件中的 `source` 为淘宝源<https://ruby.taobao.org>，这样会使你的安装或是更新顺畅很多。
+
+## 插件配置
 
 ### Input 配置示例
 
@@ -43,7 +91,7 @@ input {
 
 ### Input 解释
 
-消费端的一些比较有用的配置项：
+作为 Consumer 端,插件使用的是 `High-level-consumer API`，**请结合上述 kafka 基本概念进行设置**：
 
 * group_id
 
@@ -97,7 +145,7 @@ logstash 启动后从什么位置开始读取数据，默认是结束位置，�
 
 ### Output 解释
 
-生产的可设置性还是很多的，设置其实更多，以下是更多的设置：
+作为 Producer 端使用，以下仅为重要概念解释，**请结合上述 kafka 基本概念进行设置**：
 
 * compression_codec
 
@@ -157,7 +205,7 @@ socket 的缓存大小设置，其实就是缓冲区的大小
 
 ### 小贴士
 
-默认情况下，插件是使用 json 编码来输入和输出相应的消息，消息传递过程中 logstash 默认会为消息编码内加入相应的时间戳和 hostname 等信息。如果不想要以上信息(一般做消息转发的情况下)，可以使用以下配置，例如:
+logstash-kafka 插件输入和输出默认 `codec`  为 json 格式。在输入和输出的时候注意下编码格式。消息传递过程中 logstash 默认会为消息编码内加入相应的时间戳和 hostname 等信息。如果不想要以上信息(一般做消息转发的情况下)，可以使用以下配置，例如:
 
 ```
  output {
@@ -168,3 +216,29 @@ socket 的缓存大小设置，其实就是缓冲区的大小
     }
 }
 ```
+
+作为 Consumer 从kafka中读数据，如果为非 json 格式的话需要进行相关解码，例如：
+
+```
+input {
+    kafka {
+        zk_connect => "xxx：xxx"
+        group_id => "test"
+        topic_id => "test-topic"
+        codec => "line"
+        ...........
+    }
+}
+```
+
+关于性能：
+
+其实 logstash 的 kafka 插件性能并不是很突出，可以通过使用以下命令查看队列积压消费情况：
+
+```
+$/bin/kafka-run-class.sh kafka.tools.ConsumerOffsetChecker --group test
+```
+
+队列积压严重，性能跟不上的情况下，结合实际服务器资源，可以适当增加 topic 的 partition 多实例化 Consumer 进行消费处理消息。
+
+更多高性能方案可以选择 <https://github.com/reachkrishnaraj/kafka-elasticsearch-standalone-consumer>
