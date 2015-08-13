@@ -57,7 +57,7 @@ apt-get install logstash
 
 ```
 rpm --import http://packages.elasticsearch.org/GPG-KEY-elasticsearch
-cat > /etc/yum.repos.d/logstash.repo <EOF
+cat > /etc/yum.repos.d/logstash.repo <<EOF
 [logstash-1.5]
 name=logstash repository for 1.5.x packages
 baseurl=http://packages.elasticsearch.org/logstash/1.5/centos

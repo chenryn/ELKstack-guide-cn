@@ -12,3 +12,4 @@
 * 感谢 NERO 完成 utmp 插件开发介绍章节。
 * 感谢 childe 完成 kibana-auth-CAS 介绍, elasticsearch 读写分离和别名等章节。
 * 感谢 gnuhpc 完善 elasticsearch 插件 index 配置细节，logstash-fowarder-java 部署细节。
+* 感谢 东南 指出两处代码示例笔误。

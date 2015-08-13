@@ -9,7 +9,7 @@ Logstash 使用一个名叫 *FileWatch* 的 Ruby Gem 库来监听文件变化。
 ## 配置示例
 
 ```
-input
+input {
     file {
         path => ["/var/log/*.log", "/var/log/message"]
         type => "system"
