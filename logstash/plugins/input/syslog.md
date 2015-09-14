@@ -50,7 +50,7 @@ input {
 }
 filter {
   grok {
-    match => ["message", %{SYSLOGLINE} ]
+    match => ["message", "%{SYSLOGLINE}" ]
   }
   syslog_pri { }
 }
