@@ -16,7 +16,7 @@ output {
 
 ## 配置说明
 
-在收集端采用 tcp 方式发送给远端的 tcp 端口。这里需要注意的是，默认的 codec 选项是 **json**。而远端的 LogStash::Inputs::TCP 的默认 codec 选项却是 **plain** ！所以不指定各自的 codec ，对接肯定是失败的。
+在收集端采用 tcp 方式发送给远端的 tcp 端口。这里需要注意的是，默认的 codec 选项是 **json**。而远端的 LogStash::Inputs::TCP 的默认 codec 选项却是 **line** ！所以不指定各自的 codec ，对接肯定是失败的。
 
 另外，由于IO BUFFER 的原因，即使是两端共同约定为 **json** 依然无法正常运行，接收端会认为一行数据没结束，一直等待直至自己 OutOfMemory ！
 
