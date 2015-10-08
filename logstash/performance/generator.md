@@ -54,6 +54,8 @@ LogStash::Codecs::Dots 也是一个另类的 codec 插件，他的作用是：�
 
 *注：如果你在 CentOS 上通过 yum 安装的 pv 命令，版本较低，可能还不支持 -a 参数。单纯靠 -bt 参数看起来还是有点累的。*
 
+如果你要测试的是 input 插件的效率，方法也是类似的。此外，如果不想使用额外而且可能低版本的 pv 命令，通过 logstash-filter-metric 插件也可以做到类似的效果，[官方博客](https://www.elastic.co/blog/logstash-configuration-tuning)中对此有详细阐述，建议大家阅读。
+
 ## 额外的话
 
 既然单独花这么一节来说测试，这里想额外谈谈一个很常见的话题：* ELK 的性能怎么样？*
