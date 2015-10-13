@@ -2,7 +2,7 @@
 
 在运维体系中，监控和报警总是成双成对的出现。ELKstack 在时序统计方面的便捷，在很多时候被作为监控的一种方式在使用。那么，自然就引申出一个问题：ELKstack 如何做报警？
 
-对于简单而且固定需求的模式，我们可以在 Logstash 中利用 `filter/metric` 和 `filter/ruby` 等插件做预处理，直接 `output/nagios` 或 `output/nagios` 来报警；但是对于针对全局的、更复杂的情况，Logstash 就无能为力了。
+对于简单而且固定需求的模式，我们可以在 Logstash 中利用 `filter/metric` 和 `filter/ruby` 等插件做预处理，直接 `output/nagios` 或 `output/zabbix` 来报警；但是对于针对全局的、更复杂的情况，Logstash 就无能为力了。
 
 目前比较通行的办法。有两种：
 
