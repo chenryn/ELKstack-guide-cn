@@ -82,7 +82,7 @@ input {
         zk_connect => "localhost:2181"
         group_id => "logstash"
         topic_id => "test"
-        codec => plain #default: json，kafka插件默认使用的是json codec，只能使用单个核心，使用plain，可以使用多个核心解析，但是实测效率只能翻倍，而不是和核心数成正比；
+        codec => plain
         reset_beginning => false # boolean (optional)， default: false
         consumer_threads => 5  # number (optional)， default: 1
         decorate_events => true # boolean (optional)， default: false
@@ -232,7 +232,9 @@ input {
 }
 ```
 
-关于性能：
+### 性能
+
+#### 队列监控
 
 其实 logstash 的 kafka 插件性能并不是很突出，可以通过使用以下命令查看队列积压消费情况：
 
@@ -242,4 +244,26 @@ $/bin/kafka-run-class.sh kafka.tools.ConsumerOffsetChecker --group test
 
 队列积压严重，性能跟不上的情况下，结合实际服务器资源，可以适当增加 topic 的 partition 多实例化 Consumer 进行消费处理消息。
 
-更多高性能方案可以选择 <https://github.com/reachkrishnaraj/kafka-elasticsearch-standalone-consumer>
+#### input-kafka 的 JSON 序列化性能
+
+此外，跟 logstash-input-syslog 改在 filter 阶段 grok 的优化手段类似，也可以将 logstash-input-kafka 的默认 JSON 序列化操作从 codec 阶段后移到 filter 阶段。如下：
+
+```
+input {
+    kafka {
+        codec => plain
+    }
+}
+filter {
+    json {
+        source => "message"
+    }
+}
+```
+
+然后通过 `bin/logstash -w $num_cpus` 运行，利用多核计算优势，可以获得大约一倍左右的性能提升。
+
+#### 其他方案
+
+* <https://github.com/reachkrishnaraj/kafka-elasticsearch-standalone-consumer>
+* <https://github.com/childe/hangout>

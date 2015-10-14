@@ -50,6 +50,14 @@ local 192.168.0.2    7      d         *      Sunstreak
 * Logstash 1.4.2 在 transport 和 http 协议的情况下是固定连接指定 host 发送数据。从 1.5.0 开始，host 可以设置数组，它会从节点列表中选取不同的节点发送数据，达到 Round-Robin 负载均衡的效果。
 * Kibana4 强制要求 ES 全集群所有 node 版本在 1.4 以上，所以采用 node 方式发送数据的 logstash-1.4(携带的 Elasticsearch.jar 库是 1.1.1 版本) 会导致 Kibana4 无法运行，采用 Kibana4 的读者务必改用 http 方式。
 * 开发者在 IRC freenode#logstash 频道里表示："高于 1.0 版本的 Elasticsearch 应该都能跟最新版 logstash 的 node 协议一起正常工作"。此信息仅供参考，请认真测试后再上线。
+* 经常有同学问，为什么 Logstash 在有多个 conf 文件的情况下，进入 ES 的数据会重复，几个 conf 数据就会重复几次。其实问题原因在之前[启动参数章节](../../get_start/full_config.md)有提过，output 段顺序执行，没有对日志 type 进行判断的各插件配置都会全部执行一次。在 output 段对 type 进行判断的语法如下所示：
+```
+output {
+  if [type] == "nginxaccess" {
+    elasticsearch { }
+  }
+}
+```
 
 #### 性能问题
 
@@ -198,12 +206,6 @@ doc_values 虽然用的是磁盘，但是系统本身也有自带 VFS 的 cache 
 然后运行 `curl -XPUT http://localhost:9200/_template/template_newid -d '@/path/to/your/tmpl.json'` 即可。
 
 logstash 默认的模板， order 是 0，id 是 logstash，通过 logstash/outputs/elasticsearch 的配置选项 `template_name` 修改。你的新模板就不要跟这个名字冲突了。
-
-* type 判断
-
-经常有同学问，为什么logstash在有多个conf文件的情况下，进入es的数据会重复，几个conf在es中数据就会重复几次，其实，是因为没有对日志type进行判断，此处应该对日志type进行判断，形如：
-output {
-  if [type] == "nginxaccess" { }
 
 ## 推荐阅读
 

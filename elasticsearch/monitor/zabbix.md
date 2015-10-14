@@ -71,3 +71,7 @@ github 上有好几个版本的 ESZabbix 仓库，都源自 Elastic 公司员工
    * Number of unassigned shards
    * Total number of records
    这个模板下都是集群总体情况的监控项，所以，运用在一台有 ES 集群读取权限的主机上即可，比如 zabbix server。
+
+## 其他
+
+untergeek 最近刚更新了他的仓库，重构了一个 es_stats_zabbix 模块用于 Zabbix 监控，有兴趣的读者可以参考：<https://github.com/untergeek/zabbix-grab-bag/blob/master/Elasticsearch/es_stats_zabbix.README.md>
