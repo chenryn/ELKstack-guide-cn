@@ -199,6 +199,12 @@ doc_values 虽然用的是磁盘，但是系统本身也有自带 VFS 的 cache 
 
 logstash 默认的模板， order 是 0，id 是 logstash，通过 logstash/outputs/elasticsearch 的配置选项 `template_name` 修改。你的新模板就不要跟这个名字冲突了。
 
+* type 判断
+
+经常有同学问，为什么logstash在有多个conf文件的情况下，进入es的数据会重复，几个conf在es中数据就会重复几次，其实，是因为没有对日志type进行判断，此处应该对日志type进行判断，形如：
+output {
+  if [type] == "nginxaccess" { }
+
 ## 推荐阅读
 
 * <http://www.elasticsearch.org/guide>
