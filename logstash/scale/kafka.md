@@ -82,6 +82,7 @@ input {
         zk_connect => "localhost:2181"
         group_id => "logstash"
         topic_id => "test"
+        codec => plain #default: json，kafka插件默认使用的是json codec，只能使用单个核心，使用plain，可以使用多个核心解析，但是实测效率只能翻倍，而不是和核心数成正比；
         reset_beginning => false # boolean (optional)， default: false
         consumer_threads => 5  # number (optional)， default: 1
         decorate_events => true # boolean (optional)， default: false
