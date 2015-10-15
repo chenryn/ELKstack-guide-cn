@@ -16,7 +16,7 @@ output {
 }
 ```
 
-如果更标准化一点，可以把数据格式的定义改在 codec 插件中完成：
+按照 Logstash 标准，其实应该可以把数据格式的定义改在 codec 插件中完成，就像下面，但是 logstash-output-file 插件内部实现中跳过了 `@codec.decode` 这步，所以 **codec 设置无法生效！**
 
 ```
 output {
