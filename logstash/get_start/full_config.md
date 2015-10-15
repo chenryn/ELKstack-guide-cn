@@ -92,17 +92,17 @@ Logstash从 1.3.0 版开始支持条件判断和表达式。
 
 表达式支持下面这些操作符：
 
-* equality, etc: ==, !=, <, >, <=, >=
-* regexp: =~, !~
-* inclusion: in, not in
-* boolean: and, or, nand, xor
-* unary: !()
+* `==`(等于), `!=`(不等于), `<`(小于), `>`(大于), `<=`(小于等于), `>=`(大于等于)
+* `=~`(匹配正则), `!~`（不匹配正则）
+* `in`(包含), `not in`(不包含)
+* `and`(与), `or`(或), nand(非与), xor(非或)
+* `()`(复合表达式), `!()`(对复合表达式结果取反)
 
-通常来说，你都会在表达式里用到字段引用。比如：
+通常来说，你都会在表达式里用到字段引用。为了尽量展示全面各种表达式，下面虚拟一个示例：
 
 ```
 if "_grokparsefailure" not in [tags] {
-} else if [status] !~ /^2\d\d/ and [url] == "/noc.gif" {
+} else if [status] !~ /^2\d\d/ or ( [url] == "/noc.gif" nand [geoip][city] != "beijing" ) {
 } else {
 }
 ```
