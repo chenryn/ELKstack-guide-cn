@@ -16,6 +16,19 @@ output {
 }
 ```
 
+如果更标准化一点，可以把数据格式的定义改在 codec 插件中完成：
+
+```
+output {
+    file {
+        path => "/path/to/%{+yyyy/MM/dd/HH}/%{host}.log.gz"
+        codec => line {
+            format => "%{message}"
+        }
+    }
+}
+```
+
 ## 解释
 
 使用 *output/file* 插件首先需要注意的就是 `message_format` 参数。插件默认是输出整个 event 的 JSON 形式数据的。这可能跟大多数情况下使用者的期望不符。大家可能只是希望按照日志的原始格式保存就好了。所以需要定义为 `%{message}`，当然，前提是在之前的 *filter* 插件中，你没有使用 `remove_field` 或者 `update` 等参数删除或修改 `%{message}` 字段的内容。
