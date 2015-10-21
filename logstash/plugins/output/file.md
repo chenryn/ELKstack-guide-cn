@@ -9,22 +9,9 @@
 ```
 output {
     file {
-        path => "/path/to/%{+yyyy/MM/dd/HH}/%{host}.log.gz"
+        path => "/path/to/%{+yyyy}/%{+MM}/%{+dd}/%{host}.log.gz"
         message_format => "%{message}"
         gzip => true
-    }
-}
-```
-
-按照 Logstash 标准，其实应该可以把数据格式的定义改在 codec 插件中完成，就像下面，但是 logstash-output-file 插件内部实现中跳过了 `@codec.decode` 这步，所以 **codec 设置无法生效！**
-
-```
-output {
-    file {
-        path => "/path/to/%{+yyyy/MM/dd/HH}/%{host}.log.gz"
-        codec => line {
-            format => "%{message}"
-        }
     }
 }
 ```
@@ -46,4 +33,21 @@ output {
 
 *小贴士：你或许见过网络流传的 parallel 命令行工具并发处理数据的神奇文档，但在自己用的时候总见不到效果。实际上就是因为：文档中处理的 gzip 文件，可以分开处理然后再合并的。*
 
+## 注意
+
+1. 按照 Logstash 标准，其实应该可以把数据格式的定义改在 codec 插件中完成，但是 logstash-output-file 插件内部实现中跳过了 `@codec.decode` 这步，所以 **codec 设置无法生效！**
+2. 按照 Logstash 标准，配置参数的值可以使用 event sprintf 格式。但是 logstash-output-file 插件对 `event.sprintf(@path)` 的结果，还附加了一步 `inside_file_root?` 校验(个人猜测是为了防止越权到其他路径)，这个 `file_root` 是通过直接对 path 参数分割 `/` 符号得到的。如果在 sprintf 格式中带有 `/` 符号，那么被切分后的结果就无法正确解析了。
+
+所以，如下所示配置，虽然看起来是正确的，实际效果却不对，正确写法应该是本节之前的配置示例那样。
+
+```
+output {
+    file {
+        path => "/path/to/%{+yyyy/MM/dd}/%{host}.log.gz"
+        codec => line {
+            format => "%{message}"
+        }
+    }
+}
+```
 
