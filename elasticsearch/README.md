@@ -1,3 +1,3 @@
 Elasticsearch 来源于作者 Shay Banon 的第一个开源项目 Compass 库，而这个 Java 库最初的目的只是为了给 Shay 当时正在学厨师的妻子做一个菜谱的搜索引擎。2010 年，Elasticsearch 正式发布。至今已经成为 GitHub 上最流行的 Java 项目，不过 Shay 承诺给妻子的菜谱搜索依然没有面世……
 
-2015 年初，Elasticsearch 公司召开了第一次全球用户大会 Elastic{ON}15。诸多 IT 巨头纷纷赞助，参会，演讲。会后，Elasticsearch 公司宣布改名 Elastic，公司官网也变成 <http://elastic.co/>。这意味着 Elasticsearch 的发展方向，不再限于搜索业务，也就是说，ELKstack 等机器数据和 IT 服务领域成为官方更加注意的方向。随后几个月，专注监控报警的 Watcher 发布 beta 版，社区有名的网络抓包工具 Packetbeat 也在前几天被 Elastic 公司收购。
+2015 年初，Elasticsearch 公司召开了第一次全球用户大会 Elastic{ON}15。诸多 IT 巨头纷纷赞助，参会，演讲。会后，Elasticsearch 公司宣布改名 Elastic，公司官网也变成 <http://elastic.co/>。这意味着 Elasticsearch 的发展方向，不再限于搜索业务，也就是说，ELK Stack 等机器数据和 IT 服务领域成为官方更加注意的方向。随后几个月，专注监控报警的 Watcher 发布 beta 版，社区有名的网络抓包工具 Packetbeat 也在前几天被 Elastic 公司收购。

@@ -1,6 +1,6 @@
 # script
 
-Elasticsearch 中，可以使用自定义脚本扩展功能。包括评分、过滤函数和聚合字段等方面。作为 ELKstack 场景，我们只介绍在聚合字段方面使用 script 的方式。
+Elasticsearch 中，可以使用自定义脚本扩展功能。包括评分、过滤函数和聚合字段等方面。作为 ELK Stack 场景，我们只介绍在聚合字段方面使用 script 的方式。
 
 ## 动态提交
 

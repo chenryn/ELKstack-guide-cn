@@ -16,7 +16,7 @@
 
 segment 归并的过程，需要先读取 segment，归并计算，再写一遍 segment，最后还要保证刷到磁盘。可以说，这是一个非常消耗磁盘 IO 和 CPU 的任务。所以，ES 提供了对归并线程的限速机制，确保这个任务不会过分影响到其他任务。
 
-默认情况下，归并线程的限速配置 `indices.store.throttle.max_bytes_per_sec` 是 20MB。对于写入量较大，磁盘转速较高，甚至使用 SSD 盘的服务器来说，这个限速是明显过低的。对于 ELKstack 应用，建议可以适当调大到 100MB或者更高。
+默认情况下，归并线程的限速配置 `indices.store.throttle.max_bytes_per_sec` 是 20MB。对于写入量较大，磁盘转速较高，甚至使用 SSD 盘的服务器来说，这个限速是明显过低的。对于 ELK Stack 应用，建议可以适当调大到 100MB或者更高。
 
 ```
 # curl -XPUT http://127.0.0.1:9200/_cluster/settings -d'
@@ -27,7 +27,7 @@ segment 归并的过程，需要先读取 segment，归并计算，再写一遍 
 }'
 ```
 
-归并线程的数目，ES 也是有所控制的。默认数目的计算公式是： `Math.min(3, Runtime.getRuntime().availableProcessors() / 2)`。即服务器 CPU 核数的一半大于 3 时，启动 3 个归并线程；否则启动跟 CPU 核数的一半相等的线程数。相信一般做 ELKstack 的服务器 CPU 合数都会在 6 个以上。所以一般来说就是 3 个归并线程。如果你确定自己磁盘性能跟不上，可以降低 `index.merge.scheduler.max_thread_count` 配置，免得 IO 情况更加恶化。
+归并线程的数目，ES 也是有所控制的。默认数目的计算公式是： `Math.min(3, Runtime.getRuntime().availableProcessors() / 2)`。即服务器 CPU 核数的一半大于 3 时，启动 3 个归并线程；否则启动跟 CPU 核数的一半相等的线程数。相信一般做 ELK Stack 的服务器 CPU 合数都会在 6 个以上。所以一般来说就是 3 个归并线程。如果你确定自己磁盘性能跟不上，可以降低 `index.merge.scheduler.max_thread_count` 配置，免得 IO 情况更加恶化。
 
 ## 归并策略
 
@@ -52,5 +52,5 @@ segment 归并的过程，需要先读取 segment，归并计算，再写一遍 
 # curl -XPOST http://127.0.0.1:9200/logstash-2015-06.10/_optimize?max_num_segments=1
 ```
 
-由于 optimize 线程对资源的消耗比普通的归并线程大得多，所以，绝对不建议对还在写入数据的热索引执行这个操作。这个问题对于 ELKstack 来说非常好办，一般索引都是按天分割的。更合适的任务定义方式，请阅读本书稍后的 curator 章节。
+由于 optimize 线程对资源的消耗比普通的归并线程大得多，所以，绝对不建议对还在写入数据的热索引执行这个操作。这个问题对于 ELK Stack 来说非常好办，一般索引都是按天分割的。更合适的任务定义方式，请阅读本书稍后的 curator 章节。
 

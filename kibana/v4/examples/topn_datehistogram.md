@@ -1,6 +1,6 @@
 # TopN 的时序趋势图
 
-TopN 的时序趋势图是将 ELKstack 用于监控场景最常用的手段。乃至在 Kibana3 时代，开发者都通过在 Query 框上额外定义 TopN 输入的方式提供了这个特性。不过在 Kibana4 中，因为 sub aggs 的依次分桶原理，TopN 时序趋势图又有了新的特点。
+TopN 的时序趋势图是将 ELK Stack 用于监控场景最常用的手段。乃至在 Kibana3 时代，开发者都通过在 Query 框上额外定义 TopN 输入的方式提供了这个特性。不过在 Kibana4 中，因为 sub aggs 的依次分桶原理，TopN 时序趋势图又有了新的特点。
 
 Kibana3 中，请求实质是先单独发起一次 termFacet 请求得到 topN，然后再发起带有 facetFilter 的 dateHistogramFacet ，分别请求每个 term 的时序。那么同样的原理，迁移到 Kibana4 中，就是先利用一次 termAgg 分桶后，再每个桶内做 dateHistogramAgg 了。对应的 Kibana4 地址为：
 

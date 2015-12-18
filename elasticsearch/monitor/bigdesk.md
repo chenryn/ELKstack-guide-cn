@@ -15,7 +15,7 @@ Serving HTTP on 0.0.0.0 port 8000 ...
 
 ![](./bigdesk-banner.png)
 
-注意：设置 refresh 间隔请考虑 ELKstack 使用的 template 里实际的 `refresh_interval` 是多少。否则你可能看到波动太大的数据，不足以说明情况。
+注意：设置 refresh 间隔请考虑 ELK Stack 使用的 template 里实际的 `refresh_interval` 是多少。否则你可能看到波动太大的数据，不足以说明情况。
 
 点选某个节点后，就可以看到该节点性能的实时走势。一般重点关注 JVM 性能和索引性能。
 

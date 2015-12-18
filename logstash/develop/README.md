@@ -104,7 +104,7 @@ Gem::Specification.new do |s|
   s.name = 'logstash-filter-mything'
   s.version         = '1.1.0'
   s.licenses = ['Apache License (2.0)']
-  s.summary = "This mything filter is just for ELKstack Guide example"
+  s.summary = "This mything filter is just for ELK Stack Guide example"
   s.description = "This gem is a logstash plugin required to be installed on top of the Logstash core pipeline using $LS_HOME/bin/plugin install gemname. This gem is not a stand-alone program"
   s.authors = ["Chenryn"]
   s.email = 'chenlin7@staff.sina.com.cn'
