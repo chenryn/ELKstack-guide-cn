@@ -90,8 +90,21 @@
   * Maximum zoom: Kibana 的 Tilemap 支持 18 级缩放。该选项设置热力图最大强度下的最高缩放级别。
   * Minimum opacity: 设置数据点的不透明截止位置。
   * Show Tooltip: 勾选该项，让鼠标放在数据点上时显示该点的数据。
+
 ### Desaturate map tiles
-    淡化地图颜色，凸显标记的清晰度。
+
+淡化地图颜色，凸显标记的清晰度。
+
+### WMS compliant map server
+
+勾选该项，可以配置使用符合 Web Map Service (WMS) 标准的其他第三方地图服务。需要指定一下参数：
+
+* WMS url: WMS 地图服务的 URL；
+* WMS layers: 用于可视化的图层列表，逗号分隔。每个地图服务商都会提供自己的图层。
+* WMS version: 该服务商采用的 WMS 版本。
+* WMS format: 该服务商使用的图片格式。通常来说是 image/png 或 image/jpeg。
+* WMS attribution: 可选项。用户自定义字符串，用来显示在图表右下角的属性说明。
+* WMS styles: 逗号分隔的风格列表。每个地图服务商都会提供自己的风格选项。
 
 更新选项后，点击绿色 **Apply changes** 按钮更新你的可视化界面，或者灰色 **Discard changes** 按钮保持原状。
 

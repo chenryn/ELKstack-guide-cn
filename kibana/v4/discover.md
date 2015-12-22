@@ -132,6 +132,28 @@ Discover 标签页用于交互式探索你的数据。你可以访问到匹配�
   点击这个图标*反转*过滤器。默认情况下，过滤器都是包含型，显示为绿色，只有匹配过滤条件的结果才会显示。反转成排除型过滤器后，显示的是*不*匹配过滤器的检索项，显示为红色。
 * 移除过滤器 ![images/filter-delete.png](https://www.elastic.co/guide/en/kibana/current/images/filter-delete.png)
   点击这个图标删除过滤器。
+* 自定义过滤器 ![](https://www.elastic.co/guide/en/kibana/current/images/filter-custom.png)
+  点击这个图标会打开一个文本编辑框。编辑框内可以修改 JSON 形式的过滤器内容，并起一个 alias 别名：
+  ![](https://www.elastic.co/guide/en/kibana/current/images/filter-custom-json.png)
+  JSON 中可以灵活应用 bool query 组合各种 `should`、`must`、`must_not` 条件。一个用 `should` 表达的 OR 关系过滤如下:
+```
+{
+    "bool": {
+        "should": [
+            {
+                "term": {
+                    "geoip.country_name.raw": "Canada"
+                }
+            },
+            {
+                "term": {
+                    "geoip.country_name.raw": "China"
+                }
+            }
+        ]
+    }
+}
+```
 
 想要对当前页所有过滤器统一执行上面的某个操作，点击 ![images/filter-actions.png](https://www.elastic.co/guide/en/kibana/current/images/filter-actions.png) **Global Filter Actions** 按钮，然后再执行操作即可。
 

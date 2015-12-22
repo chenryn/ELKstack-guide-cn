@@ -12,7 +12,27 @@
 
 ![New Dashboard screen](http://www.elasticsearch.org/guide/en/kibana/current/images/NewDashboard.jpg)
 
-通过添加可视化的方式来构建你的仪表板。
+通过添加可视化的方式来构建你的仪表板。默认情况下，Kibana 仪表板使用明亮风格。如果你想切换成黑色风格点击数 **Settings**![](https://www.elastic.co/guide/en/kibana/current/images/SettingsButton.jpg) 按钮，然后勾选 **Use dark theme**。
+
+![dark theme](https://www.elastic.co/guide/en/kibana/current/images/darktheme.png)
+
+### 自动刷新页面
+
+你可以设置页面自动刷新的间隔以查看最新索引进来的数据。这个设置会定期提交搜索请求。
+
+设置刷新间隔后，它会出现在菜单栏的时间过滤器左侧。
+
+要设置刷新间隔：
+
+1. 点击菜单栏右上角的 **Time Filter**![](https://www.elastic.co/guide/en/kibana/current/images/TimeFilter.jpg)
+2. 点击 **Refresh Interval** 标签
+3. 从列表中选择一个刷新间隔
+
+要自动刷新数据，点击 **Auto-Refresh**![](https://www.elastic.co/guide/en/kibana/current/images/autorefresh.png) 按钮选择自动刷新间隔：
+
+![](https://www.elastic.co/guide/en/kibana/current/images/autorefresh-intervals.png)
+
+开启自动刷新后，Kibana 顶部菜单栏会显示一个暂停按钮和自动刷新间隔：![](https://www.elastic.co/guide/en/kibana/current/images/autorefresh-pause.png)。点击这个暂停按钮可以暂停自动刷新。
 
 ### 添加可视化到仪表板上
 
