@@ -1,5 +1,7 @@
 # Logstash Forwarder
 
+*本节作者：LeiTu*
+
 Redis 已经帮我们解决了很多的问题，而且也很轻量，为什么我们还需要 logstash-forwarder 呢？
 
 > Redis provides simple authentication but no transport-layer encryption or authorization. This is perfectly fine in trusted environments. However, if you're connecting to Redis between datacenters you will probably want to use encryption.

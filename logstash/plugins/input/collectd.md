@@ -1,5 +1,7 @@
 # collectd简述
 
+*本节作者：crazw*
+
 collectd 是一个守护(daemon)进程，用来收集系统性能和提供各种存储方式来存储不同值的机制。它会在系统运行和存储信息时周期性的统计系统的相关统计信息。利用这些信息有助于查找当前系统性能瓶颈（如作为性能分析 `performance analysis`）和预测系统未来的 load（如能力部署`capacity planning`）等
 
 下面简单介绍一下: collectd的部署以及与logstash对接的相关配置实例

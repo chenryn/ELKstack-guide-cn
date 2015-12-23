@@ -1,5 +1,7 @@
 # 通过kafka传输
 
+*本节作者：jingbli*
+
 Kafka 是一个高吞吐量的分布式发布订阅日志服务，具有高可用、高性能、分布式、高扩展、持久性等特性。目前已经在各大公司中广泛使用。和之前采用 Redis 做轻量级消息队列不同，Kafka 利用磁盘作队列，所以也就无所谓消息缓冲时的磁盘问题。此外，如果公司内部已有 Kafka 服务在运行，logstash 也可以快速接入，免去重复建设的麻烦。
 
 如果打算新建 Kafka 系统的，请参考 Kafka 官方入门文档：<http://kafka.apache.org/documentation.html#quickstart>

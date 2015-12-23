@@ -1,5 +1,7 @@
 # ossec
 
+*本节作者：林鹏*
+
 ## 配置OSSEC SYSLOG 输出 （所有agent）
 
 1. 编辑ossec.conf 文件（默认为/var/ossec/etc/ossec.conf）

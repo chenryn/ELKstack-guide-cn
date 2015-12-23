@@ -21,3 +21,20 @@ ELK Stack 在最近两年迅速崛起，成为机器数据分析，或者说实�
 
 ![ercode](kibana/v3/img/alipay.png)
 
+# Version
+
+由于 ELK Stack 处于高速迭代状态，特标明本书知识主要针对的具体版本号：
+
+* Logstash-1.5
+* Elasticsearch-1.7
+* Kibana-4.3
+
+# TODO
+
+限于个人经验、时间和场景，有部分内容尚未完成，期待各位同好出手。罗列如下：
+
+* Elasticsearch snapshot
+* es-hadoop
+* filebeat 等 beats
+* grafana
+* kibana plugin
