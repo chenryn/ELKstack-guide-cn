@@ -144,7 +144,7 @@ logstash 列出目录下所有文件时，是字母排序的。而 logstash 配�
 
 * --filterworkers 或 -w
 
-意即*工作线程*。Logstash 会运行多个线程。你可以用 `bin/logstash -w 5` 这样的方式强制 Logstash 为**过滤**插件运行 5 个线程。
+意即*工作线程*。Logstash 会运行多个线程。你可以用 `bin/logstash -w 5` 这样的方式强制 Logstash 为**过滤**插件运行 5 个线程。在 Logstash-2.0 之前，该参数默认是 1；之后，修改为自动适配 CPU 核数的一半。
 
 *注意：Logstash目前还不支持输入插件的多线程。而输出插件的多线程需要在配置内部设置，这个命令行参数只是用来设置过滤插件的！*
 
