@@ -37,7 +37,6 @@ reindex 操作的 logstash 配置如下：
 input {
   elasticsearch {
     hosts => [ "192.168.0.2" ]
-    port => "9200"
     index => "old_index"
     size => 500
     scroll => "5m"
@@ -46,11 +45,9 @@ input {
 }
 output {
   elasticsearch {
-    host => "192.168.0.2"
-    port => "9200"
-    protocol => "http"
+    hosts => [ "192.168.0.3" ]
     index => "%{[@metadata][_index]}"
-    index_type => "%{[@metadata][_type]}"
+    document_type => "%{[@metadata][_type]}"
     document_id => "%{[@metadata][_id]}"
   }
 }
