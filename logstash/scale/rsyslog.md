@@ -191,3 +191,7 @@ sys.stdout.flush()
 **慎用提示**
 
 mmexternal 是基于 direct mode 的，所以如果你发送的数据量较大时，rsyslog 并不会像 linkedlist mode 那样缓冲在磁盘队列上，而是**持续 fork 出新的 mmexternal 程序**，几千个进程后，你的服务器就挂了！！所以，务必开启 `forcesingleinstance` 选项。
+
+## rsyslog 的 mmgrok 模块
+
+Rsyslog 8.15.0 开始，附带了 mmgrok 模块，系笔者贡献。利用该模块，可以将 Logstash 的 Grok 规则，运用在 Rsyslog 中。欢迎有兴趣的读者试用。
