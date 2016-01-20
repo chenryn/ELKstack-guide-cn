@@ -55,7 +55,7 @@ ES 提供了一系列参数详细控制这部分逻辑：
 
 上面说的各种配置，都是从策略层面，控制分片分配的选择。在必要的时候，还可以通过 ES 的 reroute 接口，手动完成对分片的分配选择的控制。
 
-reroute 接口支持三种指令：allocate，move 和 cancel。常用的一半是 allocate 和 move：
+reroute 接口支持三种指令：allocate，move 和 cancel。常用的一般是 allocate 和 move：
 
 * allocate 指令
 
