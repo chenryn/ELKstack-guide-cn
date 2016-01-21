@@ -32,112 +32,56 @@ tar xzvf filebeat-1.0.1-darwin.tgz
 PS > cd 'C:\Program Files\Filebeat'
 PS C:\Program Files\Filebeat> .\install-service-filebeat.ps1
 ```
-Note
-If script execution is disabled on your system, you need to set the execution policy for the current session to allow the script to run. For example: PowerShell.exe -ExecutionPolicy RemoteSigned -File .\install-service-filebeat.ps1.
 
+*注意*
 
-## logstash-input-beats 配置
+可能需要额外授予执行权限。命令为：`PowerShell.exe -ExecutionPolicy RemoteSigned -File .\install-service-filebeat.ps1`.
 
-在 logstash 作为 indexer server 角色的这端，我们首先需要生成证书：
+## filebeat 配置
 
-    cd /etc/pki/tls
-    sudo openssl req -x509 -batch -nodes -days 3650 -newkey rsa:2048 -keyout private/logstash-forwarder.key -out certs/logstash-forwarder.crt
+所有的 beats 组件在 output 方面的配置都是一致的，之前章节已经介绍过。这里只介绍 filebeat 在 input 段的配置，如下：
 
-然后把证书发送到准备运行 logstash-forwarder 的 shipper 端服务器上去：
-
-    scp private/logstash-forwarder.key root@target_server_ip:/etc/pki/tls/private
-    scp certs/logstash-forwarder.crt root@target_server_ip:/etc/pki/tls/certs
-
-```
-./bin/plugin install logstash-input-beats
-```
-
-然后创建 logstash 的配置文件，内容如下：
-
-```
-input {
-    beats {
-        port => 5044
-    }
-}
-output {
-    elasticsearch {
-        hosts => "localhost:9200"
-        sniffing => true
-        manage_template => false
-        index => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
-        document_type => "%{[@metadata][type]}"
-    }
-}
+```yaml
+filebeat:
+    spool_size: 1024                                    # 最大可以攒够 1024 条数据一起发送出去
+    idle_timeout: "5s"                                  # 否则每 5 秒钟也得发送一次
+    registry_file: ".filebeat"                          # 文件读取位置记录文件，会放在当前工作目录下。所以如果你换一个工作目录执行 filebeat 会导致重复传输！
+    config_dir: "path/to/configs/contains/many/yaml"    # 如果配置过长，可以通过目录加载方式拆分配置
+    prospectors:                                        # 有相同配置参数的可以归类为一个 prospector
+        -
+            fields:
+                ownfield: "mac"                         # 类似 logstash 的 add_fields
+            paths:
+                - /var/log/system.log                   # 指明读取文件的位置
+                - /var/log/wifi.log
+        -
+            document_type: "apache"                     # 定义写入 ES 时的 _type 值
+            ignore_older: "24h"                         # 超过 24 小时没更新内容的文件不再监听。在windows上另外有一个配置叫force_close_files，只要文件名一变化立刻关闭文件句柄，保证文件可以被删除，缺陷是可能会有日志还没读完
+            scan_frequency: "10s"                       # 每 10 秒钟扫描一次目录，更新通配符匹配上的文件列表
+            tail_files: false                           # 是否从文件末尾开始读取
+            harvester_buffer_size: 16384                # 实际读取文件时，每次读取 16384 字节
+            backoff: "1s"                               # 每 1 秒检测一次文件是否有新的一行内容需要读取
+            paths:
+                - "/var/log/apache/*"                   # 可以使用通配符
+        -
+            input_type: "stdin"                         # 除了 "log"，还有 "stdin"
+output:
+    ...
 ```
 
-## shipper 端配置
+我们已完成了配置，当 `sudo service filebeat start` 之后，你就可以在 kibana 上看到你的日志了。
 
-我们现在登入到我们需要传送 log 的机器上，我们已在之前的步骤中发送了 logstash 的 crt 过来。
+# 字段
 
-### logstash-forwarder 安装
+Filebeat 发送的日志，会包含以下字段：
 
-首先，我们需要安装 logstash-forwarder 软件。官方都已经提供了软件仓库可用。在 Redhat 机器上只需要添加一个 */etc/yum.repos.d/logstash-forwarder.repo*，内容如下：
-
-```ini
-[logstash-forwarder]
-name=logstash-forwarder
-baseurl=http://packages.elasticsearch.org/logstash-forwarder/centos
-gpgcheck=1
-gpgkey=http://packages.elasticsearch.org/GPG-KEY-elasticsearch
-enabled=1
-```
-
-然后运行安装命令即可：
-
-    sudo yum install -y logstash-forwarder
-
-你可以从我提供的 gist 中下载已经更改的 init script 或者使用 rpm 中提供的脚本 [logstash-forwader](https://gist.github.com/ae30a4c1a1f342df1274.git).
-
-### logstash-forwarder 配置
-
-logstash-forwarder 的配置文件是纯 JSON 格式。因为其轻量级的设计目的，所以可配置项很少。下面是一个 */etc/logstash-forwarder* 配置示例：
-
-```json
-{
-  "network": {
-    "servers": [ "10.18.10.2:5000" ],
-      "timeout": 15,
-      "ssl ca" : "/etc/pki/tls/certs/logstash-forwarder.crt"
-      "ssl key": "/etc/pki/tls/private/logstash-forwarder.key"
-  },
-  "files": [
-    {
-      "paths": [
-        "/var/log/message",
-      "/var/log/secure"
-        ],
-      "fields": { "type": "syslog" }
-    }
-  ]
-}
-```
-
-我们已完成了配置，当 `sudo service logstash-forwarder start` 之后，你就可以在 kibana 上看到你的日志了
-
-### logstash-forwarder 配置说明
-
-配置中，主要包括下面几个可用配置项：
-
-* network.servers: 用来指定远端(即 logstash indexer 角色)服务器的 IP 地址和端口。这里可以写数组，但是 logstash-forwarder 只会随机选一台作为对端发送数据，一直到对端故障，才会重选其他服务器。
-* network.ssl\*: 网络交互中使用的 SSL 证书路径。
-* files.\*.paths: 读取的文件路径。
-  logstash-forwarder 只支持两种输入，一种就是示例中用的文件方式，和 logstash 一样也支持 glob 路径，即 `"/var/log/*.log"` 这样的写法；一种是标准输入，写法为 `"paths": [ "-" ]`
-* files.\*.fields: 给每条日志添加的固定字段，相当于 logstash 里的 `add_field` 参数。
-  注意示例中添加的是 **type** 字段。在 logstash-forwarder 里添加的字段是优先于 LogStash::Inputs::Lumberjack 配置里定义的字段的。所以，在本例中，即便你在 indexer 上定义 type 为 "anything"。事件的实际 type 依然是这里添加的 "syslog"。这也意味着，你在 indexer 上如果做后续判断，应该是这样：
-
-```
-filter {
-  if [type] == "syslog" {
-    grok {
-      match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
-    }
-  }
-}
-```
+* `beat.hostname` beat 运行的主机名
+* `beat.name` shipper 配置段设置的 `name`，如果没设置，等于 `beat.hostname`
+* `@timestamp` 读取到该行内容的时间
+* `type` 通过 `document_type` 设定的内容
+* `input_type` 来自 "log" 还是 "stdin"
+* `source` 具体的文件名全路径
+* `offset` 该行日志的起始偏移量
+* `message` 日志内容
+* `fields` 添加的其他固定字段都存在这个对象里面
 
