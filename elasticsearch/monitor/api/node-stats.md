@@ -326,3 +326,16 @@ ES 在 index、bulk、search、get、merge 等各种操作都有专门的线程�
 
 `fielddata_breaker.maximum_size` 是一个请求能使用的内存的最大值。`fielddata_breaker.tripped` 记录的是触发 circuit breaker 的次数。如果这个数值太高，或者持续增长，说明目前 ES 收到的请求亟待优化，或者单纯的，加机器，加内存。
 
+## hot_threads 状态
+
+除了 stats 信息以外，`/_nodes/` 下还有另一个监控接口：
+
+```
+# curl -XGET 'http://127.0.0.1:9200/_nodes/_local/hot_threads?interval=60s'
+```
+
+该接口会返回在 `interval` 时长内，该节点消耗资源最多的前三个线程的堆栈情况。这对于性能调优初期，采集现状数据，极为有用。
+
+默认的采样间隔是 500ms，一般来说，这个时间范围是不太够的，建议至少 60s 以上。
+
+默认的，资源消耗是按照 CPU 来衡量，还可以用 `?type=wait` 或者 `?type=block` 来查看在等待和堵塞状态的当前线程排名。
