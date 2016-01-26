@@ -26,3 +26,26 @@ Serving HTTP on 0.0.0.0 port 8000 ...
 有关数据读写性能部分截图如下：
 
 ![](./bigdesk-indexing.png)
+
+## Elasticsearch 2.x 上的部署方法
+
+bigdesk 的源码开发在 2015 年夏天就已经停止，所以默认是无法支持 Elasticsearch 2.x 的监控的。不过总体来说，Elasticsearch 性能监控接口没有什么变化，我们只需要稍微修改 bigdesk，使之符合 Elasticsearch 2.x 的插件规范即可继续使用。
+
+Elasticsearch 2.x 的插件目录规范，可以参考 marvel-agent，kopf 等。
+
+```
+mkdir -p $ES_HOME/plugins/bigdesk
+cd $ES_HOME/plugins/bigdesk
+git clone https://github.com/lukas-vlcek/bigdesk _site
+sed -i '142s/==/>=/' _site/js/store/BigdeskStore.js
+cat >plugin-descriptor.properties<<EOF
+description=bigdesk - Live charts and statistics for Elasticsearch cluster.
+version=2.5.1
+site=true
+name=bigdesk
+EOF
+```
+
+然后启动 Elasticsearch 服务，通过 `http://127.0.0.1:9200/_plugin/bigdesk` 访问即可。
+
+*注意：这种方式只能恢复 node 监控，cluster 部分，bigdesk 是采用了 `/_status` 接口，这个接口从 Elasticsearch 1.2 开始就已经宣布废弃，2.x 里已经彻底没有了，数据被拆分成了 `/_stats` 和 `/_recovery` 两个接口。不是简单修改可以搞定的了。*
