@@ -13,4 +13,5 @@
 * 感谢 childe 完成 kibana-auth-CAS 介绍, elasticsearch 读写分离和别名等章节。
 * 感谢 gnuhpc 完善 elasticsearch 插件 index 配置细节，logstash-fowarder-java 部署细节。
 * 感谢 东南 指出两处代码示例笔误。
+* 感谢 陆一鸣 指出 openjdk 的 rpm 名错误。
 * 感谢 elain 完成 search-guard 章节。

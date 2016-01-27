@@ -33,7 +33,7 @@ wget https://download.elastic.co/logstash/logstash/packages/centos/logstash-1.5.
 如果你必须得在一些很老的操作系统上运行 Logstash，那你只能用源代码包部署了，记住要自己提前安装好 Java：
 
 ```
-yum install openjdk-jre
+yum install java-1.8.0-openjdk
 export JAVA_HOME=/usr/java
 tar zxvf logstash-1.5.1.tar.gz
 ```
