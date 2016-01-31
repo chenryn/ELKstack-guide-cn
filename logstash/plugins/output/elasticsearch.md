@@ -1,6 +1,6 @@
 # 保存进 Elasticsearch
 
-Logstash 早期有三个不同的 elasticsearch 插件。到 1.4.0 版本的时候，开发者彻底重写了 `LogStash::Outputs::Elasticsearch` 插件。从此，我们只需要用这一个插件，就能任意切换使用 Elasticsearch 集群支持的各种不同协议了。
+Logstash 可以试用不同的协议实现完成将数据写入 Elasticsearch 的工作。在不同时期，也有不同的插件实现方式。本节以最新版为准，即主要介绍 HTTP 方式。同时也附带一些原有的 node 和 transport 方式的介绍。
 
 ## 配置示例
 
@@ -9,14 +9,22 @@ output {
     elasticsearch {
         hosts => ["192.168.0.2:9200"]
         index => "logstash-%{type}-%{+YYYY.MM.dd}"
-        index_type => "%{type}"
-        workers => 5
+        document_type => "%{type}"
+        workers => 1
+        flush_size => 20000
+        idle_flush_time => 10
         template_overwrite => true
     }
 }
 ```
 
 ## 解释
+
+### 批量发送
+
+`flush_size` 和 `idle_flush_time` 共同控制 Logstash 向 Elasticsearch 发送批量数据的行为。以上面示例来说：Logstash 会努力攒到 20000 条数据一次性发送出去，但是如果 10 秒钟内也没攒够 20000 条，Logstash 还是会以当前攒到的数据量发一次。
+
+默认情况下，`flush_size` 是 500 条，`idle_flush_time` 是 1 秒。这也是很多人改大了 `flush_size` 也没能提高写入 ES 性能的原因——Logstash 还是 1 秒钟发送一次。
 
 ### 索引名
 
@@ -26,7 +34,11 @@ output {
 
 ### Java 协议
 
-从 Logstash-2.0 开始，logstash-output-elasticsearch 改为只支持 *http* 协议。想继续使用 *node* 或者 *transport* 协议的用户，需要单独安装 `logstash-output-elasticsearch_java` 插件。
+1.4.0 版本之前，有 `logstash-output-elasticsearch`, `logstash-output-elasticsearch_http`, `logstash-output-elasticsearch_river` 三个插件。
+
+1.4.0 到 2.0 版本之间，配合 Elasticsearch 废弃 river 方法，只剩下 `logstash-output-elasticsearch` 一个插件，同时实现了 node、transport、http 三种协议。
+
+2.0 版本开始，为了兼容性和调试方便，`logstash-output-elasticsearch` 改为只支持 *http* 协议。想继续使用 *node* 或者 *transport* 协议的用户，需要单独安装 `logstash-output-elasticsearch_java` 插件。
 
 一个小集群里，使用 *node* 协议最方便了。Logstash 以 elasticsearch 的 client 节点身份(即不存数据不参加选举)运行。如果你运行下面这行命令，你就可以看到自己的 logstash 进程名，对应的 `node.role` 值是 **c**：
 
@@ -62,7 +74,7 @@ Logstash 1.4.2 在 http 协议下默认使用作者自己的 ftw 库，随同分
 
 解决办法：
 
-1. 对性能要求不高的，可以在启动 logstash 进程时，配置环境变量ENV["BULK"]，强制采用 elasticsearch 官方 Ruby 库。命令如下：
+1. 对性能要求不高的，可以在启动 logstash 进程时，配置环境变量 `ENV["BULK"]`，强制采用 elasticsearch 官方 Ruby 库。命令如下：
 
     export BULK="esruby"
 
