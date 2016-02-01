@@ -31,10 +31,12 @@ ELK Stack 在最近两年迅速崛起，成为机器数据分析，或者说实�
 
 # TODO
 
-限于个人经验、时间和场景，有部分内容尚未完成，期待各位同好出手。罗列如下：
+限于个人经验、时间和场景，有部分 ELK Stack 社区比较常见的用法介绍未完成，期待各位同好出手。罗列如下：
 
 * Elasticsearch snapshot
-* es-hadoop
+* es-hadoop 用例
 * beats 开发
-* grafana
-* kibana plugin
+* grafana 介绍
+* 和 statsd/graphite 的配合
+* codec/netflow 的详解
+* filter/elapsed 的用例
