@@ -35,6 +35,6 @@ ELK Stack 在最近两年迅速崛起，成为机器数据分析，或者说实�
 
 * Elasticsearch snapshot
 * es-hadoop
-* filebeat 等 beats
+* beats 开发
 * grafana
 * kibana plugin
