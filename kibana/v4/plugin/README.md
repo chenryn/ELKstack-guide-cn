@@ -12,7 +12,7 @@ Kibana 从 4.2 以后，引入了完善的插件化机制。原先意义上的 K
 bin/kibana plugin --install <org>/<package>/<version>
 ```
 
-这种方式目前适用于官方插件，比如：
+version 是可选项。这种方式目前适用于官方插件，比如：
 
 ```
 bin/kibana plugin -i elasticsearch/marvel/latest
@@ -21,13 +21,15 @@ bin/kibana plugin -i elasticsearch/marvel/latest
 2. 通过 GitHub 仓库地址：
 
 ```
-bin/kibana plugin --install <github-user>/<github-repo>
+bin/kibana plugin --install <github-user>/<github-repo>/<version>
 ```
 
 这种方式目前适用于非官方，或官方还未发布的，寄存在 GitHub 上的插件代码，比如：
 
 ```
 bin/kibana plugin -i elastic/timelion
+bin/kibana plugin -i sirensolutions/kibi_wordcloud_vis/0.1.0
+bin/kibana plugin -i sirensolutions/kibi_radar_vis/0.1.0
 ```
 
 ## 查看与切换

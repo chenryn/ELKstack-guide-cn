@@ -117,7 +117,6 @@ define(function (require) {
             </div>
         </div>
         <div>{{metric.label}}</div>
-        <div class="copyright" style="margin:0 0 4px 4px;font-size:11px;position:absolute;bottom:0;left:0;">Developed by <a href="https://logz.io" target="_blank">Logz.io</a></div>
     </div>
 </div>
 ```
