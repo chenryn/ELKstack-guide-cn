@@ -1,6 +1,8 @@
 # Kibana4 插件
 
-Kibana 从 4.2 以后，引入了完善的插件化机制。原先意义上的 Kibana 现在已经变成了 Kibana 插件框架下的一个默认插件。本节用以讲述 Kibana4 插件的安装使用和定制开发。
+Kibana 从 4.2 以后，引入了完善的插件化机制。目前分为 app，vistype，fieldformatter、spymode 等多种插件类型。原先意义上的 Kibana 现在已经变成了 Kibana 插件框架下的一个默认 app 类型插件。
+
+本节用以讲述 Kibana4 插件的安装使用和定制开发。
 
 ## 部署命令
 
@@ -30,6 +32,14 @@ bin/kibana plugin --install <github-user>/<github-repo>/<version>
 bin/kibana plugin -i elastic/timelion
 bin/kibana plugin -i sirensolutions/kibi_wordcloud_vis/0.1.0
 bin/kibana plugin -i sirensolutions/kibi_radar_vis/0.1.0
+```
+
+3. 通过 zip 压缩包：
+
+支持本地和远程 HTTP 下载两种，比如：
+
+```
+bin/kibana plugin -i heatmap -u https://github.com/stormpython/heatmap/archive/master.zip
 ```
 
 ## 查看与切换
