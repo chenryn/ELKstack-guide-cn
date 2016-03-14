@@ -15,3 +15,4 @@
 * 感谢 东南 指出两处代码示例笔误。
 * 感谢 陆一鸣 指出 openjdk 的 rpm 名错误。
 * 感谢 elain 完成 search-guard 章节。
+* 感谢 李宏旭 完成 hdfs 快照备份 章节。
