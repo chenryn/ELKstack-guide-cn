@@ -142,28 +142,26 @@ logstash 列出目录下所有文件时，是字母排序的。而 logstash 配�
 
 意即*日志*。Logstash 默认输出日志到标准错误。生产环境下你可以通过 `bin/logstash -l logs/logstash.log` 命令来统一存储日志。
 
-* --filterworkers 或 -w
+* --pipeline-workers 或 -w
 
-意即*工作线程*。Logstash 会运行多个线程。你可以用 `bin/logstash -w 5` 这样的方式强制 Logstash 为**过滤**插件运行 5 个线程。在 Logstash-2.0 之前，该参数默认是 1；之后，修改为自动适配 CPU 核数的一半。
+运行 filter 和 output 的 pipeline 线程数量。默认是 CPU 核数。
 
-*注意：Logstash目前还不支持输入插件的多线程。而输出插件的多线程需要在配置内部设置，这个命令行参数只是用来设置过滤插件的！*
+* --pipeline-batch-size 或 -b
 
-**提示：Logstash 目前不支持对过滤器线程的监测管理。如果 filterworker 挂掉，Logstash 会处于一个无 filter 的僵死状态。这种情况在使用 filter/ruby 自己写代码时非常需要注意，很容易碰上 `NoMethodError: undefined method '*' for nil:NilClass` 错误。需要妥善处理，提前判断。**
+每个 Logstash pipeline 线程，在执行具体的 filter 和 output 函数之前，最多能累积的日志条数。默认是 125 条。越大性能越好，同样也会消耗越多的 JVM 内存。
+
+* --pipeline-batch-delay 或 -u
+
+每个 Logstash pipeline 线程，在打包批量日志的时候，最多等待几毫秒。默认是 5 ms。
 
 * --pluginpath 或 -P
 
 可以写自己的插件，然后用 `bin/logstash --pluginpath /path/to/own/plugins` 加载它们。
 
-*小贴士：如果你使用的 Logstash 版本高于 1.5.0-rc3，该参数已经被取消，请阅读[插件开发](../develop.md)章节，改成本地 gem 插件安装形式。*
-
 * --verbose
 
 输出一定的调试日志。
 
-*小贴士：如果你使用的 Logstash 版本低于 1.3.0，你只能用 `bin/logstash -v` 来代替。*
-
 * --debug
 
 输出更多的调试日志。
-
-*小贴士：如果你使用的 Logstash 版本低于 1.3.0，你只能用 `bin/logstash -vv` 来代替。*
