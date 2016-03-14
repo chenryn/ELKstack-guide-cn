@@ -41,3 +41,5 @@ ELK Stack 在最近两年迅速崛起，成为机器数据分析，或者说实�
 * 和 statsd/graphite 的配合
 * codec/netflow 的详解
 * filter/elapsed 的用例
+* [K4的oauth2权限插件](https://github.com/trevan/oauth2)
+* [juttle的ES后端支持](https://github.com/juttle/juttle-elastic-adapter)

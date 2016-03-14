@@ -30,6 +30,7 @@ bin/kibana plugin --install <github-user>/<github-repo>/<version>
 
 ```
 bin/kibana plugin -i elastic/timelion
+bin/kibana plugin -i snuids/jVectorMapKibanaCountry
 bin/kibana plugin -i sirensolutions/kibi_wordcloud_vis/0.1.0
 bin/kibana plugin -i sirensolutions/kibi_radar_vis/0.1.0
 ```
