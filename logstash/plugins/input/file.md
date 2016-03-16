@@ -30,6 +30,13 @@ logstash 每隔多久去检查一次被监听的 `path` 下是否有新文件。
 
 不想被监听的文件可以排除出去，这里跟 `path` 一样支持 glob 展开。
 
+* close_older
+
+一个已经监听中的文件，如果超过这个值的时间内没有更新内容，就关闭监听它的文件句柄。默认是 3600 秒，即一小时。
+* ignore_older
+
+在每次检查文件列表的时候，如果一个文件的最后修改时间超过这个值，就忽略这个文件。默认是 86400 秒，即一天。
+
 * sincedb_path
 
 如果你不想用默认的 `$HOME/.sincedb`(Windows 平台上在 `C:\Windows\System32\config\systemprofile\.sincedb`)，可以通过这个配置定义 sincedb 文件到其他位置。

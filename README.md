@@ -17,6 +17,8 @@ ELK Stack 在最近两年迅速崛起，成为机器数据分析，或者说实�
 我本人于 ELK Stack，虽然接触较早，但本身专于 web 和 app 应用数据方面，动笔以来，得到诸多朋友的帮助，详细贡献名单见[合作名单](./contributors.md)。此外，还要特别感谢曾勇(medcl)同学，完成 ES 在国内的启蒙式分享，并主办 ES 中国用户大会；吴晓刚(wood)同学，积极帮助新用户们，并最早分享了携程的 ELK Stack 日亿级规模的实例。
 
 欢迎加入 ELK Stack 交流 QQ 群：315428175。
+<a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=d9900718f2e38e03d4bb73b624319eec9c0de7fabdbe340199e967fdecee929b"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="ElasticStack交流" title="ElasticStack交流"></a>
+
 *欢迎捐赠，作者支付宝账号：<rao.chenlin@gmail.com>*
 
 ![ercode](kibana/v3/img/alipay.png)
@@ -34,11 +36,9 @@ ELK Stack 在最近两年迅速崛起，成为机器数据分析，或者说实�
 
 限于个人经验、时间和场景，有部分 ELK Stack 社区比较常见的用法介绍未完成，期待各位同好出手。罗列如下：
 
-* Elasticsearch snapshot
 * es-hadoop 用例
 * beats 开发
 * grafana 介绍
-* 和 statsd/graphite 的配合
 * codec/netflow 的详解
 * filter/elapsed 的用例
 * [K4的oauth2权限插件](https://github.com/trevan/oauth2)
