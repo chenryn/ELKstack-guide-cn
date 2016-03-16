@@ -56,11 +56,13 @@ ES 的一大特点，就是全 RESTful 接口处理 JSON 请求。所以，数�
 # curl -XDELETE http://127.0.0.1:9200/logstash-2015.06.21/testlog/AU4ew3h2nBE6n0qcyVJK
 ```
 
-删除不单针对单条数据，还可以删除整个 type，乃至整个索引。甚至可以用通配符。
+删除不单针对单条数据，还可以删除整个整个索引。甚至可以用通配符。
 
 ```
 # curl -XDELETE http://127.0.0.1:9200/logstash-2015.06.0*
 ```
+
+在 Elasticsearch 2.x 之前，可以通过查询语句删除，也可以删除某个 `_type` 内的数据。现在都已经不再内置支持，改为 `Delete by Query` 插件。因为这种方式本身对性能影响较大！
 
 ## 数据更新
 

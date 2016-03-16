@@ -93,30 +93,91 @@ Elasticsearch 支持给索引预定义设置和 mapping(前提是你用的 elast
   },
   "mappings" : {
     "_default_" : {
-       "_all" : {"enabled" : true},
-       "dynamic_templates" : [ {
-         "string_fields" : {
-           "match" : "*",
-           "match_mapping_type" : "string",
-           "mapping" : {
-             "type" : "string", "index" : "analyzed", "omit_norms" : true,
-               "fields" : {
-                 "raw" : {"type": "string", "index" : "not_analyzed", "ignore_above" : 256}
-               }
-           }
-         }
-       } ],
-       "properties" : {
-         "@version": { "type": "string", "index": "not_analyzed" },
-         "geoip"  : {
-           "type" : "object",
-             "dynamic": true,
-             "path": "full",
-             "properties" : {
-               "location" : { "type" : "geo_point" }
-             }
-         }
-       }
+      "_all" : {"enabled" : true, "omit_norms" : true},
+      "dynamic_templates" : [ {
+        "message_field" : {
+          "match" : "message",
+          "match_mapping_type" : "string",
+          "mapping" : {
+            "type" : "string", "index" : "analyzed", "omit_norms" : true,
+            "fielddata" : { "format" : "disabled"  }
+          }
+        }
+      }, {
+        "string_fields" : {
+          "match" : "*",
+          "match_mapping_type" : "string",
+          "mapping" : {
+            "type" : "string", "index" : "analyzed", "omit_norms" : true,
+            "fielddata" : { "format" : "disabled"  },
+            "fields" : {
+              "raw" : {"type": "string", "index" : "not_analyzed", "doc_values" : true, "ignore_above" : 256}
+            }
+          }
+        }
+      }, {
+        "float_fields" : {
+          "match" : "*",
+          "match_mapping_type" : "float",
+          "mapping" : { "type" : "float", "doc_values" : true  }
+        }
+      }, {
+        "double_fields" : {
+          "match" : "*",
+          "match_mapping_type" : "double",
+          "mapping" : { "type" : "double", "doc_values" : true  }
+        }
+      }, {
+        "byte_fields" : {
+          "match" : "*",
+          "match_mapping_type" : "byte",
+          "mapping" : { "type" : "byte", "doc_values" : true  }
+        }
+      }, {
+        "short_fields" : {
+          "match" : "*",
+          "match_mapping_type" : "short",
+          "mapping" : { "type" : "short", "doc_values" : true  }
+        }
+      }, {
+        "integer_fields" : {
+          "match" : "*",
+          "match_mapping_type" : "integer",
+          "mapping" : { "type" : "integer", "doc_values" : true  }
+        }
+      }, {
+        "long_fields" : {
+          "match" : "*",
+          "match_mapping_type" : "long",
+          "mapping" : { "type" : "long", "doc_values" : true  }
+        }
+      }, {
+        "date_fields" : {
+          "match" : "*",
+          "match_mapping_type" : "date",
+          "mapping" : { "type" : "date", "doc_values" : true  }
+        }
+      }, {
+        "geo_point_fields" : {
+          "match" : "*",
+          "match_mapping_type" : "geo_point",
+          "mapping" : { "type" : "geo_point", "doc_values" : true  }
+        }
+      } ],
+      "properties" : {
+        "@timestamp": { "type": "date", "doc_values" : true  },
+        "@version": { "type": "string", "index": "not_analyzed", "doc_values" : true  },
+        "geoip"  : {
+          "type" : "object",
+          "dynamic": true,
+          "properties" : {
+            "ip": { "type": "ip", "doc_values" : true  },
+            "location" : { "type" : "geo_point", "doc_values" : true  },
+            "latitude" : { "type" : "float", "doc_values" : true  },
+            "longitude" : { "type" : "float", "doc_values" : true  }
+          }
+        }
+      }
     }
   }
 }
@@ -138,9 +199,7 @@ Elasticsearch 会自动使用自己的默认分词器(空格，点，斜线等�
 
 * geo\_point
 
-Elasticsearch 支持 *geo_point* 类型， *geo distance* 聚合等等。比如说，你可以请求某个 *geo_point* 点方圆 10 千米内数据点的总数。在 Kibana 的 bettermap 类型面板里，就会用到这个类型的数据。
-
-#### 其他模板配置建议
+Elasticsearch 支持 *geo_point* 类型， *geo distance* 聚合等等。比如说，你可以请求某个 *geo_point* 点方圆 10 千米内数据点的总数。在 Kibana 的 tilemap 类型面板里，就会用到这个类型的数据。
 
 * doc\_values
 
@@ -150,47 +209,15 @@ doc\_values 是 Elasticsearch 1.0 版本引入的新特性。启用该特性的�
 
 doc\_values 只能给不分词(对于字符串字段就是设置了 `"index":"not_analyzed"`，数值和时间字段默认就没有分词) 的字段配置生效。
 
-doc\_values 虽然用的是磁盘，但是系统本身也有自带 VFS 的 cache 效果并不会太差。据官方测试，经过 1.4 的优化后，只比使用内存的 fielddata 慢 15% 。所以，在数据量较大的情况下，**强烈建议开启**该配置：
+doc\_values 虽然用的是磁盘，但是系统本身也有自带 VFS 的 cache 效果并不会太差。据官方测试，经过 1.4 的优化后，只比使用内存的 fielddata 慢 15% 。所以，在数据量较大的情况下，**强烈建议开启**该配置。
 
-```json
-{
-  "template" : "logstash-*",
-  "settings" : {
-    "index.refresh_interval" : "5s"
-  },
-  "mappings" : {
-    "_default_" : {
-       "_all" : {"enabled" : true},
-       "dynamic_templates" : [ {
-         "string_fields" : {
-           "match" : "*",
-           "match_mapping_type" : "string",
-           "mapping" : {
-             "type" : "string", "index" : "analyzed", "omit_norms" : true,
-               "fields" : {
-                 "raw" : { "type": "string", "index" : "not_analyzed", "ignore_above" : 256, "doc_values": true }
-               }
-           }
-         }
-       } ],
-       "properties" : {
-         "@version": { "type": "string", "index": "not_analyzed" },
-         "@timestamp": { "type": "date", "index": "not_analyzed", "doc_values": true, "format": "dateOptionalTime" },
-         "geoip"  : {
-           "type" : "object",
-             "dynamic": true,
-             "path": "full",
-             "properties" : {
-               "location" : { "type" : "geo_point" }
-             }
-         }
-       }
-    }
-  }
-}
-```
+**Elasticsearch 2.0 以后，`doc_values` 变成默认设置。这部分可以不再单独指定了。**
 
-Elasticsearch 2.0 以后，`doc_values` 变成默认设置。这部分可以不再单独指定了。
+* fielddata
+
+和 doc_values 对应的，则是 fielddata。在 Elasticsearch 2.x 全面启用 doc_values 后，Logstash 的默认 template 更干脆的加上了对 fielddata 的 `{"format":"disabled"}`。当你还对分词字段发起聚合和排序请求的时候，直接提示无法构建 fielddata 了！
+
+#### 其他模板配置建议
 
 * order
 
@@ -217,7 +244,3 @@ Elasticsearch 2.0 以后，`doc_values` 变成默认设置。这部分可以不�
 然后运行 `curl -XPUT http://localhost:9200/_template/template_newid -d '@/path/to/your/tmpl.json'` 即可。
 
 logstash 默认的模板， order 是 0，id 是 logstash，通过 logstash/outputs/elasticsearch 的配置选项 `template_name` 修改。你的新模板就不要跟这个名字冲突了。
-
-## 推荐阅读
-
-* <http://www.elasticsearch.org/guide>
