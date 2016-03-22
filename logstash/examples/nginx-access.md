@@ -48,7 +48,7 @@ filter {
         if [uri] {
             ruby {
                 init => "@kname = ['url_path','url_args']"
-                code => "event.append(Hash[@kname.zip(event['request'].split('?'))])"
+                code => "event.append(Hash[@kname.zip(event['uri'].split('?'))])"
             }
             kv {
                 prefix => "url_"
