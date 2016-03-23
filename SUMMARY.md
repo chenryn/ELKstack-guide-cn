@@ -125,6 +125,7 @@
        * [ElastAlert](elasticsearch/other/elastalert.md)
        * [时序数据库](elasticsearch/other/rrd.md)
        * [Grafana](elasticsearch/other/grafana.md)
+       * [juttle](elasticsearch/other/juttle.md)
        * [Etsy的Kale异常检测](elasticsearch/other/kale.md)
 * [Kibana](kibana/README.md)
    * [k3和k4的对比](kibana/difference.md)
