@@ -37,7 +37,7 @@ output {
 		authentication =>    "plain"
 		use_tls        =>    true
 		from           =>    "test@126.com"
-		subject        =>    "Error Alert"
+		subject        =>    "Warning: %{title}"
 		to             =>    "test@qq.com"
 		via            =>    "smtp"
 		body           =>    "%{message}"
