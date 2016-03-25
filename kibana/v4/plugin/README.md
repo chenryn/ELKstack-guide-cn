@@ -29,15 +29,13 @@ bin/kibana plugin -i elastic/timelion
 支持本地和远程 HTTP 下载两种，比如：
 
 ```
+bin/kibana plugin --install sense -u file:///tmp/sense-2.0.0-beta1.tar.gz
 bin/kibana plugin -i heatmap -u https://github.com/stormpython/heatmap/archive/master.zip
-bin/kibana plugin -i jVectorMapKibanaCountry -u https://github.com/snuids/jVectorMapKibanaCountry/archive/master.zip
-bin/kibana plugin -i kibi_wordcloud_vis -u  https://github.com/sirensolutions/kibi_wordcloud_vis/archive/0.1.0.zip
-bin/kibana plugin -i kibi_radar_vis -u  https://github.com/sirensolutions/kibi_radar_vis/archive/0.1.0.zip
 bin/kibana plugin -i kibi_timeline_vis -u https://github.com/sirensolutions/kibi_timeline_vis/raw/0.1.2/target/kibi_timeline_vis-0.1.2.zip
-bin/kibana plugin -i kbn_circles_vis -u https://github.com/JuanCarniglia/kbn_circles_vis/archive/master.zip
-bin/kibana plugin -i kbn_sunburst_vis -u https://github.com/JuanCarniglia/kbn_sunburst_vis/archive/master.zip
-bin/kibana plugin -i kbn_heatmap_vis -u https://github.com/JuanCarniglia/kbn_heatmap_vis/archive/master.zip
+bin/kibana plugin -i oauth2 -u https://github.com/trevan/oauth2/releases/download/0.1.0/oauth2-0.1.0.zip
 ```
+
+目前已知的 Kibana4 Plugin 列表见官方 WIKI：<https://github.com/elastic/kibana/wiki/Known-Plugins>
 
 注意：kibana 目前版本变动较大，不一定所有插件都可以成功使用
 
