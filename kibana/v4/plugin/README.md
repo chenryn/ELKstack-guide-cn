@@ -18,30 +18,28 @@ version 是可选项。这种方式目前适用于官方插件，比如：
 
 ```
 bin/kibana plugin -i elasticsearch/marvel/latest
-```
-
-2. 通过 GitHub 仓库地址：
-
-```
-bin/kibana plugin --install <github-user>/<github-repo>/<version>
-```
-
-这种方式目前适用于非官方，或官方还未发布的，寄存在 GitHub 上的插件代码，比如：
-
-```
 bin/kibana plugin -i elastic/timelion
-bin/kibana plugin -i snuids/jVectorMapKibanaCountry
-bin/kibana plugin -i sirensolutions/kibi_wordcloud_vis/0.1.0
-bin/kibana plugin -i sirensolutions/kibi_radar_vis/0.1.0
 ```
 
-3. 通过 zip 压缩包：
+```
+```
+
+2. 通过 zip 压缩包：
 
 支持本地和远程 HTTP 下载两种，比如：
 
 ```
 bin/kibana plugin -i heatmap -u https://github.com/stormpython/heatmap/archive/master.zip
+bin/kibana plugin -i jVectorMapKibanaCountry -u https://github.com/snuids/jVectorMapKibanaCountry/archive/master.zip
+bin/kibana plugin -i kibi_wordcloud_vis -u  https://github.com/sirensolutions/kibi_wordcloud_vis/archive/0.1.0.zip
+bin/kibana plugin -i kibi_radar_vis -u  https://github.com/sirensolutions/kibi_radar_vis/archive/0.1.0.zip
+bin/kibana plugin -i kibi_timeline_vis -u https://github.com/sirensolutions/kibi_timeline_vis/raw/0.1.2/target/kibi_timeline_vis-0.1.2.zip
+bin/kibana plugin -i kbn_circles_vis -u https://github.com/JuanCarniglia/kbn_circles_vis/archive/master.zip
+bin/kibana plugin -i kbn_sunburst_vis -u https://github.com/JuanCarniglia/kbn_sunburst_vis/archive/master.zip
+bin/kibana plugin -i kbn_heatmap_vis -u https://github.com/JuanCarniglia/kbn_heatmap_vis/archive/master.zip
 ```
+
+注意：kibana 目前版本变动较大，不一定所有插件都可以成功使用
 
 ## 查看与切换
 
