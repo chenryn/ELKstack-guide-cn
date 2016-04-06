@@ -79,7 +79,7 @@ mapping 中主要就是针对字段设置类型以及类型相关参数。那么
 2. ES 独有类型
 
 * 多重: multi
-* 经纬度: geo_point
+* 经纬度: geo\_point
 * 网络地址: ip
 * 堆叠对象: nested object
 * 二进制: binary
@@ -89,9 +89,12 @@ mapping 中主要就是针对字段设置类型以及类型相关参数。那么
 
 **注意：**
 
-ES 的映射虽然有 index 和 type 两层关系，但是实际索引时是以 index 为基础的。如果同一个 index 下不同 type 的字段出现 mapping 不一致的情况，虽然数据依然可以成功写入并生成各自的 mapping，但实际 fielddata 中的索引结果却依然是以 index 内第一个 mapping 类型来生成的。这种情况下可能会有比较奇怪的事情发生。比如看似 double 的数据实际存储成 long，导致数值比较的搜索结果异常。
+ES 的映射虽然有 index 和 type 两层关系，但是实际索引时是以 index 为基础的。如果同一个 index 下不同 type 的字段出现 mapping 不一致的情况，虽然数据依然可以成功写入并生成各自的 mapping，但实际 fielddata 中的索引结果却依然是以 index 内第一个 mapping 类型来生成的。这种情况下可能会有比较奇怪的事情发生。比如：
 
-从 Kibana4 开始，会在 Object Setting 页对该情况做出冲突预警；并预计在 ES 2.0 版本正式拒绝这种冲突数据写入。
+* 看似 double 的数据实际存储成 long，导致数值比较的搜索结果异常。
+* 同样的字段，一部分采用标准分词器，一部分采用中文分词器，导致索引查询异常。
+
+从 Kibana4 开始，会在 Object Setting 页对该情况做出冲突预警；并从 ES 2.0 版本开始正式拒绝这种冲突数据写入。
 
 ## 查看已有数据的映射
 
@@ -138,7 +141,7 @@ ES 的映射虽然有 index 和 type 两层关系，但是实际索引时是以 
 
 * analyzed
   默认选项，以标准的全文索引方式，分析字符串，完成索引。
-* not_analyzed
+* not\_analyzed
   精确索引，不对字符串做分析，直接索引字段内数据的精确内容。
 * no
   不索引该字段。
@@ -165,7 +168,9 @@ ES 的映射虽然有 index 和 type 两层关系，但是实际索引时是以 
 }
 ```
 
-而 ES 默认的时间字段格式，除了 `dateOptionalTime` 以外，还有一种，就是 `UNIX_MS`，毫秒级的 UNIX 时间戳。因为这个数值 ES 可以直接好不修改的存成内部实际的 long 数值。
+而 ES 默认的时间字段格式，除了 `dateOptionalTime` 以外，还有一种，就是 `epoch_millis`，毫秒级的 UNIX 时间戳。因为这个数值 ES 可以直接毫不修改的存成内部实际的 long 数值。此外，从 ES 2.0 开始，新增了对秒级 UNIX 时间戳的支持，其 `format` 定义为：`epoch_second`。
+
+注意：在 ES 2.x 中，同名 date 字段的 `format` 也必须保持一致。
 
 ### 多重索引
 
