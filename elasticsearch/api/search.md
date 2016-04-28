@@ -264,6 +264,50 @@ Kibana 分别在 v3 中使用 Facet，v4 中使用 Aggregation。不过总的来
 
 ES 目前能支持的聚合请求列表，参见：<https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html>。
 
-## See Also
+#### See Also
 
 Holt Winters 预测算法，见：<https://en.wikipedia.org/wiki/Holt-Winters>。其在运维领域最著名的运用是 RRDtool 中的 [HWPREDICT](http://rrdtool.org/rrdtool/doc/rrdtool.en.html)。
+
+## search 请求参数
+
+* from
+
+从索引的第几条数据开始返回，默认是 0；
+
+* size
+
+返回多少条数据，默认是 10。
+
+注意：Elasticsearch 集群实际是需要给 coordinate node 返回 `shards number * (from + size)` 条数据，然后在单机上进行排序，最后给客户端返回这个 size 大小的数据的。所以请谨慎使用 from 和 size 参数。
+
+此外，Elasticsearch 2.x 还新增了一个索引级别的动态控制配置项：`index.max_result_window`，默认为 10000。即 `from + size` 大于 10000 的话，Elasticsearch 直接拒绝掉这次请求不进行具体搜索，以保护节点。
+
+另外，Elasticsearch 2.x 还提供了一个小优化：当设置 `"size":0` 时，自动改变 `search_type` 为 count。跳过搜索过程的 fetch 阶段。
+
+* timeout
+
+coordinate node 等待超时时间。到达该阈值后，coordinate node 直接把当前收到的数据返回给客户端，不再继续等待 data node 后续的返回了。
+
+** 注意：这个参数只是为了配合客户端程序，并不能取消掉 data node 上搜索任务还在继续运行和占用资源。**
+
+* terminate\_after
+
+各 data node 上，扫描单个分片时，找到多少条记录后，就认为足够了。这个参数可以切实保护 data node 上搜索任务不会长期运行和占用资源。但是也就意味着搜索范围没有覆盖全部索引，是一个抽样数据。准确率是不好判断的。
+
+* request\_cache
+
+各 data node 上，在分片级别，对请求的响应(仅限于 `hits.total` 数值、aggregation 和 suggestion 的结果集)做的缓存。注意：这个缓存的键值要求很严格，请求的 JSON 必须一字不易，缓存才能命中。
+
+另外，`request_cache` 参数不能写在请求 JSON 里，只能以 URL 参数的形式存在。示例如下：
+
+```
+curl -XPOST http://localhost:9200/_search?request_cache=true -d '
+{
+    "size" : 0,
+    "timeout" : "120s",
+    "terminate_after" : 1000000,
+    "query" : { "match_all" : {} },
+    "aggs" : { "terms" : { "terms" : { "field" : "keyname" } } }
+}
+'
+```
