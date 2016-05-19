@@ -18,7 +18,11 @@ filter {
     if [errinfo]
     {
         ruby {
-            code => "event.append(Hash[event['errinfo'].split(', ').map{|l| l.split(': ')}])"
+            code => "
+                new_event = LogStash::Event.new(Hash[event['errinfo'].split(', ').map{|l| l.split(': ')}])
+                new_event.remove('@timestamp')
+                event.append(new_event)""
+            "
         }
     }
     grok {
