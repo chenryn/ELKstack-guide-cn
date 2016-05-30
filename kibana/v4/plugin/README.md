@@ -21,9 +21,6 @@ bin/kibana plugin -i elasticsearch/marvel/latest
 bin/kibana plugin -i elastic/timelion
 ```
 
-```
-```
-
 2. 通过 zip 压缩包：
 
 支持本地和远程 HTTP 下载两种，比如：

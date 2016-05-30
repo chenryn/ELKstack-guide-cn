@@ -27,7 +27,7 @@ ELK Stack 在最近两年迅速崛起，成为机器数据分析，或者说实�
 
 由于 ELK Stack 处于高速迭代状态，特标明本书知识主要针对的具体版本号：
 
-* Logstash-2.2
+* Logstash-2.3
 * Elasticsearch-2.x
 * Kibana-4.4
 * beats-1.0.1
