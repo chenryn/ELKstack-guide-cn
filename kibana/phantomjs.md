@@ -16,7 +16,11 @@ phantomjs 在 Linux 平台上没有二进制分发包，所以必须源代码编
 # ./build.sh
 ```
 
-想要给 kibana 页面截图，几行代码就够了。`capture-kibana.js` 示例如下：
+想要给 kibana 页面截图，几行代码就够了。
+
+## Kibana3 截屏代码
+
+下面是一个 Kibana3 的截屏示例。 `capture-kibana.js` 如下：
 
 ```
 var page = require('webpage').create();
@@ -42,3 +46,9 @@ page.open(address, function (status) {
 
 1. 要设置 `viewportSize` 里的宽度，否则效果会变成单个 panel 依次往下排列。
 3. 要设置 `setTimeout`，否则在获取完 index.html 后就直接返回了，只能看到一个大白板。用 phantomjs 截取 angularjs 这类单页 MVC 框架应用时一定要设置这个。
+
+## Kibana4 的截屏开源项目
+
+Kibana4 的 dashboard 同样可以采取上面 Kibana3 的方式自己实现。不过社区最近有人完成了一个辅助项目，把截屏配置、历史记录展示等功能都界面化了。项目地址见：<https://github.com/parvez/snapshot_for_kibana>。
+
+![](https://raw.githubusercontent.com/parvez/snapshot_for_kibana/master/screenshots/4.%20schedule.png)
