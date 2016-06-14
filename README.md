@@ -23,6 +23,8 @@ ELK Stack 在最近两年迅速崛起，成为机器数据分析，或者说实�
 
 ![ercode](kibana/v3/img/alipay.png)
 
+![](http://ww1.sinaimg.cn/large/3dbd9afajw1f4o47wdqdfj20sr1f4grb.jpg)
+
 # Version
 
 由于 ELK Stack 处于高速迭代状态，特标明本书知识主要针对的具体版本号：
