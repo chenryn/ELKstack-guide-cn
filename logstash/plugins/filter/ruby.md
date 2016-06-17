@@ -11,7 +11,7 @@ filter {
     ruby {
         init => "@kname = ['client','servername','url','status','time','size','upstream','upstreamstatus','upstreamtime','referer','xff','useragent']"
         code => "
-            new_event = LogStash::Event.new(Hash[@kname.zip(event['message'].split('|'))])
+            new_event = LogStash::Event.new(Hash[@kname.zip(event.get('message').split('|'))])
             new_event.remove('@timestamp')
             event.append(new_event)"
     }
@@ -30,7 +30,9 @@ filter {
 
 *filters/mutate* 插件里的 "split" 选项只能切成数组，后续很不方便使用和识别。而在 *filters/ruby* 里，我们可以通过 "init" 参数预定义好由每个新字段的名字组成的数组，然后在 "code" 参数指定的 Ruby 语句里通过两个数组的 zip 操作生成一个哈希并添加进数组里。短短一行 Ruby 代码，可以减少 50% 以上的 CPU 使用率。
 
-注：从 Logstash-2.3 开始，`LogStash::event.append` 不再直接接受 Hash 对象，而必须是 `LogStash::Event` 对象。所以示例变成要先初始化一个新 event，再把无用的 `@timestamp` 移除，再 append 进去。否则会把 `@timestamp` 变成有两个时间的数组了！
+注1：从 Logstash-2.3 开始，`LogStash::Event.append` 不再直接接受 Hash 对象，而必须是 `LogStash::Event` 对象。所以示例变成要先初始化一个新 event，再把无用的 `@timestamp` 移除，再 append 进去。否则会把 `@timestamp` 变成有两个时间的数组了！
+
+注2：从 Logstash-5.0 开始，`LogStash::Event` 改为 Java 实现，直接使用 `event["parent"]["child"]` 形式获取的不是原事件的引用而是复制品。需要改用 `event.get('[parent][child]')` 和 `event.set('[parent][child]', 'value')` 的方法。
 
 *filters/ruby* 插件用途远不止这一点，下一节你还会继续见到它的身影。
 

@@ -19,7 +19,7 @@ filter {
     {
         ruby {
             code => "
-                new_event = LogStash::Event.new(Hash[event['errinfo'].split(', ').map{|l| l.split(': ')}])
+                new_event = LogStash::Event.new(Hash[event.get('errinfo').split(', ').map{|l| l.split(': ')}])
                 new_event.remove('@timestamp')
                 event.append(new_event)""
             "

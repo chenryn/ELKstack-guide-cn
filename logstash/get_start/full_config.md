@@ -165,3 +165,15 @@ logstash 列出目录下所有文件时，是字母排序的。而 logstash 配�
 * --debug
 
 输出更多的调试日志。
+
+## 设置文件
+
+从 Logstash 5.0 开始，新增了 `$LS_HOME/config/logstash.yml` 文件，可以将所有的命令行参数都通过 YAML 文件方式设置。同时为了反映命令行配置参数的层级关系，参数也都改成用.而不是-了。
+
+```YAML
+pipeline:
+    workers: 24
+    batch:
+        size: 125
+        delay: 5
+```

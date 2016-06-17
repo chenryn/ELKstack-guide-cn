@@ -53,6 +53,7 @@
        * [监控方案](logstash/performance/monitor/README.md)
            * [logstash-input-heartbeat方式](logstash/performance/monitor/heartbeat.md)
            * [jmx启动参数方式](logstash/performance/monitor/jmx.md)
+           * [API方式](logstash/performance/monitor/api.md)
    * [扩展方案](logstash/scale/README.md)
        * [通过redis传输](logstash/scale/redis.md)
        * [通过kafka传输](logstash/scale/kafka.md)

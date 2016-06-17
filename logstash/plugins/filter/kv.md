@@ -9,7 +9,7 @@ filter {
     ruby {
         init => "@kname = ['method','uri','verb']"
         code => "
-            new_event = LogStash::Event.new(Hash[@kname.zip(event['request'].split('|'))])
+            new_event = LogStash::Event.new(Hash[@kname.zip(event.get('request').split('|'))])
             new_event.remove('@timestamp')
             event.append(new_event)""
         "
@@ -18,7 +18,7 @@ filter {
         ruby {
             init => "@kname = ['url_path','url_args']"
             code => "
-                new_event = LogStash::Event.new(Hash[@kname.zip(event['uri'].split('?'))])
+                new_event = LogStash::Event.new(Hash[@kname.zip(event.get('uri').split('?'))])
                 new_event.remove('@timestamp')
                 event.append(new_event)""
             "

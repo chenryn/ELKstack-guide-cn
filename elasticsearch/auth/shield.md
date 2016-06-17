@@ -12,7 +12,7 @@ Shield 是 Elastic 公司官方发布的权限管理产品。其主要特性包�
 
 ## License管理策略
 
-Shield 是一款商业产品，不过提供 30 天免费试用，使用期间是全功能的。过期后 Shield 将会在降级模式下工作，此模式下对 cluster health、cluster stats 以及 index stats 等接口的访问将被阻止无法使用。
+Shield 是一款商业产品，不过提供 30 天免费试用，试用期间是全功能的。过期后集群会不再正常工作。
 
 ## Shield架构
 
