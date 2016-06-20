@@ -85,6 +85,7 @@
        * [routing和replica的读写过程](elasticsearch/principle/route-and-replica.md)
        * [shard的allocate控制](elasticsearch/principle/shard-allocate.md)
        * [自动发现的配置](elasticsearch/principle/auto-discovery.md)
+   * [Ingest节点](elasticsearch/ingest.md)
    * [接口使用示例](elasticsearch/api/README.md)
        * [增删改查操作](elasticsearch/api/CRUD.md)
        * [搜索请求](elasticsearch/api/search.md)
