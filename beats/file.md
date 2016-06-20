@@ -54,6 +54,8 @@ filebeat:
             paths:
                 - /var/log/system.log                   # 指明读取文件的位置
                 - /var/log/wifi.log
+            include_lines: ["^ERR", "^WARN"]            # 只发送包含这些字样的日志
+            exclude_lines: ["^OK"]                      # 不发送包含这些字样的日志
         -
             document_type: "apache"                     # 定义写入 ES 时的 _type 值
             ignore_older: "24h"                         # 超过 24 小时没更新内容的文件不再监听。在windows上另外有一个配置叫force_close_files，只要文件名一变化立刻关闭文件句柄，保证文件可以被删除，缺陷是可能会有日志还没读完
@@ -63,8 +65,13 @@ filebeat:
             backoff: "1s"                               # 每 1 秒检测一次文件是否有新的一行内容需要读取
             paths:
                 - "/var/log/apache/*"                   # 可以使用通配符
+            exclude_files: ["/var/log/apache/error.log"]
         -
             input_type: "stdin"                         # 除了 "log"，还有 "stdin"
+            multiline:                                  # 多行合并
+                pattern: '^[[:space:]]'
+                negate: false
+                match: after
 output:
     ...
 ```

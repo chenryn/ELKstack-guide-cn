@@ -6,8 +6,6 @@ Beats 平台是 Elastic.co 从 packetbeat 发展出来的数据收集器系统�
 
 ## filter
 
-5.0 版本后，beats 新增了简单的 filter 功能，用来完成事件过滤和字段删减：
-
 ```
 filters:
     - drop_event:
@@ -40,7 +38,6 @@ beats 发送到 Elasticsearch 也是走 HTTP 接口。示例配置段如下：
 output:
     elasticsearch:
         hosts: ["http://localhost:9200", "https://onesslip:9200/path", "anotherip"]
-        parameters: {pipeline: my_pipeline_id}                         # 仅用于 Elasticsearch 5.0 以后的 ingest 方式
         username: "user"
         password: "pwd"
         index: "topbeat"
