@@ -55,7 +55,7 @@ rule 设置各自独立以文件方式存储在 `rules_folder` 设置的目录�
 
 * `name` 配置，每个 rule 需要有自己独立的 name，一旦重复，进程将无法启动。
 * `type` 配置，选择某一种数据验证方式。
-* `index` 配置，从某类索引里读取数据，目前只支持通配符。
+* `index` 配置，从某类索引里读取数据，目前已经支持Ymd格式，需要先设置use_strftime_index: true，然后匹配索引，配置形如：index: logstash-es-test-%Y.%m.%d，表示匹配logstash-es-test名称开头，以年月日作为索引后缀的index。
 * `filter` 配置，设置向 ES 请求的过滤条件。
 * `timeframe` 配置，累积触发报警的时长。
 * `alert` 配置，设置触发报警时执行哪些报警手段。
