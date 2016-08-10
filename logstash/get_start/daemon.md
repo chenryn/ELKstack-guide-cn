@@ -12,7 +12,7 @@
 
 以 RPM 为例，`/etc/init.d/logstash` 脚本中，会加载 `/etc/init.d/functions` 库文件，利用其中的 `daemon` 函数，将 logstash 进程作为后台程序运行。
 
-所以，你只需把自己写好的配置文件，统一放在 `/etc/logstash/` 目录下(注意目录下所有配置文件都应该是 **.conf** 结尾，且不能有其他文本文件存在。因为 logstash agent 启动的时候是读取全文件夹的)，然后运行 `service logstash start` 命令即可。
+所以，你只需把自己写好的配置文件，统一放在 `/etc/logstash/conf.d` 目录下(注意目录下所有配置文件都应该是 **.conf** 结尾，且不能有其他文本文件存在。因为 logstash agent 启动的时候是读取全文件夹的)，然后运行 `service logstash start` 命令即可。
 
 ## 最基础的 nohup 方式
 
