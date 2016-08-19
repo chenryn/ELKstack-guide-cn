@@ -17,7 +17,7 @@ filter {
     }
     if "metric" in [tags] {
         ruby {
-            code => "event.cancel if event.get('[error_504][rate_1m]') * 60 < 100"
+            code => "event.cancel if (event.get('[error_504][rate_1m]') * 60 > 100)"
         }
     }
 }
