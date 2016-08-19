@@ -208,7 +208,7 @@ access_log syslog:server=unix:/data0/rsyslog/nginx.sock locallog;
 或者直接发送给远程 logstash 机器：
 
 ```
-access_log syslog:server=192.168.0.2:5140,facility=local6,tag=nginx-access,severity=info logstashlog;
+access_log syslog:server=192.168.0.2:5140,facility=local6,tag=nginx_access,severity=info logstashlog;
 ```
 
 默认情况下，Nginx 将使用 `local7.info` 等级，`nginx` 为标签，发送数据。注意，采用 syslog 发送日志的时候，无法配置 `buffer=16k` 选项。
