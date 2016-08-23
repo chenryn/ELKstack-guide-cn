@@ -51,7 +51,7 @@ logstash 每隔多久检查一次被监听文件状态（是否有更新），�
 
 * start_position
 
-logstash 从什么位置开始读取文件数据，默认是结束位置，也就是说 logstash 进程会以类似 `tail -F` 的形式运行。如果你是要导入原有数据，把这个设定改成 "beginning"，logstash 进程就从头开始读取，有点类似 `cat`，但是读到最后一行不会终止，而是继续变成 `tail -F`。
+logstash 从什么位置开始读取文件数据，默认是结束位置，也就是说 logstash 进程会以类似 `tail -F` 的形式运行。如果你是要导入原有数据，把这个设定改成 "beginning"，logstash 进程就从头开始读取，类似 `less -F` 的形式运行。
 
 ## 注意
 
