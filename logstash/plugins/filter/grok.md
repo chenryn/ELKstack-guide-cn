@@ -55,9 +55,9 @@ USERNAME [a-zA-Z0-9._-]+
 USER %{USERNAME}
 ```
 
-**第一行，用普通的正则表达式来定义一个 grok 表达式；第二行，通过打印赋值格式，用前面定义好的 grok 表达式来定义另一个 grok 表达式。**
+**第一行，用普通的正则表达式来定义一个 grok 表达式；第二行，通过打印赋值格式(sprintf format)，用前面定义好的 grok 表达式来定义另一个 grok 表达式。**
 
-grok 表达式的打印复制格式的完整语法是下面这样的：
+grok 表达式的打印赋值格式的完整语法是下面这样的：
 
 ```
 %{PATTERN_NAME:capture_name:data_type}
