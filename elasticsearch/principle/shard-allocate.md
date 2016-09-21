@@ -96,7 +96,7 @@ curl -XPOST 127.0.0.1:9200/_cluster/reroute -d '{
 集群中个别节点出现故障预警等情况，需要下线，也是 Elasticsearch 运维工作中常见的情况。如果已经稳定运行过一段时间的集群，每个节点上都会保存有数量不少的分片。这种时候通过 reroute 接口手动转移，就显得太过麻烦了。这个时候，有另一种方式：
 
 ```
-curl -XPOST 127.0.0.1:9200/_cluster/settings -d '{
+curl -XPUT 127.0.0.1:9200/_cluster/settings -d '{
   "transient" :{
       "cluster.routing.allocation.exclude._ip" : "10.0.0.1"
    }
