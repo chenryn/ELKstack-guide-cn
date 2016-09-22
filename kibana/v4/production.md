@@ -99,4 +99,4 @@ Kibana 同时支持对客户端请求以及 Kibana 服务器发往 Elasticsearch
 
 你可以用 [Elasticsearch Shield](http://www.elasticsearch.org/overview/shield/) 来控制用户通过 Kibana 可以访问到的 Elasticsearch 数据。Shield 提供了索引级别的访问控制。如果一个用户没被许可运行这个请求，那么它在 Kibana 可视化界面上只能看到一个空白。
 
-要配置 Kibana 使用 Shield，你要位 Kibana 创建一个或者多个 Shield 角色(role)，以 `kibana4` 作为开头的默认角色。更详细的做法，请阅读 [Using Shield with Kibana 4](http://www.elasticsearch.org/guide/en/shield/current/_shield_with_kibana_4.html)。
+要配置 Kibana 使用 Shield，你要为 Kibana 创建一个或者多个 Shield 角色(role)，以 `kibana4` 作为开头的默认角色。更详细的做法，请阅读 [Using Shield with Kibana 4](http://www.elasticsearch.org/guide/en/shield/current/_shield_with_kibana_4.html)。
