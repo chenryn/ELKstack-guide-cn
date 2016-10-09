@@ -23,7 +23,7 @@ filter {
         }
     }
 }
-output {stdout{}}
+output {stdout{codec => rubydebug}}
 ```
 
 运行 logstash 进程然后输入 "begin 123.456 end"，你会看到类似下面这样的输出：
