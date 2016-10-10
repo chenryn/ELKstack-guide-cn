@@ -111,6 +111,8 @@ filter {
 }
 ```
 
+更多有关 grok 正则性能的最佳实践(`timeout_millis` 等)，见：<https://www.elastic.co/blog/do-you-grok-grok>
+
 ## 小贴士
 
 ### 多行匹配
