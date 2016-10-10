@@ -51,6 +51,21 @@ ES 提供了一系列参数详细控制这部分逻辑：
 
 注意，这里配置的是 5 而不是 4。因为我们需要预防有机器故障，分片发生迁移的情况。如果写的是 4，那么分片迁移会失败。
 
+此外，另一种方式则更加玄妙，Elasticsearch 中有一系列参数，相互影响，最终联合决定分片分配：
+
+* cluster.routing.allocation.balance.shard
+  节点上分配分片的权重，默认为 0.45。数值越大越倾向于在节点层面均衡分片。
+* cluster.routing.allocation.balance.index
+  每个索引往单个节点上分配分片的权重，默认为 0.55。数值越大越倾向于在索引层面均衡分片。
+* cluster.routing.allocation.balance.threshold
+  大于阈值则触发均衡操作。默认为1。
+
+Elasticsearch 中的计算方法是：
+
+(indexBalance * (node.numShards(index) – avgShardsPerNode(index)) + shardBalance * (node.numShards() – avgShardsPerNode)) <=> weightthreshold
+
+所以，也可以采取加大 `cluster.routing.allocation.balance.index`，甚至设置 `cluster.routing.allocation.balance.shard` 为 0 来尽量采用索引内的节点均衡。
+
 ## reroute 接口
 
 上面说的各种配置，都是从策略层面，控制分片分配的选择。在必要的时候，还可以通过 ES 的 reroute 接口，手动完成对分片的分配选择的控制。
