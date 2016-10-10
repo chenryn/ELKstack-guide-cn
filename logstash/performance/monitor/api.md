@@ -2,11 +2,24 @@
 
 Logstash 5.0 开始，提供了输出自身进程的指标和状态监控的 API。这大大降低了我们监控 Logstash 的难度。
 
-目前 API 主要有两类：
+目前 API 主要有四类：
+
+* 节点信息
+* 插件信息
+* 节点指标
+* 热线程统计
+
+### 节点信息
+
+node info 接口目前支持三种类型：pipeline、os、jvm。没什么要紧的。
+
+### 插件信息
+
+用来列出已安装插件的名称和版本。
 
 ### 节点指标
 
-node stats 接口目前支持三种类型的指标：
+node stats 接口目前支持四种类型的指标：
 
 #### events
 
@@ -79,6 +92,75 @@ curl -s localhost:9600/_node/stats/process?pretty=true
 ```
 
 目前 beats 家族有个 [logstashbeat](https://github.com/consulthys/logstashbeat) 项目，就是专门采集这个数据的。
+
+#### pipeline
+
+获取该指标的方式为：
+
+```
+curl -s localhost:9600/_node/stats/pipeline?pretty=true
+```
+
+该指标的响应结果示例如下：
+
+```json
+{
+    "pipeline": {
+        "events": {
+            "duration_in_millis": 7863504,
+            "in": 100,
+            "filtered": 100,
+            "out": 100
+        },
+        "plugins": {
+            "inputs": [],
+            "filters": [
+                {
+                    "id": "grok_20e5cb7f7c9e712ef9750edf94aefb465e3e361b-2",
+                    "events": {
+                        "duration_in_millis": 48,
+                        "in": 100,
+                        "out": 100
+                    },
+                    "matches": 100,
+                    "patterns_per_field": {
+                        "message": 1
+                    },
+                    "name": "grok"
+                },
+                {
+                    "id": "geoip_20e5cb7f7c9e712ef9750edf94aefb465e3e361b-3",
+                    "events": {
+                        "duration_in_millis": 141,
+                        "in": 100,
+                        "out": 100
+                    },
+                    "name": "geoip"
+                }
+            ],
+            "outputs": [
+                {
+                    "id": "20e5cb7f7c9e712ef9750edf94aefb465e3e361b-4",
+                    "events": {
+                        "in": 100,
+                        "out": 100
+                    },
+                    "name": "elasticsearch"
+                }
+            ]
+        },
+        "reloads": {
+            "last_error": null,
+            "successes": 0,
+            "last_success_timestamp": null,
+            "last_failure_timestamp": null,
+            "failures": 0
+        }
+    }
+}
+```
+
+可以看到它这里显示了每个插件的日志处理情况(数量、耗时等)，尤其是 grok 过滤器插件，还显示出来了正则匹配失败的数量、每个字段匹配的正则表达式个数等很有用的排障和性能调优信息。
 
 ### 热线程统计
 
