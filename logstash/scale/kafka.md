@@ -139,7 +139,7 @@ logstash 启动后从什么位置开始读取数据，默认是结束位置，�
 ```
  output {
     kafka {
-        broker_list => "localhost:9092"
+        bootstrap_servers => "localhost:9092"
         topic_id => "test"
         compression_codec => "snappy" # string (optional)， one of ["none"， "gzip"， "snappy"]， default: "none"
     }
