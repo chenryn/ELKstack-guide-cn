@@ -35,7 +35,7 @@ Lucene 把每次生成的倒排索引，叫做一个段(segment)。然后另外�
 
 这一步刷到文件系统缓存的步骤，在 Elasticsearch 中，是默认设置为 1 秒间隔的，对于大多数应用来说，几乎就相当于是实时可搜索了。Elasticsearch 也提供了单独的 `/_refresh` 接口，用户如果对 1 秒间隔还不满意的，可以主动调用该接口来保证搜索可见。
 
-不过对于 ELK Stack 的日志场景来说，恰恰相反，我们并不需要如此高的实时性，而是需要更快的写入性能。所以，一般来说，我们反而会通过 `/_settings` 接口或者定制 template 的方式，加大 `refresh_interval` 参数：
+不过对于 Elastic Stack 的日志场景来说，恰恰相反，我们并不需要如此高的实时性，而是需要更快的写入性能。所以，一般来说，我们反而会通过 `/_settings` 接口或者定制 template 的方式，加大 `refresh_interval` 参数：
 
 ```
 # curl -XPOST http://127.0.0.1:9200/logstash-2015.06.21/_settings -d'

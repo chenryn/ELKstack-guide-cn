@@ -12,7 +12,7 @@ pip install elasticsearch-curator
 
 ## 参数介绍
 
-和 ELK Stack 里其他组件一样，curator 也是被 Elastic.co 收购的原开源社区周边。收编之后同样进行了一次重构，命令行参数从单字母风格改成了长单词风格。新版本的 curator 命令可用参数如下：
+和 Elastic Stack 里其他组件一样，curator 也是被 Elastic.co 收购的原开源社区周边。收编之后同样进行了一次重构，命令行参数从单字母风格改成了长单词风格。新版本的 curator 命令可用参数如下：
 
 > Usage: curator [OPTIONS] COMMAND [ARGS]...
 

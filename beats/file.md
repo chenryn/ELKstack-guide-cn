@@ -1,6 +1,6 @@
 # filebeat
 
-filebeat 是基于原先 logstash-forwarder 的源码改造出来的。换句话说：filebeat 就是新版的 logstash-forwarder，也会是 ELK Stack 在 shipper 端的第一选择。
+filebeat 是基于原先 logstash-forwarder 的源码改造出来的。换句话说：filebeat 就是新版的 logstash-forwarder，也会是 Elastic Stack 在 shipper 端的第一选择。
 
 ![](https://www.elastic.co/guide/en/beats/filebeat/current/images/filebeat.png)
 

@@ -2,7 +2,7 @@
 
 目前 packetbeat 支持的网络协议有：HTTP，MySQL，PostgreSQL，Redis，Thrift，DNS，MongoDB，Memcache。
 
-对于很多 ELK Stack 新手来说，面对的很可能就是几种常用数据流，而书写 logstash 正则是一个耗时耗力的重复劳动，文件落地本身又是多余操作，packetbeat 的运行方式，无疑是对新手入门极大的帮助。
+对于很多 Elastic Stack 新手来说，面对的很可能就是几种常用数据流，而书写 logstash 正则是一个耗时耗力的重复劳动，文件落地本身又是多余操作，packetbeat 的运行方式，无疑是对新手入门极大的帮助。
 
 ## 安装部署
 

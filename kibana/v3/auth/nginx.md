@@ -1,6 +1,6 @@
 # nginx 代理和简单权限验证
 
-Kibana3 作为一个纯静态文件式的单页应用，可以运行在任意主机上，却要求所有用户的浏览器，都可以直连 ELasticsearch 集群。这对网络和数据安全都是极为不利的。所以，一般在生产环境的 ELK Stack，都是采取 HTTP 代理层的方式来做一层防护。最简单的办法，就是使用 Nginx 代理配置。
+Kibana3 作为一个纯静态文件式的单页应用，可以运行在任意主机上，却要求所有用户的浏览器，都可以直连 ELasticsearch 集群。这对网络和数据安全都是极为不利的。所以，一般在生产环境的 Elastic Stack，都是采取 HTTP 代理层的方式来做一层防护。最简单的办法，就是使用 Nginx 代理配置。
 
 ES 官方也提供了一个推荐配置：<https://github.com/elastic/kibana/blob/3.0/sample/nginx.conf>
 

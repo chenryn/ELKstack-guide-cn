@@ -157,7 +157,7 @@ ES 的映射虽然有 index 和 type 两层关系，但是实际索引时是以 
 
 ### 时间格式
 
-稍微见过 ELK Stack 示例的人，都对其中 `@timestamp` 字段的特殊格式有深刻的印象。这个时间格式在 Nginx 中叫 `$time_iso8601`，在 Rsyslog 中叫 `date-rfc3339`，在 ES 中叫 `dateOptionalTime`。但事实上，ES 完全可以接收其他时间格式作为时间字段的内容。对于 ES 来说，时间字段内容实际都是转换成 long 类型作为内部存储的。所以，接收段的时间格式，可以任意配置：
+稍微见过 Elastic Stack 示例的人，都对其中 `@timestamp` 字段的特殊格式有深刻的印象。这个时间格式在 Nginx 中叫 `$time_iso8601`，在 Rsyslog 中叫 `date-rfc3339`，在 ES 中叫 `dateOptionalTime`。但事实上，ES 完全可以接收其他时间格式作为时间字段的内容。对于 ES 来说，时间字段内容实际都是转换成 long 类型作为内部存储的。所以，接收段的时间格式，可以任意配置：
 
 ```
 "@timestamp" : {

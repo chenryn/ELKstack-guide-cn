@@ -111,7 +111,7 @@ get 这里显示的是直接使用 `_id` 读取数据的状态。
         },
 ```
 
-merges 数据分为两部分，current 开头的是当前正在发生的段合并行为统计；total 开头的是历史总计数。一般来说，作为 ELK Stack 应用，都是以数据写入压力为主的，merges 相关数据会比较突出。
+merges 数据分为两部分，current 开头的是当前正在发生的段合并行为统计；total 开头的是历史总计数。一般来说，作为 Elastic Stack 应用，都是以数据写入压力为主的，merges 相关数据会比较突出。
 
 6. 过滤器缓存：
 
@@ -122,7 +122,7 @@ merges 数据分为两部分，current 开头的是当前正在发生的段合�
         },
 ```
 
-*filter_cache.memory_size_in_bytes* 表示过滤器缓存使用的内存，*filter_cache.evictions* 表示因内存满被回收的缓存大小，这个数如果较大，说明你的过滤器缓存大小不足，或者过滤器本身不太适合缓存。比如在 ELK Stack 场景中常用的时间过滤器，如果使用 `@timestamp:["now-1d" TO "now"]` 这种表达式的话，需要每次计算 now 值，就没法长期缓存。事实上，Kibana 中通过 timepicker 生成的 filtered 请求里，对 `@timestamp` 部分就并不是直接使用 `"now"`，而是在浏览器上计算成毫秒数值，再发送给 ES 的。
+*filter_cache.memory_size_in_bytes* 表示过滤器缓存使用的内存，*filter_cache.evictions* 表示因内存满被回收的缓存大小，这个数如果较大，说明你的过滤器缓存大小不足，或者过滤器本身不太适合缓存。比如在 Elastic Stack 场景中常用的时间过滤器，如果使用 `@timestamp:["now-1d" TO "now"]` 这种表达式的话，需要每次计算 now 值，就没法长期缓存。事实上，Kibana 中通过 timepicker 生成的 filtered 请求里，对 `@timestamp` 部分就并不是直接使用 `"now"`，而是在浏览器上计算成毫秒数值，再发送给 ES 的。
 
 请注意，过滤器缓存是建立在 segment 基础上的，在当天新日志的索引中，存在大量的或多或少的 segments。一个已经 5GB 大小的 segment，和一个刚刚 2MB 大小的 segment，发生一次 *filter_cache.evictions* 对搜索性能的影响区别是巨大的。但是节点状态中本身这个计数并不能反应这点区别。所以，尽力减少这个数值，但如果搜索本身感觉不慢，那么有几个也无所谓。
 
@@ -134,7 +134,7 @@ merges 数据分为两部分，current 开头的是当前正在发生的段合�
         },
 ```
 
-*id_cache* 是 parent/child mappings 使用的内存。不过在 ELK Stack 场景中，一般不会用到这个特性，所以此处数据应该一直是 0。
+*id_cache* 是 parent/child mappings 使用的内存。不过在 Elastic Stack 场景中，一般不会用到这个特性，所以此处数据应该一直是 0。
 
 8. fielddata：
 

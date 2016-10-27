@@ -4,7 +4,7 @@ Elasticsearch 作为一个新兴项目，版本更新非常快。而且每次版
 
 按照 ES 官方设计，有 restart upgrade 和 rolling upgrade 两种可选的升级方式。对于 1.0 版本以上的用户，推荐采用 rolling upgreade 方式。
 
-**但是，对于主要负载是数据写入的 ELK Stack 场景来说，却并不是这样！**
+**但是，对于主要负载是数据写入的 Elastic Stack 场景来说，却并不是这样！**
 
 rolling upgrade 的步骤大致如下：
 
