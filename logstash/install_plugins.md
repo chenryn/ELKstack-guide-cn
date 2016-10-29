@@ -52,7 +52,7 @@ bin/plugin update logstash-input-tcp
 bin/plugin install /path/to/logstash-filter-crash.gem
 ```
 
-执行成功以后。你会发现，logstash-1.5.0 目录下的 Gemfile 文件最后会多出一段内容：
+执行成功以后。你会发现，logstash-5.0.0 目录下的 Gemfile 文件最后会多出一段内容：
 
 ```
 gem "logstash-filter-crash", "1.1.0", :path => "vendor/local_gems/d354312c/logstash-filter-mweibocrash-1.1.0"

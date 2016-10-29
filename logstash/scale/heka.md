@@ -4,6 +4,8 @@ heka 是 Mozilla 公司仿造 logstash 设计，用 Golang 重写的一个开源
 
 官网地址见：<http://hekad.readthedocs.org/>
 
+_Mozilla 员工已经在 2016 年中宣布放弃对 heka 项目的维护，但是社区依然坚持推动了部分代码更新和新版发布。所以本书继续保留 heka 的使用介绍。_
+
 下面是同样的处理逻辑，通过 syslog 接收 nginx 访问日志，解析并存储进 Elasticsearch，heka 配置文件如下：
 
 ```ini

@@ -1,6 +1,6 @@
 # 自己写一个插件
 
-前面已经提过在运行 logstash-1.4.2 的时候，可以通过 `--pluginpath` 参数来加载自己写的插件。那么，插件又该怎么写呢？
+前面已经提过在运行 logstash 的时候，可以通过 `--pluginpath` 参数来加载自己写的插件。那么，插件又该怎么写呢？
 
 ## 插件格式
 
@@ -11,7 +11,7 @@ require 'logstash/namespace'
 require 'logstash/inputs/base'
 class LogStash::Inputs::MyPlugin < LogStash::Inputs::Base
   config_name 'myplugin'
-  milestone 1
+  default :codec, "line"
   config :myoption_key, :validate => :string, :default => 'myoption_value'
   public def register
   end
@@ -22,47 +22,51 @@ end
 
 其中大多数语句在过滤器和输出阶段是共有的。
 
-* config_name 用来定义该插件写在 logstash 配置文件里的名字；
-* milestone 标记该插件的开发里程碑，一般为1，2，3，如果不再维护的，标记为 0；
+* config\_name 用来定义该插件写在 logstash 配置文件里的名字；
 * config 可以定义很多个，即该插件在 logstash 配置文件中的可配置参数。logstash 很温馨的提供了验证方法，确保接收的数据是你期望的数据类型；
 * register logstash 在启动的时候运行的函数，一些需要常驻内存的数据，可以在这一步先完成。比如对象初始化，*filters/ruby* 插件中的 `init` 语句等。
 
-*小贴士*
-
-milestone 级别在 3 以下的，logstash 默认为不足够稳定，会在启动阶段，读取到该插件的时候，输出类似下面这样的一行提示信息，日志级别是 warn。**这不代表运行出错**！只是提示如果用户碰到 bug，欢迎提供线索。
-
-> {:timestamp=>"2015-02-06T10:37:26.312000+0800", :message=>"Using milestone 2 input plugin 'file'. This plugin should be stable, but if you see strange behavior, please let us know! For more information on plugin milestones, see http://logstash.net/docs/1.4.2-modified/plugin-milestones", :level=>:warn}
-
 ## 插件的关键方法
 
-输入插件独有的是 run 方法。在 run 方法中，必须实现一个长期运行的程序(最简单的就是 loop 指令)。然后在每次收到数据并处理成 `event` 之后，一定要调用 `queue << event` 语句。一个输入流程就算是完成了。
+输入插件独有的是 run 方法。在 run 方法中，必须实现一个长期运行的程序(最简单的就是 loop 指令)。然后在每次收到数据并处理成 `event`，这段示例在上一节演示 Logstash::Event 的生成时已经介绍过。最后，一定要调用 `queue << event` 语句。一个输入流程就算是完成了。
 
 而如果是过滤器插件，对应修改成：
 
 ```ruby
 require 'logstash/filters/base'
 class LogStash::Filters::MyPlugin < LogStash::Filters::Base
+  config_name 'myplugin'
+  public def register
+  end
   public def filter(event)
+
+    filter_matched(event)
   end
 end
 ```
+
+其中，`filter_matched` 是在 filter 函数完成本插件自己的处理逻辑之后一定要调用的。
 
 输出插件则是：
 
 ```ruby
 require 'logstash/outputs/base'
 class LogStash::Outputs::MyPlugin < LogStash::Outputs::Base
-  public def receive(event)
+  config_name 'myplugin'
+  concurrency :single
+  public def register
+  end
+  public def multi_receive(events)
   end
 end
 ```
 
-另外，为了在终止进程的时候不遗失数据，建议都实现如下这个方法，只要实现了，logstash 在 shutdown 的时候就会自动调用：
+这里和过去的版本最明显的差别是，处理方法改成了 `multi_receive`，而不是 `receive`。因为新的 pipeline 机制是批量传递数据给输出插件的。不过为了兼容过去的插件，`LogStash::Outputs::Base` 基类中的 `multi_receive` 实现继续迭代调用了 `receive`。
 
-```ruby
-public def teardown
-end
-```
+另一个是新出现的配置 `concurrency`，代表着本插件是否 threadsafe，并由此取代了过去的 workers 选项。可选项为：`single` 和 `shared`。
+
+* single 表示本插件是非线程安全的，必须在各 pipeline workers 之间同一时刻只有一个运行。
+* shared 表示本插件是线程安全的，每个 pipeline workers 之间可以独立运行，这也就意味着插件作者要自己在 `multi_receive` 里调用 Mutexes。
 
 ## 推荐阅读
 
