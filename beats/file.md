@@ -8,24 +8,24 @@ filebeat 是基于原先 logstash-forwarder 的源码改造出来的。换句话
 
 * deb:
 ```
-curl -L -O https://download.elastic.co/beats/filebeat/filebeat_1.0.1_amd64.deb
-sudo dpkg -i filebeat_1.0.1_amd64.deb
+curl -L -O https://download.elastic.co/beats/filebeat/filebeat_5.0.0_amd64.deb
+sudo dpkg -i filebeat_5.0.0_amd64.deb
 ```
 * rpm:
 ```
-curl -L -O https://download.elastic.co/beats/filebeat/filebeat-1.0.1-x86_64.rpm
-sudo rpm -vi filebeat-1.0.1-x86_64.rpm
+curl -L -O https://download.elastic.co/beats/filebeat/filebeat-5.0.0-x86_64.rpm
+sudo rpm -vi filebeat-5.0.0-x86_64.rpm
 ```
 * mac:
 ```
-curl -L -O https://download.elastic.co/beats/filebeat/filebeat-1.0.1-darwin.tgz
-tar xzvf filebeat-1.0.1-darwin.tgz
+curl -L -O https://download.elastic.co/beats/filebeat/filebeat-5.0.0-darwin.tgz
+tar xzvf filebeat-5.0.0-darwin.tgz
 ```
 * win:
 
-1. 下载 https://download.elastic.co/beats/filebeat/filebeat-1.0.1-windows.zip
+1. 下载 https://download.elastic.co/beats/filebeat/filebeat-5.0.0-windows.zip
 2. 解压到 C:\Program Files
-3. 重命名 filebeat-1.0.1-windows 目录为 Filebeat
+3. 重命名 filebeat-5.0.0-windows 目录为 Filebeat
 4. 右键点击 PowerSHell 图标，选择『以管理员身份运行』
 5. 运行下列命令，将 Filebeat 安装成 windows 服务：
 ```
@@ -58,7 +58,7 @@ filebeat:
             exclude_lines: ["^OK"]                      # 不发送包含这些字样的日志
         -
             document_type: "apache"                     # 定义写入 ES 时的 _type 值
-            ignore_older: "24h"                         # 超过 24 小时没更新内容的文件不再监听。在windows上另外有一个配置叫force_close_files，只要文件名一变化立刻关闭文件句柄，保证文件可以被删除，缺陷是可能会有日志还没读完
+            ignore_older: "24h"                         # 超过 24 小时没更新内容的文件不再监听。在 windows 上另外有一个配置叫 force_close_files，只要文件名一变化立刻关闭文件句柄，保证文件可以被删除，缺陷是可能会有日志还没读完
             scan_frequency: "10s"                       # 每 10 秒钟扫描一次目录，更新通配符匹配上的文件列表
             tail_files: false                           # 是否从文件末尾开始读取
             harvester_buffer_size: 16384                # 实际读取文件时，每次读取 16384 字节

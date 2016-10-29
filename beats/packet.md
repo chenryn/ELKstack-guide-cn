@@ -11,7 +11,7 @@ packetbeat 同样有已经编译完成的软件包可以直接安装使用。需
 ```
 # yum install libpcap
 # rpm -ivh http://www.nmon.net/packages/rpm6/x86_64/PF_RING/pfring-6.1.1-83.x86_64.rpm
-# rpm -ivh https://download.elasticsearch.org/beats/packetbeat/packetbeat-1.0.0~Beta1-x86_64.rpm
+# rpm -ivh https://download.elasticsearch.org/beats/packetbeat/packetbeat-5.0.0-x86_64.rpm
 ```
 
 packetbeat 还附带了一个定制的 Elasticsearch 模板，要在正式使用前导入 ES 中。
@@ -58,6 +58,17 @@ protocols:
         ports: [3306]
         max_rows: 10                             # 发送给 ES 的 SQL 内容最多为 10 行
         max_row_length: 1024                     # 发送给 ES 的 SQL 内容每行最长为 1024 字节
+    cassandra:
+        send_request_header: true                # 在开启了 send_request 的前提下，记录 cassandra_request.request_headers 字段
+        send_response_header: true
+        compressor: "snappy"
+        ignored_ops: ["SUPPORTED","OPTIONS"]     # 不记录部分操作
+    amqp:
+        ports: [5672]
+        max_body_length: 1000                    # 超长的都截断掉
+        parse_headers: true
+        parse_arguments: false
+        hide_connection_information: true        # 不记录打开、关闭连接之类的信息
     thrift:
         transport_type: socket                   # Thrift 传输类型，"socket" 或 "framed"
         protocol_type: binary
@@ -123,7 +134,7 @@ output:
 
 ### Kibana3 topology
 
-其实在 Kibana4 推出之前，packetbeat 曾经自己 fork 了一个 Kibana3 的分支，并在此基础上二次开发了一个专门用来展示网络拓扑结构的面板，叫 force panel。该特性至今依然只能运行在 Kibana3 上。所以，需要网络拓扑展现的用户，还得继续使用 Kibana3。部署方式如下：
+其实在加入 Elastic.co 之前，packetbeat 曾经自己 fork 了一个 Kibana3 的分支，并在此基础上二次开发了一个专门用来展示网络拓扑结构的面板，叫 force panel。该特性至今依然只能运行在 Kibana3 上。所以，需要网络拓扑展现的用户，还得继续使用 Kibana3。部署方式如下：
 
 ```
 curl -L -O https://github.com/packetbeat/kibana/releases/download/v3.1.2-pb/kibana-3.1.2-packetbeat.tar.gz

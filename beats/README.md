@@ -28,9 +28,19 @@ filters:
                 cpu.user_p: 0.8
 ```
 
+可用的条件判断包括：
+
+* equals
+* contains
+* regexp
+* range
+* or
+* and
+* not
+
 ## output
 
-目前 beat 可以发送数据给 Elasticsearch、Logstash、File 和 Console 四个目的地址。
+目前 beat 可以发送数据给 Elasticsearch、Logstash、File、Kafka、Redis 和 Console 六种目的地址。
 
 ### Elasticsearch
 
@@ -97,6 +107,56 @@ output:
         rotate_every_kb: 1000
         number_of_files: 7
 ```
+
+### Kafka
+
+```
+output:
+    kafka:
+        hosts: ["kafka1:9092", "kafka2:9092", "kafka3:9092"]
+        topic: '%{[type]}'
+        topics:
+            - key: "info_list"
+              when:
+                  contains:
+                      message: "INFO"
+            - key: "debug_list"
+              when:
+                  contains:
+                      message: "DEBUG"
+            - key: "%{[type]}"
+              mapping:
+                  "http": "frontend_list"
+                  "nginx": "frontend_list"
+                  "mysql": "backend_list"
+        partition:
+            round_robin:
+                reachable_only: true
+        required_acks: 1
+        compression: gzip
+        max_message_bytes: 1000000
+```
+
+* 大于 `max_message_bytes` 长度的事件(注意不只是原日志长度)会被直接丢弃。
+* partition 策略默认为 hash。可选项还有 random 和 round\_robin。
+* compression 可选项还有 none 和 snappy。
+* required\_acks 可选项有 -1、0 和 1。分别代表：等待全部副本完成、不等待、等待本地完成。
+* topics 用来配置基于匹配规则的选择器，支持 when 和 mapping，when 条件下可以使用上小节列出的各种 filter。如果都匹配不上，则采用 topic 配置。
+
+### Redis
+
+```
+output:
+    redis:
+        hosts: ["localhost"]
+        password: "my_password"
+        key: "filebeat"
+        db: 0
+        timeout: 5
+```
+
+Redis 输出也有 keys 配置。方式和 Kafka 的 topics 类似。
+
 ### Console
 
 ```
