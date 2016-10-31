@@ -18,6 +18,10 @@
   "initializing_shards" : 0,
   "unassigned_shards" : 0,
   "number_of_pending_tasks" : 0
+  "delayed_unassigned_shards" : 0,
+  "number_of_in_flight_fetch" : 0,
+  "task_max_waiting_in_queue_millis" : 0,
+  "active_shards_percent_as_number" : 100.0
 }
 ```
 
@@ -43,8 +47,9 @@
 * relocating_shards 正在迁移中的分片数。
 * initializing_shards 正在初始化的分片数。
 * unassigned_shards 未分配到具体节点上的分片数。
+* delayed_unassigned_shards 延时待分配到具体节点上的分片数。
 
-显然，后面三项在正常情况下，一般都应该是 0。但是如果真的出来了长期非 0 的情况，怎么才能知道这些长期 unassign 或者 initialize 的分片影响的是哪个索引呢？本书随后还有有更多接口获取相关信息。不过在集群健康这层，本身就可以得到更详细一点的内容了。
+显然，后面 4 项在正常情况下，一般都应该是 0。但是如果真的出来了长期非 0 的情况，怎么才能知道这些长期 unassign 或者 initialize 的分片影响的是哪个索引呢？本书随后还有有更多接口获取相关信息。不过在集群健康这层，本身就可以得到更详细一点的内容了。
 
 ## level 请求参数
 
@@ -63,6 +68,10 @@
    "relocating_shards": 0,
    "initializing_shards": 0,
    "unassigned_shards": 1
+   "delayed_unassigned_shards" : 0,
+   "number_of_in_flight_fetch" : 0,
+   "task_max_waiting_in_queue_millis" : 0,
+   "active_shards_percent_as_number" : 99.0
    "indices": {
       "logstash-2015.05.31": {
          "status": "green",

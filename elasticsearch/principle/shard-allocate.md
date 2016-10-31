@@ -106,6 +106,61 @@ curl -XPOST 127.0.0.1:9200/_cluster/reroute -d '{
 }'
 ```
 
+## 分配失败原因
+
+如果是自己手工 reroute 失败，Elasticsearch 返回的响应中会带上失败的原因。不过格式非常难看，一堆 YES，NO。从 5.0 版本开始，Elasticsearch 新增了一个 allocation explain 接口，专门用来解释指定分片的具体失败理由：
+
+```
+curl -XGET 'http://localhost:9200/_cluster/allocation/explain' -d'{
+      "index": "logstash-2016.10.31",
+      "shard": 0,
+      "primary": false
+
+}'
+```
+
+得到的响应如下：
+
+```
+{
+    "shard" : {
+        "index" : "myindex",
+        "index_uuid" : "KnW0-zELRs6PK84l0r38ZA",
+        "id" : 0,
+        "primary" : false
+    },
+    "assigned" : false,
+    "shard_state_fetch_pending": false,
+    "unassigned_info" : {
+        "reason" : "INDEX_CREATED",
+        "at" : "2016-03-22T20:04:23.620Z"
+    },
+    "allocation_delay_ms" : 0,
+    "remaining_delay_ms" : 0,
+    "nodes" : {
+        "V-Spi0AyRZ6ZvKbaI3691w" : {
+            "node_name" : "H5dfFeA",
+            "node_attributes" : {
+                "bar" : "baz"
+            },
+            "store" : {
+                "shard_copy" : "NONE"
+            },
+            "final_decision" : "NO",
+            "final_explanation" : "the shard cannot be assigned because one or more allocation decider returns a 'NO' decision",
+            "weight" : 0.06666675,
+            "decisions" : [ {
+                "decider" : "filter",
+                "decision" : "NO",
+                "explanation" : "node does not match index include filters [foo:\"bar\"]"
+            }  ]
+        },
+        "Qc6VL8c5RWaw1qXZ0Rg57g" : {
+            ...
+```
+
+这会是很长一串 JSON，把集群里所有的节点都列上来，挨个解释为什么不能分配到这个节点。
+
 ## 节点下线
 
 集群中个别节点出现故障预警等情况，需要下线，也是 Elasticsearch 运维工作中常见的情况。如果已经稳定运行过一段时间的集群，每个节点上都会保存有数量不少的分片。这种时候通过 reroute 接口手动转移，就显得太过麻烦了。这个时候，有另一种方式：

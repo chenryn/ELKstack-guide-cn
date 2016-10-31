@@ -4,27 +4,31 @@
 
 cat 接口可以读取各种监控数据，可用接口列表如下：
 
-* /_cat/allocation
+* /_cat/nodes
 * /_cat/shards
 * /_cat/shards/{index}
-* /_cat/master
-* /_cat/nodes
-* /_cat/indices
-* /_cat/indices/{index}
-* /_cat/segments
-* /_cat/segments/{index}
-* /_cat/count
-* /_cat/count/{index}
-* /_cat/recovery
-* /_cat/recovery/{index}
-* /_cat/health
-* /_cat/pending_tasks
 * /_cat/aliases
 * /_cat/aliases/{alias}
-* /_cat/thread_pool
+* /_cat/tasks
+* /_cat/master
 * /_cat/plugins
 * /_cat/fielddata
 * /_cat/fielddata/{fields}
+* /_cat/pending_tasks
+* /_cat/count
+* /_cat/count/{index}
+* /_cat/snapshots/{repository}
+* /_cat/recovery
+* /_cat/recovery/{index}
+* /_cat/segments
+* /_cat/segments/{index}
+* /_cat/thread_pool
+* /_cat/thread_pool/{thread_pools}/_cat/nodeattrs
+* /_cat/allocation
+* /_cat/repositories
+* /_cat/health
+* /_cat/indices
+* /_cat/indices/{index}
 
 ## 集群状态
 
@@ -32,25 +36,25 @@ cat 接口可以读取各种监控数据，可用接口列表如下：
 
 ```
 # curl -XGET http://127.0.0.1:9200/_cat/health
-1434300299 00:44:59 es1003 red 39 27 2589 1505 4 1 0 0
+1434300299 00:44:59 es1003 red 39 27 2589 1505 4 1 0 0 - 100.0%
 ```
 
 如果单看这行输出，或许不熟悉的用户会有些茫然。可以通过添加 `?v` 参数，输出表头：
 
 ```
 # curl -XGET http://127.0.0.1:9200/_cat/health?v
-epoch      timestamp cluster status node.total node.data shards  pri relo init unassign pending_tasks
-1434300334 00:45:34  es1003  green          39        27   2590 1506    5    0        0             0
+epoch      timestamp cluster status node.total node.data shards  pri relo init unassign pending_tasks max_task_wait_time active_shards_percent
+1434300334 00:45:34  es1003  green          39        27   2590 1506    5    0        0             0                  -                100.0%
 ```
 
 ## 节点状态
 
 ```
 # curl -XGET http://127.0.0.1:9200/_cat/nodes?v
-host      ip            heap.percent ram.percent load node.role master name
-esnode109 10.19.0.109             62          69 6.37 d         -      10.19.0.109 
-esnode096 10.19.0.96              63          69 0.29 -         -      10.19.0.96  
-esnode100 10.19.0.100             56          79 0.07 -         m      10.19.0.100 
+host      ip            heap.percent ram.percent load_1m load_5m load_15m node.role master name
+esnode109 10.19.0.109             62          69 6.37                     d         -      10.19.0.109 
+esnode096 10.19.0.96              63          69 0.29                     -         -      10.19.0.96  
+esnode100 10.19.0.100             56          79 0.07                     -         m      10.19.0.100 
 ```
 
 跟集群状态不一样的是，节点状态数据太多，cat 接口不方便在一行表格中放下所有数据。所以默认的返回，只是最基本的内存和负载数据。具体想看某方面的数据，也是通过请求参数的方式额外指明。比如想看 heap 百分比和最大值：
@@ -134,8 +138,21 @@ logstash-mweibo-2015.06.14 17 esnode102 esnode080 96.3% 92.5% 0  0.0%   118758
 
 ```
 curl -s -XGET http://127.0.0.1:9200/_cat/thread_pool?v
-host      ip          bulk.active bulk.queue bulk.rejected index.active index.queue index.rejected search.active search.queue search.rejected 
-esnode073 127.0.0.1             1          0         20669            0           0             50             4            0               0 
+node_name   name                active queue rejected
+esnode073   bulk                     1     0    20669
+esnode073   fetch_shard_started      0     0        0
+esnode073   fetch_shard_store        0     0        0
+esnode073   flush                    0     0        0
+esnode073   force_merge              0     0        0
+esnode073   generic                  0     0        0
+esnode073   get                      0     0        0
+esnode073   index                    0     0       50
+esnode073   listener                 0     0        0
+esnode073   management               1     0        0
+esnode073   refresh                  0     0        0
+esnode073   search                   4     0        0
+esnode073   snapshot                 0     0        0
+esnode073   warmer                   0     0        0
 ```
 
-包括 merge，optimize，flush，refresh 等其他线程池状态，也可以通过 `?h` 参数指明获取。
+这个接口的输出形式和 5.0 之前的版本有了较大变化，把不同类型的线程状态做了一次行列转换，大大减少了列数以后，对人眼更加合适了。

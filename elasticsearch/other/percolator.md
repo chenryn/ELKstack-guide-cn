@@ -15,10 +15,41 @@
 
 Percolator 接口和我们习惯的搜索接口正好相反，它要求预先定义好 query，然后通过接口提交文档看能匹配上哪个 query。也就是说，这是一个实时的模式过滤接口。
 
-比如我们通过 syslog 来发现硬件报错的时候，可以预先定义 query：
+5.0 版中，对 Percolator 功能做了大幅度改造，现在已经没有单独的接口，而是作为一种 mapping 类型存在。也就是说，我们在创建索引的时候需要预先定义。
+
+比如我们通过 syslog 来发现硬件报错的时候，需要预先定义 mapping：
 
 ```
-# curl -XPUT http://127.0.0.1:9200/syslog/.percolator/memory -d '{
+# curl -XPUT http://127.0.0.1:9200/syslog -d '{
+    "mappings" : {
+        "syslog" : {
+            "properties" : {
+                "message" : {
+                    "type" : "text"
+                },
+                "severity" : {
+                    "type" : "long"
+                },
+                "program" : {
+                    "type" : "keyword"
+                }
+            }
+        },
+        "queries" : {
+            "properties" : {
+                "query" : {
+                    "type" : "percolator"
+                }
+            }
+        }
+    }
+}'
+```
+
+然后我们往 `syslog/queries` 里注册 2 条 percolator 请求规则：
+
+```
+# curl -XPUT http://127.0.0.1:9200/syslog/queries/memory -d '{
     "query" : {
         "query_string" : {
             "default_field" : "message",
@@ -27,7 +58,7 @@ Percolator 接口和我们习惯的搜索接口正好相反，它要求预先定
         }
     }
 }'
-# curl -XPUT http://127.0.0.1:9200/syslog/.percolator/disk -d '{
+# curl -XPUT http://127.0.0.1:9200/syslog/queries/disk -d '{
     "query" : {
         "query_string" : {
             "default_field" : "message",
@@ -38,17 +69,20 @@ Percolator 接口和我们习惯的搜索接口正好相反，它要求预先定
 }'
 ```
 
-然后，将标准的数据写入请求稍微做一点改动：
+然后，将标准的数据写入请求做一点改动，通过搜索接口进行：
 
 ```
-# curl -XPOST http://127.0.0.1:9200/syslog/msg/_percolate -d '{
-    "doc" : {
-        "timestamp" : "Jul 17 03:57:23",
-        "host" : "localhost",
-        "program" : "kernel",
-        "facility" : 0,
-        "severity" : 3,
-        "message" : "swapper/0: page allocation failure: order:4, mode:0x4020"
+# curl -XPOST http://127.0.0.1:9200/syslog/_search -d '{
+    "query" : {
+        "percolate" : {
+            "field" : "query",
+            "document_type" : "syslog",
+            "document" : {
+                "program" : "kernel",
+                "severity" : 3,
+                "message" : "swapper/0: page allocation failure: order:4, mode:0x4020"
+            }
+        }
     }
 }'
 ```
@@ -58,11 +92,12 @@ Percolator 接口和我们习惯的搜索接口正好相反，它要求预先定
 ```
 {
   ...,
-  "total": 1,
-  "matches": [
+  "hits": [
      {
         "_index": "syslog",
-        "_id": "memory"
+        "_type": "queries",
+        "_id": "memory",
+        ...
      }
   ]
 }
@@ -70,10 +105,20 @@ Percolator 接口和我们习惯的搜索接口正好相反，它要求预先定
 
 从结果可以看出来，这条 syslog 日志匹配上了 memory 异常。接下来就可以发送给报警系统了。
 
-如果是 syslog 索引中已经有的数据，也可以重新过一遍 Percolator 接口：
+如果是 syslog 索引中已经有的数据，也可以重新过一遍 Percolator 查询。比如我们有一条之前已经写入到 `http://127.0.0.1:9200/syslog/cisco/1234567` 的数据，如下命令就可以把这条数据再过一次 percolate：
 
 ```
-# curl -XPOST http://127.0.0.1:9200/syslog/msg/existsid/_percoloate
+# curl -XPOST http://127.0.0.1:9200/syslog/_search -d '{
+    "query" : {
+        "percolate" : {
+            "field" : "query",
+            "document_type" : "syslog",
+            "index" : "syslog",
+            "type" : "cisco",
+            "id" : "1234567",
+        }
+    }
+}'
 ```
 
 利用更复杂的 query DSL 做 Percolator 请求的示例，推荐阅读官网这篇 geo 定位的文章：<https://www.elastic.co/blog/using-percolator-geo-tagging>

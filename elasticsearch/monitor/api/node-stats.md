@@ -17,13 +17,15 @@
    "cluster_name": "elasticsearch_zach",
    "nodes": {
       "UNr6ZMf5Qk-YCPA_L18BOQ": {
-         "timestamp": 1408474151742,
+         "timestamp": 1477886018477,
          "name": "Zach",
-         "transport_address": "inet[zacharys-air/192.168.1.131:9300]",
-         "host": "zacharys-air",
-         "ip": [
-            "inet[zacharys-air/192.168.1.131:9300]",
-            "NONE"
+         "transport_address": "192.168.1.131:9300",
+         "host": "192.168.1.131",
+         "ip": "192.168.1.131:9300",
+         "roles": [
+             "master",
+             "data",
+             "ingest"
          ],
 ...
 ```
@@ -58,10 +60,13 @@
            "delete_total": 0,
            "delete_time_in_millis": 0,
            "delete_current": 0
+           "noop_update_total" : 0,
+           "is_throttled" : false,
+           "throttle_time_in_millis" : 0
         },
 ```
 
-*indexing.index_total* 是一个递增累计数，表示节点完成的数据写入总次数。至于后面又删除了多少，额外记录在 *indexing.delete_total* 里。
+*indexing.index_total* 是一个递增累计数，表示节点完成的数据写入总次数。至于后面又删除了多少，额外记录在 *indexing.delete_total* 里；*indexing.is_throttled* 是 2.0 版之后新增的计数，因为 Elasticsearch 从此开始自动管理 throttle，所以有了这个计数。
 
 3. 读取性能：
 
@@ -90,6 +95,12 @@ get 这里显示的是直接使用 `_id` 读取数据的状态。
            "fetch_total": 3,
            "fetch_time_in_millis": 55,
            "fetch_current": 0
+           "scroll_total" : 0,
+           "scroll_time_in_millis" : 0,
+           "scroll_current" : 0,
+           "suggest_total" : 0,
+           "suggest_time_in_millis" : 0,
+           "suggest_current" : 0
         },
 ```
 
@@ -108,6 +119,9 @@ get 这里显示的是直接使用 `_id` 读取数据的状态。
            "total_time_in_millis": 21338523,
            "total_docs": 7241313,
            "total_size_in_bytes": 5724869463
+           "total_stopped_time_in_millis" : 0,
+           "total_throttled_time_in_millis" : 0,
+           "total_auto_throttle_in_bytes" : 104857600
         },
 ```
 
@@ -116,15 +130,20 @@ merges 数据分为两部分，current 开头的是当前正在发生的段合�
 6. 过滤器缓存：
 
 ```
-        "filter_cache": {
+        "query_cache": {
            "memory_size_in_bytes": 48,
+           "total_count" : 0,
+           "hit_count" : 0,
+           "miss_count" : 0,
+           "cache_size" : 0,
+           "cache_count" : 0,
            "evictions": 0
         },
 ```
 
-*filter_cache.memory_size_in_bytes* 表示过滤器缓存使用的内存，*filter_cache.evictions* 表示因内存满被回收的缓存大小，这个数如果较大，说明你的过滤器缓存大小不足，或者过滤器本身不太适合缓存。比如在 Elastic Stack 场景中常用的时间过滤器，如果使用 `@timestamp:["now-1d" TO "now"]` 这种表达式的话，需要每次计算 now 值，就没法长期缓存。事实上，Kibana 中通过 timepicker 生成的 filtered 请求里，对 `@timestamp` 部分就并不是直接使用 `"now"`，而是在浏览器上计算成毫秒数值，再发送给 ES 的。
+*query_cache.memory_size_in_bytes* 表示过滤器缓存使用的内存，*query_cache.evictions* 表示因内存满被回收的缓存大小，这个数如果较大，说明你的过滤器缓存大小不足，或者过滤器本身不太适合缓存。比如在 Elastic Stack 场景中常用的时间过滤器，如果使用 `@timestamp:["now-1d" TO "now"]` 这种表达式的话，需要每次计算 now 值，就没法长期缓存。事实上，Kibana 中通过 timepicker 生成的 filtered 请求里，对 `@timestamp` 部分就并不是直接使用 `"now"`，而是在浏览器上计算成毫秒数值，再发送给 ES 的。
 
-请注意，过滤器缓存是建立在 segment 基础上的，在当天新日志的索引中，存在大量的或多或少的 segments。一个已经 5GB 大小的 segment，和一个刚刚 2MB 大小的 segment，发生一次 *filter_cache.evictions* 对搜索性能的影响区别是巨大的。但是节点状态中本身这个计数并不能反应这点区别。所以，尽力减少这个数值，但如果搜索本身感觉不慢，那么有几个也无所谓。
+请注意，过滤器缓存是建立在 segment 基础上的，在当天新日志的索引中，存在大量的或多或少的 segments。一个已经 5GB 大小的 segment，和一个刚刚 2MB 大小的 segment，发生一次 *query_cache.evictions* 对搜索性能的影响区别是巨大的。但是节点状态中本身这个计数并不能反应这点区别。所以，尽力减少这个数值，但如果搜索本身感觉不慢，那么有几个也无所谓。
 
 7. id 缓存：
 
@@ -153,8 +172,19 @@ merges 数据分为两部分，current 开头的是当前正在发生的段合�
 
 ```
         "segments": {
-           "count": 319,
-           "memory_in_bytes": 65812120
+           "count": 1,
+           "memory_in_bytes": 2042,
+           "terms_memory_in_bytes" : 1510,
+           "stored_fields_memory_in_bytes" : 312,
+           "term_vectors_memory_in_bytes" : 0,
+           "norms_memory_in_bytes" : 128,
+           "points_memory_in_bytes" : 0,
+           "doc_values_memory_in_bytes" : 92,
+           "index_writer_memory_in_bytes" : 0,
+           "version_map_memory_in_bytes" : 0,
+           "fixed_bit_set_memory_in_bytes" : 0,
+           "max_unsafe_auto_id_timestamp" : -1,
+           "file_sizes" : {  }
         },
 ```
 
@@ -311,10 +341,10 @@ ES 在 index、bulk、search、get、merge 等各种操作都有专门的线程�
 
 ## Circuit Breaker
 
-继续往下，是 fielddata circuit breaker 的数据：
+继续往下，是 circuit breaker 的数据，包括 request、fielddata、in\_flight\_requests 和 parent 四种：
 
 ```
-         "fielddata_breaker": {
+         "in_flight_requests": {
             "maximum_size_in_bytes": 623326003,
             "maximum_size": "594.4mb",
             "estimated_size_in_bytes": 0,
@@ -324,7 +354,32 @@ ES 在 index、bulk、search、get、merge 等各种操作都有专门的线程�
          }
 ```
 
-`fielddata_breaker.maximum_size` 是一个请求能使用的内存的最大值。`fielddata_breaker.tripped` 记录的是触发 circuit breaker 的次数。如果这个数值太高，或者持续增长，说明目前 ES 收到的请求亟待优化，或者单纯的，加机器，加内存。
+in\_flight\_requests 是 5.0 版本新加入的一个控制。在过去版本中，索引速度较慢，而入口流量过大会导致 Client 节点在分发 bulk 流量的时候没有限速而 OOM，现在可以直接对过大的流量返回失败了。
+
+## ingest
+
+最后是 ingest 节点独有的 ingest 状态数据。
+
+```
+"ingest" : {
+    "total" : {
+        "count" : 0,
+        "time_in_millis" : 0,
+        "current" : 0,
+        "failed" : 0
+    },
+    "pipelines" : {
+        "set-something" : {
+            "count" : 0,
+            "time_in_millis" : 0,
+            "current" : 0,
+            "failed" : 0
+        }
+    }
+}
+```
+
+会列出每个定义好的 pipeline 以及最终总体的 ingest 处理量、当前处理中的数据量和处理耗时等。
 
 ## hot_threads 状态
 

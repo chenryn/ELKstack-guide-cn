@@ -113,3 +113,5 @@ Watcher 中可用的 `ctx` 变量包括：
 ```
 watcher.input.search.dynamic_indices.time_zone: '+08:00'
 ```
+
+笔者仿照 watcher 的配置语法，开源了一个基于 Kibana 扩展的类 watcher 监控项目，本书稍后 Kibana 章节将会有详细介绍。

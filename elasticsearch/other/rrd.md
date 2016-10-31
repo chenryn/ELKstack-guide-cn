@@ -39,8 +39,7 @@
       "properties" : {
         "sid" : {
           "index" : "no",
-          "doc_values" : true,
-          "type" : "string"
+          "type" : "keyword"
         }
       },
 ```

@@ -1,8 +1,10 @@
-# 等待执行的任务列表
+# 任务管理
 
-首先需要解释的是，这个接口返回的列表，只是对于集群的 master 节点来说的等待执行。数据节点本身的写入和查询线程，如果因为较慢导致排队，是不在这个列表里的。
+任务是 Elasticsearch 中早就有的一个概念。不过最新的 5.0 版对此重构之前，我们只能看到对于 master 来说等待执行的集群级别的任务。这个是一个非常狭隘的概念。重构以后，和数据相关的一些操作，也可以以任务形态存在，从而也就有了针对性的管理操作。目前，还只有 recovery、snapshot、reindex 等操作是基于任务式的。未来的 6.0 版，可能把整个 query 检索都改为基于任务式的。困扰用户多年的资源隔离问题，可能就可以得到大大缓解。
 
-之前章节已经讲过，master 节点负责处理的任务其实很少，只有集群状态的数据维护。所以绝大多数情况下，这个任务列表应该都是空的。
+## 等待执行的任务列表
+
+首先我们还是先了解一下狭义的任务，即过去就有的 master 节点的等待执行任务。之前章节已经讲过，master 节点负责处理的任务其实很少，只有集群状态的数据维护。所以绝大多数情况下，这个任务列表应该都是空的。
 
 ```
 # curl -XGET http://127.0.0.1:9200/_cluster/pending_tasks
@@ -13,6 +15,7 @@
 
 但是如果你碰上集群有异常，比如频繁有索引映射更新，数据恢复啊，分片分配或者初始化的时候反复出错啊这种时候，就会看到一些任务列表了：
 
+```
 {
   "tasks" : [ {
     "insert_order": 767003,
@@ -54,3 +57,25 @@
 * 索引就是特别多：给 master 加内存。
 * 索引里字段太多：改用 nested object 方式节省字段数量。
 * 索引多到内存就是不够了：把一部分数据拆出来另一个集群。
+
+## 新版任务管理
+
+新版本的任务并没有独立的创建接口，你发起的具体某次 snapshot、reindex 等操作，自动就成为了一个任务。而任务的列表可以通过 `/_tasks` 或者 `/_cat/tasks` 接口来获取。和其他接口一样，手工操作选用 cat ，写程序的时候选用 JSON 接口。
+
+```
+curl -XGET 'localhost:9200/_cat/tasks?v'
+action                         task_id                    parent_task_id             type      start_time    timestamp running_time ip        node
+cluster:monitor/tasks/lists    -ANcpn_JTI-Zs93fGAfhjw:779 -                          transport 1477891751674 13:29:11  170.2micros  127.0.0.1 -ANcpn_
+cluster:monitor/tasks/lists[n] -ANcpn_JTI-Zs93fGAfhjw:780 -ANcpn_JTI-Zs93fGAfhjw:779 direct    1477891751674 13:29:11  60.6micros   127.0.0.1 -ANcpn_
+indices:data/write/reindex     r1A2WoRbTwKZ516z6NEs5A:916 -                          transport 1477891751674 13:29:11  212.5micros  127.0.0.1 r1A2WoR
+```
+
+上面是一个正常运行中的集群的任务列表。除了一个 reindex 任务，没有什么 recovery 的麻烦事儿，很好。
+
+如果想要取消某个任务，比如上面的 reindex，可以像这样运行：
+
+```
+curl -XPOST 'localhost:9200/_tasks/task_id:916/_cancel'
+```
+
+目前来说，能做的只有这些了。Elasticsearch 还不支持诸如挂起、暂停之类更复杂的任务操作。让我们期待未来的发展吧。
