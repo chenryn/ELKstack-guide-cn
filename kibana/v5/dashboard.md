@@ -1,18 +1,18 @@
 一个 Kibana *dashboard* 能让你自由排列一组已保存的可视化。然后你可以保存这个仪表板，用来分享或者重载。
 
-简单的仪表板像这样。![Example dashboard](http://www.elasticsearch.org/guide/en/kibana/current/images/NYCTA-Dashboard.jpg)
+简单的仪表板像这样。![Example dashboard](https://www.elastic.co/guide/en/kibana/current/images/tutorial-dashboard.png)
 
 ## 开始
 
-要用仪表板，你需要至少有一个已保存的 [visualization](http://www.elasticsearch.org/guide/en/kibana/current/visualize.html)。
+要用仪表板，你需要至少有一个已保存的 [visualization](http://www.elastic.co/guide/en/kibana/current/visualize.html)。
 
 ### 创建一个新的仪表板
 
 你第一次点击 **Dashboard** 标签的时候，Kibana 会显示一个空白的仪表板
 
-![New Dashboard screen](http://www.elasticsearch.org/guide/en/kibana/current/images/NewDashboard.jpg)
+![New Dashboard screen](http://www.elastic.co/guide/en/kibana/current/images/NewDashboard.jpg)
 
-通过添加可视化的方式来构建你的仪表板。默认情况下，Kibana 仪表板使用明亮风格。如果你想切换成黑色风格点击数 **Settings**![](https://www.elastic.co/guide/en/kibana/current/images/SettingsButton.jpg) 按钮，然后勾选 **Use dark theme**。
+通过添加可视化的方式来构建你的仪表板。默认情况下，Kibana 仪表板使用明亮风格。如果你想切换成黑色风格，点击 **Options**，然后勾选 **Use dark theme**。
 
 ![dark theme](https://www.elastic.co/guide/en/kibana/current/images/darktheme.png)
 
@@ -36,19 +36,17 @@
 
 ### 添加可视化到仪表板上
 
-要添加可视化到仪表板上，点击工具栏面板上的 **Add Visualization** ![Plus](http://www.elasticsearch.org/guide/en/kibana/current/images/AddVis.png) 按钮。从列表中选择一个已保存的可视化。你可以在 **Visualization Filter** 里输入字符串来过滤想要找的可视化。
+要添加可视化到仪表板上，点击工具栏面板上的 **Add**。从列表中选择一个已保存的可视化。你可以在 **Visualization Filter** 里输入字符串来过滤想要找的可视化。
 
 由你选择的这个可视化会出现在你仪表板上的一个*容器(container)*里。
 
-> 如果你觉得容器的高度和宽度不合适，可以[调整容器大小](http://www.elasticsearch.org/guide/en/kibana/current/dashboard.html#resizing-containers)。
-
 ### 保存仪表板
 
-要保存仪表板，点击工具栏面板上的 **Save Dashboard** 按钮，在 **Save As** 栏输入仪表板的名字，然后点击 **Save** 按钮。
+要保存仪表板，点击工具栏面板上的 **Save** 按钮，在 **Save As** 栏输入仪表板的名字，然后点击 **Save** 按钮。
 
 ### 加载已保存仪表板
 
-点击 **Load Saved Dashboard** 按钮显示已存在的仪表板列表。已保存仪表板选择器包括了一个文本栏可以通过仪表板的名字做过滤，还有一个链接到 **Object Editor** 而已管理你的已保存仪表板。你也可以直接点击 **Settings > Edit Saved Objects** 来访问 **Object Editor**。
+点击 **Open** 按钮显示已存在的仪表板列表。已保存仪表板选择器包括了一个文本栏可以通过仪表板的名字做过滤，还有一个链接到 **Object Editor** 而已管理你的已保存仪表板。你也可以直接点击 **Settings > Edit Saved Objects** 来访问 **Object Editor**。
 
 ### 分享仪表板
 
@@ -56,7 +54,7 @@
 
 > 用户必须有 Kibana 的访问权限才能看到嵌入的仪表板。
 
-点击 **Share** 按钮显示 HTML 代码，就可以嵌入仪表板到其他网页里。还带有一个指向仪表板的链接。点击复制按钮![Copy](http://www.elasticsearch.org/guide/en/kibana/current/images/Clipboard.png) 可以复制代码，或者链接到你的黏贴板。
+点击 **Share** 按钮显示 HTML 代码，就可以嵌入仪表板到其他网页里。还带有一个指向仪表板的链接。点击复制按钮![Copy](http://www.elastic.co/guide/en/kibana/current/images/Clipboard.png) 可以复制代码，或者链接到你的黏贴板。
 
 ### 嵌入仪表板
 
@@ -82,14 +80,13 @@
 
 要显示可视化背后的原始数据，点击容器地步的条带。可视化会被有关原始数据详细信息的几个标签替换掉。如下所示：
 
-表格(Table)。底层数据的分页展示。你可以通过点击每列顶部的方式给该列数据排序。![images/NYCTA-Table.jpg](http://www.elasticsearch.org/guide/en/kibana/current/images/NYCTA-Table.jpg)
+![images/NYCTA-Table.jpg](http://www.elastic.co/guide/en/kibana/current/images/NYCTA-Table.jpg)
 
-请求(Request)。发送到服务器的原始请求，以 JSON 格式展示。![images/NYCTA-Request.jpg](http://www.elasticsearch.org/guide/en/kibana/current/images/NYCTA-Request.jpg)
-
-响应(Response)。从服务器返回的原始响应，以 JSON 格式展示。![images/NYCTA-Response.jpg](http://www.elasticsearch.org/guide/en/kibana/current/images/NYCTA-Response.jpg)
-
-统计值(Statistics)。和请求响应相关的一些统计值，以数据网格的方式展示。数据报告，请求时间，响应时间，返回的记录条目数，匹配请求的索引模式(index pattern)。![images/NYCTA-Statistics.jpg](http://www.elasticsearch.org/guide/en/kibana/current/images/NYCTA-Statistics.jpg)
+* 表格(Table)。底层数据的分页展示。你可以通过点击每列顶部的方式给该列数据排序。
+* 请求(Request)。发送到服务器的原始请求，以 JSON 格式展示。
+* 响应(Response)。从服务器返回的原始响应，以 JSON 格式展示。
+* 统计值(Statistics)。和请求响应相关的一些统计值，以数据网格的方式展示。数据报告，请求时间，响应时间，返回的记录条目数，匹配请求的索引模式(index pattern)。
 
 ## 修改可视化
 
-点击容器右上角的 *Edit* 按钮 ![Pencil button](http://www.elasticsearch.org/guide/en/kibana/current/images/EditVis.png) 在 [Visualize](./visualize.md) 页打开可视化编辑。
+点击容器右上角的 *Edit* 按钮在 [Visualize](./visualize.md) 页打开可视化编辑。

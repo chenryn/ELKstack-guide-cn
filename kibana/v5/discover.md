@@ -47,22 +47,20 @@ Discover 标签页用于交互式探索你的数据。你可以访问到匹配�
 
 要清除当前搜索或开始一个新搜索，点击 Discover 工具栏的 New Search 按钮。
 
-![](http://www.elasticsearch.org/guide/en/kibana/current/images/Discover-New-Search.jpg)
-
 ## 保存搜索
 
 你可以在 Discover 页加载已保存的搜索，也可以用作 [visualizations](./visualize.md) 的基础。保存一个搜索，意味着同时保存下了搜索请求字符串和当前选择的索引模式。
 
 要保存当前搜索：
 
-1. 点击 Discover 工具栏的 `Save Search` 按钮 ![Save Search button](http://www.elasticsearch.org/guide/en/kibana/current/images/SaveButton.jpg)。
+1. 点击 Discover 工具栏的 `Save Search` 按钮。
 2. 输入一个名称，点击 `Save`。
 
 ## 加载一个已存搜索
 
 要加载一个已保存的搜索：
 
-1. 点击 Discover 工具栏的 `Load Search` 按钮 ![Load Search button](http://www.elasticsearch.org/guide/en/kibana/current/images/LoadButton.jpg)。
+1. 点击 Discover 工具栏的 `Load Search` 按钮。
 2. 选择你要加载的搜索。
 
 如果已保存的搜索关联到跟你当前选择的索引模式不一样的其他索引上，加载这个搜索也会切换当前的已选索引模式。
@@ -73,7 +71,7 @@ Discover 标签页用于交互式探索你的数据。你可以访问到匹配�
 
 要选择另外的索引模式：
 
-1. 点击 Discover 工具栏的 `Settings` 按钮 ![Settings button](http://www.elasticsearch.org/guide/en/kibana/current/images/SettingsButton.jpg)。
+1. 点击 Discover 工具栏的 `Settings` 按钮。
 2. 从索引模式列表中选取你打算采用的模式。
 
 关于索引模式的更多细节，请阅读稍后 [Setting 功能小节](./settings.md)。
