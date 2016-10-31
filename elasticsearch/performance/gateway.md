@@ -46,6 +46,13 @@ node.enable_custom_paths: true
 }'
 ```
 
-针对 shadow replicas ，ES 节点不会做实际的索引操作，而是单纯的每次 flush 时，把 segment 内容 fsync 到共享存储磁盘上。然后 refresh 让其他节点能够搜索该 segment 内容。所以，shadow replicas 里是没有 translog 的，对于还没有 refresh 的数据，如果 GET 获取请求传到 shadow replicas 上，是查询不到的，请求会自动变成 `?preference=_primary` 模式，只从主分片上获取数据。同理，在 cluster state 还没定期更新过来之前，节点上的索引映射可能也还保持着自己主分片数据的样式，不会因为 shadow replica 里数据样式的变动发生变动，搜索请求也有可能失败。
+针对 shadow replicas ，ES 节点不会做实际的索引操作，而是单纯的每次 flush 时，把 segment 内容 fsync 到共享存储磁盘上。然后 refresh 让其他节点能够搜索该 segment 内容。
 
-综上，shadow replicas 只是一个在某些特定环境下有用的方式。在资源允许的情况下，还是应该使用 local gateway。而另外采用 snapshot 接口来完成数据长期备份到 HDFS 或其他共享存储的需要。
+如果你已经决定把数据放到共享存储上了，采用 shadow replicas 还是有一些好处的：
+
+1. 可以帮助你节省一部分不必要的多副本分片的数据写入压力；
+2. 在节点出现异常，需要在其他节点上恢复副本数据的时候，可以避免不必要的网络数据拷贝。
+
+但是请注意：主分片节点还是要承担一个副本的写入过程，并不像 Lucene 的 FileReplicator 那样通过复制文件完成，所以达不到完全节省 CPU 的效果。
+
+shadow replicas 只是一个在某些特定环境下有用的方式。在资源允许的情况下，还是应该使用 local gateway。而另外采用 snapshot 接口来完成数据长期备份到 HDFS 或其他共享存储的需要。

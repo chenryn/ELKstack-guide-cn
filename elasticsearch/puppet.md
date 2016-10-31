@@ -18,7 +18,7 @@ Elasticsearch 作为一个 Java 应用，本身的部署已经非常简单了。
 
 ```
 class { 'elasticsearch':
-  version => '1.5.2',
+  version => '2.4.1',
   config => { 'cluster.name' => 'es1003' },
   java_install => true,
 }

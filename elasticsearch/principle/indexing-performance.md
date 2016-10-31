@@ -16,7 +16,7 @@
 
 segment 归并的过程，需要先读取 segment，归并计算，再写一遍 segment，最后还要保证刷到磁盘。可以说，这是一个非常消耗磁盘 IO 和 CPU 的任务。所以，ES 提供了对归并线程的限速机制，确保这个任务不会过分影响到其他任务。
 
-默认情况下，归并线程的限速配置 `indices.store.throttle.max_bytes_per_sec` 是 20MB。对于写入量较大，磁盘转速较高，甚至使用 SSD 盘的服务器来说，这个限速是明显过低的。对于 Elastic Stack 应用，建议可以适当调大到 100MB或者更高。
+在 5.0 之前，归并线程的限速配置 `indices.store.throttle.max_bytes_per_sec` 是 20MB。对于写入量较大，磁盘转速较高，甚至使用 SSD 盘的服务器来说，这个限速是明显过低的。对于 Elastic Stack 应用，社区广泛的建议是可以适当调大到 100MB或者更高。
 
 ```
 # curl -XPUT http://127.0.0.1:9200/_cluster/settings -d'
@@ -27,30 +27,32 @@ segment 归并的过程，需要先读取 segment，归并计算，再写一遍 
 }'
 ```
 
+5.0 开始，ES 对此作了大幅度改进，使用了 Lucene 的 CMS(ConcurrentMergeScheduler) 的 auto throttle 机制，正常情况下已经不再需要手动配置 `indices.store.throttle.max_bytes_per_sec` 了。官方文档中都已经删除了相关介绍，不过从源码中还是可以看到，这个值目前的默认设置是 10240 MB。
+
 归并线程的数目，ES 也是有所控制的。默认数目的计算公式是： `Math.min(3, Runtime.getRuntime().availableProcessors() / 2)`。即服务器 CPU 核数的一半大于 3 时，启动 3 个归并线程；否则启动跟 CPU 核数的一半相等的线程数。相信一般做 Elastic Stack 的服务器 CPU 合数都会在 6 个以上。所以一般来说就是 3 个归并线程。如果你确定自己磁盘性能跟不上，可以降低 `index.merge.scheduler.max_thread_count` 配置，免得 IO 情况更加恶化。
 
 ## 归并策略
 
 归并线程是按照一定的运行策略来挑选 segment 进行归并的。主要有以下几条：
 
-* index.merge.policy.floor_segment
+* index.merge.policy.floor\_segment
   默认 2MB，小于这个大小的 segment，优先被归并。
-* index.merge.policy.max_merge_at_once
+* index.merge.policy.max\_merge\_at\_once
   默认一次最多归并 10 个 segment
-* index.merge.policy.max_merge_at_once_explicit
-  默认 optimize 时一次最多归并 30 个 segment。
-* index.merge.policy.max_merged_segment
-  默认 5 GB，大于这个大小的 segment，不用参与归并。optimize 除外。
+* index.merge.policy.max\_merge\_at\_once\_explicit
+  默认 forcemerge 时一次最多归并 30 个 segment。
+* index.merge.policy.max\_merged\_segment
+  默认 5 GB，大于这个大小的 segment，不用参与归并。forcemerge 除外。
 
 根据这段策略，其实我们也可以从另一个角度考虑如何减少 segment 归并的消耗以及提高响应的办法：加大 flush 间隔，尽量让每次新生成的 segment 本身大小就比较大。
 
-## optimize 接口
+## forcemerge 接口
 
-既然默认的最大 segment 大小是 5GB。那么一个比较庞大的数据索引，就必然会有为数不少的 segment 永远存在，这对文件句柄，内存等资源都是极大的浪费。但是由于归并任务太消耗资源，所以一般不太选择加大 `index.merge.policy.max_merged_segment` 配置，而是在负载较低的时间段，通过 optimize 接口，强制归并 segment。
+既然默认的最大 segment 大小是 5GB。那么一个比较庞大的数据索引，就必然会有为数不少的 segment 永远存在，这对文件句柄，内存等资源都是极大的浪费。但是由于归并任务太消耗资源，所以一般不太选择加大 `index.merge.policy.max_merged_segment` 配置，而是在负载较低的时间段，通过 forcemerge 接口，强制归并 segment。
 
 ```
-# curl -XPOST http://127.0.0.1:9200/logstash-2015-06.10/_optimize?max_num_segments=1
+# curl -XPOST http://127.0.0.1:9200/logstash-2015-06.10/_forcemerge?max_num_segments=1
 ```
 
-由于 optimize 线程对资源的消耗比普通的归并线程大得多，所以，绝对不建议对还在写入数据的热索引执行这个操作。这个问题对于 Elastic Stack 来说非常好办，一般索引都是按天分割的。更合适的任务定义方式，请阅读本书稍后的 curator 章节。
+由于 forcemerge 线程对资源的消耗比普通的归并线程大得多，所以，绝对不建议对还在写入数据的热索引执行这个操作。这个问题对于 Elastic Stack 来说非常好办，一般索引都是按天分割的。更合适的任务定义方式，请阅读本书稍后的 curator 章节。
 

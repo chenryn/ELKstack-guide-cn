@@ -1,7 +1,5 @@
 # 字段数据
 
-**Elasticsearch 2.x 已经默认所有 not\_analyzed 字段自动启用 doc\_values ！本节不再重要，仅作为知识共享保留。**
-
 字段数据(fielddata)，在 Lucene 中又叫 uninverted index。我们都知道，搜索引擎会使用倒排索引(inverted index)来映射单词到文档的 ID 号。而同时，为了提供对文档内容的聚合，Lucene 还可以在运行时将每个字段的单词以字典序排成另一个 uninverted index，可以大大加速计算性能。
 
 作为一个加速性能的方式，fielddata 当然是被全部加载在内存的时候最为有效。这也是 ES 默认的运行设置。但是，内存是有限的，所以 ES 同时也需要提供对 fielddata 内存的限额方式：
@@ -24,13 +22,100 @@ Elasticsearch 在 total，fielddata，request 三个层面上都设计有 circui
 
 所谓 `doc_values`，其实就是在 ES 将数据写入索引的时候，提前生成好 fielddata 内容，并记录到磁盘上。因为 fielddata 数据是顺序读写的，所以即使在磁盘上，通过文件系统层的缓存，也可以获得相当不错的性能。
 
-注意：因为 `doc_values` 是在数据写入时即生成内容，所以，它只能应用在精准索引的字段上，因为索引进程没法知道后续会有什么分词器生成的结果。所以，字段设置应该是这样：
+注意：因为 `doc_values` 是在数据写入时即生成内容，所以，它只能应用在精准索引的字段上，因为索引进程没法知道后续会有什么分词器生成的结果。
+
+由于在 Elastic Stack 场景中，`doc_values` 的使用极其频繁，到 Elasticsearch 5.0 以后，这两者的区别被彻底强化成两个不同字段类型：`text` 和 `keyword`。
+
+```
+"myfieldname": {
+    "type": "text"
+}
+```
+
+等同于过去的：
 
 ```
     "myfieldname": {
-        "type":       "string",
-        "index":      "not_analyzed",
+        "type": "string",
+        "fielddata": false
+    }
+```
+
+而
+
+```
+"myfieldname": {
+    "type": "keyword"
+}
+```
+
+等同于过去的：
+
+```
+    "myfieldname": {
+        "type": "string",
+        "index": "not_analyzed",
         "doc_values": true
     }
 ```
 
+也就是说，以后的用户，已经不太需要在意 fielddata 的问题了。不过依然有少数情况，你会需要对分词字段做聚合统计的话，你可以在自己接受范围内，开启这个特性：
+
+```
+{
+    "mappings": {
+        "my_type": {
+            "properties": {
+                "message": {
+                    "type": "text",
+                    "fielddata": true,
+                    "fielddata_frequency_filter": {
+                        "min": 0.1,
+                        "max": 1.0,
+                        "min_segment_size": 500
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+你可以看到在上面加了一段 `fielddata_frequency_filter` 配置，这个配置是 segment 级别的。上面示例的意思是：只有这个 segment 里的文档数量超过 500 个，而且含有该字段的文档数量占该 segment 里的文档数量比例超过 10% 时，才加载这个 segment 的 fielddata。
+
+下面是一个可能有用的对分词字段做聚合的示例：
+
+```
+curl -XPOST 'http://localhost:9200/logstash-2016.07.18/logs/_search?pretty&terminate_after=10000&size=0' -d '
+{
+    "aggs": {
+        "group": {
+            "terms": {
+                "field": "punct"
+            },
+            "aggs": {
+                "keyword": {
+                    "significant_terms": {
+                        "size": 2,
+                        "field": "message"
+                    },
+                    "aggs": {
+                        "hit": {
+                            "top_hits": {
+                                "_source": {
+                                    "include": [ "message" ]
+                                },
+                                "size":1
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}'
+```
+
+这个示例可以对经过了 `logstash-filter-punct` 插件处理的数据，获取每种 punct 类型日志的关键词和对应的代表性日志原文。其效果类似 Splunk 的事件模式功能：
+
+![](http://chenlinux.com/images/uploads/splunk-event-pattern.png)

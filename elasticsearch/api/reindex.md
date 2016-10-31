@@ -2,7 +2,9 @@
 
 Elasticsearch 本身不提供对索引的 rename，mapping 的 alter 等操作。所以，如果有需要对全索引数据进行导出，或者修改某个已有字段的 mapping 设置等情况下，我们只能通过 scroll API 导出全部数据，然后重新做一次索引写入。这个过程，叫做 reindex。
 
-既然没有直接的方式，那么自然只能使用其他工具了。这里介绍两个常用的方法，自己写程序和用 logstash。
+之前完成这个过程只能自己写程序或者用 logstash。5.0 中，Elasticsearch 将这个过程内置为 reindex API，但是要注意：这个接口并没有什么黑科技，其本质仅仅是将这段相同逻辑的代码预置分发而已。如果有复杂的数据变更操作等细节需求，依然需要自己编程完成。
+
+下面分别给出这三种方法的示例：
 
 ## Perl 客户端
 
@@ -62,3 +64,50 @@ filter {
   }
 }
 ```
+
+## reindex API
+
+简单的 reindex，可以很容易的完成：
+
+```
+curl -XPOST http://localhost:9200/_reindex -d '
+{
+  "source": {
+    "index": "logstash-2016.10.29"
+  },
+  "dest": {
+    "index": "logstash-new-2016.10.29"
+  }
+}'
+```
+
+复杂需求，也能通过配合其他 API，比如 script、pipeline 等来满足一些，下面举一个复杂的示例：
+
+```
+curl -XPOST http://localhost:9200/_reindex?requests_per_second=10000 -d '
+{
+  "source": {
+    "remote": {
+      "host": "http://192.168.0.2:9200",
+    },
+    "index": "metricbeat-*",
+    "query": {
+      "match": {
+        "host": "webserver"
+      }
+    }
+  },
+  "dest": {
+    "index": "metricbeat",
+    "pipeline": "ingest-rule-1"
+  },
+  "script": {
+    "lang": "painless",
+    "inline": "ctx._index = 'metricbeat-' + (ctx._index.substring('metricbeat-'.length(), ctx._index.length())) + '-1'"
+  }
+}'
+```
+
+上面这个请求的作用，是将来自 192.168.0.2 集群的 metricbeat-2016.10.29 索引中，有关 `host:webserver` 的数据，读取出来以后，经过 localhost 集群的 `ingest-rule-1` 规则处理，在写入 localhost 集群的 metricbeat-2016.10.29-1 索引中。
+
+通过 reindex 接口运行的任务可以通过同样是 5.0 新引入的任务管理接口进行取消、修改等操作。详细介绍见后续任务管理章节。

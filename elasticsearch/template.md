@@ -18,7 +18,7 @@ Elasticsearch 是一个 schema-less 的系统，但 schema-less 并不代表 no 
           "type" : "date"
         },
         "message" : {
-          "type" : "string"
+          "type" : "text"
         },
         "pid" : {
           "type" : "long"
@@ -38,8 +38,7 @@ Elasticsearch 是一个 schema-less 的系统，但 schema-less 并不代表 no 
 {
   "properties" : {
     "syslogtag" : {
-      "type" :    "string",
-      "index":    "not_analyzed"
+      "type" : "keyword",
     }
   }
 }'
@@ -69,8 +68,8 @@ mapping 中主要就是针对字段设置类型以及类型相关参数。那么
 
 1. JSON 基础类型
 
-* 字符串: string
-* 数字: byte, short, integer, long, float, double
+* 字符串: text, keyword
+* 数字: byte, short, integer, long, float, double，half\_float
 * 时间: date
 * 布尔值: true, false
 * 数组: array
@@ -85,16 +84,7 @@ mapping 中主要就是针对字段设置类型以及类型相关参数。那么
 * 二进制: binary
 * 附件: attachment
 
-前面提到，ES 是根据收到的 JSON 数据里的类型来猜测的。所以，一个内容为 `"123"` 的数据，猜测出来的类型应该是 string 而不是 long。除非这个字段已经有了确定为 long 的映射关系，那么 ES 会尝试做一次转换。如果转换失败，这条数据写入就会报错。
-
-**注意：**
-
-ES 的映射虽然有 index 和 type 两层关系，但是实际索引时是以 index 为基础的。如果同一个 index 下不同 type 的字段出现 mapping 不一致的情况，虽然数据依然可以成功写入并生成各自的 mapping，但实际 fielddata 中的索引结果却依然是以 index 内第一个 mapping 类型来生成的。这种情况下可能会有比较奇怪的事情发生。比如：
-
-* 看似 double 的数据实际存储成 long，导致数值比较的搜索结果异常。
-* 同样的字段，一部分采用标准分词器，一部分采用中文分词器，导致索引查询异常。
-
-从 Kibana4 开始，会在 Object Setting 页对该情况做出冲突预警；并从 ES 2.0 版本开始正式拒绝这种冲突数据写入。
+前面提到，ES 是根据收到的 JSON 数据里的类型来猜测的。所以，一个内容为 `"123"` 的数据，猜测出来的类型应该是字符串而不是数值。除非这个字段已经有了确定为 long 的映射关系，那么 ES 会尝试做一次转换。如果转换失败，这条数据写入就会报错。
 
 ## 查看已有数据的映射
 
@@ -112,10 +102,10 @@ ES 的映射虽然有 index 和 type 两层关系，但是实际索引时是以 
                   "format": "dateOptionalTime"
                },
                "name": {
-                  "type": "string"
+                  "type": "keyword"
                },
                "tweet": {
-                  "type": "string"
+                  "type": "text"
                },
                "user_id": {
                   "type": "long"
@@ -131,29 +121,15 @@ ES 的映射虽然有 index 和 type 两层关系，但是实际索引时是以 
 
 大家可以通过上面一个现存的映射发现其实所有的字段都有好几个属性，这些都是我们可以自己定义修改的。除了已经看到的这些基本内容外，ES 还支持其他一些可能会比较常用的映射属性：
 
-* 全文索引还是精确索引
+* 索引还是存储
 * 自定义分词器
 * 自定义日期格式
 
 ### 精确索引
 
-字段都有几个基本的映射选项，类型(type)和索引方式(index)。以字符串类型为例，index 有三个可设置项：
+字段都有几个基本的映射选项，类型(type)、存储(store)和索引方式(index)。默认来说，store 是 false 而 index 是 true。因为 ES 会直接在 `_source` 里存储全部 JSON，不用每个 field 单独存储了。
 
-* analyzed
-  默认选项，以标准的全文索引方式，分析字符串，完成索引。
-* not\_analyzed
-  精确索引，不对字符串做分析，直接索引字段内数据的精确内容。
-* no
-  不索引该字段。
-
-对于日志应用来说，很多字段都是不需要在 Elasticsearch 里做解析这步的，所以，我们可以设置：
-
-```
-    "myfieldname": {
-        "type":     "string",
-        "index":    "not_analyzed"
-    }
-```
+不过在非日志场景，比如用作监控存储的 TSDB 使用的时候，我们就可以关闭 `_source`，只存储有关 metric 名称的字段 store；同时也关闭所有数值字段的 `index`，只使用它们的 `doc_values`。
 
 ### 时间格式
 
@@ -162,15 +138,13 @@ ES 的映射虽然有 index 和 type 两层关系，但是实际索引时是以 
 ```
 "@timestamp" : {
     "type" : "date"
-    "index" : "not_analyzed",
-    "doc_values" : true,
     "format" : "dd/MMM/YYYY:HH:mm:ss Z",
 }
 ```
 
 而 ES 默认的时间字段格式，除了 `dateOptionalTime` 以外，还有一种，就是 `epoch_millis`，毫秒级的 UNIX 时间戳。因为这个数值 ES 可以直接毫不修改的存成内部实际的 long 数值。此外，从 ES 2.0 开始，新增了对秒级 UNIX 时间戳的支持，其 `format` 定义为：`epoch_second`。
 
-注意：在 ES 2.x 中，同名 date 字段的 `format` 也必须保持一致。
+注意：从 ES 2.x 开始，同名 date 字段的 `format` 也必须保持一致。
 
 ### 多重索引
 
@@ -178,9 +152,9 @@ ES 的映射虽然有 index 和 type 两层关系，但是实际索引时是以 
 
 ```
 "title": {
-    "type": "string",
+    "type": "text",
     "fields": {
-        "raw": { "type": "string", "index": "not_analyzed" }
+        "raw": { "type": "keyword" }
     }
 }
 ```
@@ -191,17 +165,16 @@ ES 的映射虽然有 index 和 type 两层关系，但是实际索引时是以 
 
 ```
 "title": {
-    "type": "string",
-    "index": "not_analyzed",
+    "type": "keyword",
     "fields": {
-        "alz": { "type": "string" }
+        "alz": { "type": "text" }
     }
 }
 ```
 
 ## 特殊字段
 
-上面介绍的，都是对普通数据字段的一些常用设置。而实际上，ES 默认还有一些特殊字段，在默默的发挥着作用。这些字段，统一以 `_` 下划线开头。在之前 CRUD 章节中，我们就已经看到一些，比如 `_index`，`_type`，`_id`。默认不开启的还有 `_ttl`，`_timestamp`，`_size`，`_parent` 等。这里需要单独介绍两个，对我们索引和检索的效果和性能，都有较大影响的：
+上面介绍的，都是对普通数据字段的一些常用设置。而实际上，ES 默认还有一些特殊字段，在默默的发挥着作用。这些字段，统一以 `_` 下划线开头。在之前 CRUD 章节中，我们就已经看到一些，比如 `_index`，`_type`，`_id`。默认不开启的还有 `_parent` 等。这里需要介绍三个，对我们索引和检索的效果和性能，都有较大影响的：
 
 ### _all
 
@@ -214,6 +187,14 @@ ES 的映射虽然有 index 和 type 两层关系，但是实际索引时是以 
     "enabled" : false
 }
 ```
+
+Elastic.co 甚至考虑在 6.0 版本中废弃掉 `_all`，由用户自定义字段来完成类似工作(比如日志场景中的 `message` 字段)。因为 `_all` 采用的分词器和用户自定义字段可能是不一致的，某些场景下会产生误解。
+
+### _field_names
+
+`_field_names` 里存储的是每条数据里的字段名，你可以认为它是 `_all` 的补集。其主要作用是在做 `_missing_` 或 `_exists_` 查询的时候，不用检索数据本身，直接获取字段名对应的文档 ID。听起来似乎蛮不错的，但是文档较多的时候，就意味着这个倒排链非常长！而且几乎每次索引写入操作，都需要往这个倒排里加入文档 ID，这点是实际使用中非常损耗写入性能的地方。
+
+除非有必要理由，关闭 `_field_names` 可以提升大概 20% 的写入性能。
 
 ### _source
 
@@ -235,10 +216,9 @@ ES 的映射虽然有 index 和 type 两层关系，但是实际索引时是以 
       "dynamic_templates" : [ {
         "message_field" : {
           "mapping" : {
-            "index" : "analyzed",
             "omit_norms" : true,
             "store" : false,
-            "type" : "string"
+            "type" : "text"
           },
           "match" : "*msg",
           "match_mapping_type" : "string"
@@ -246,11 +226,9 @@ ES 的映射虽然有 index 和 type 两层关系，但是实际索引时是以 
       }, {
         "string_fields" : {
           "mapping" : {
-            "index" : "not_analyzed",
             "ignore_above" : 256,
             "store" : false,
-            "doc_values" : true,
-            "type" : "string"
+            "type" : "keyword"
           },
           "match" : "*",
           "match_mapping_type" : "string"

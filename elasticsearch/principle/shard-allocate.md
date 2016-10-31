@@ -11,17 +11,17 @@ ES 提供了一系列参数详细控制这部分逻辑：
 
 * cluster.routing.allocation.enable
   该参数用来控制允许分配哪种分片。默认是 `all`。可选项还包括 `primaries` 和 `new_primaries`。`none` 则彻底拒绝分片。该参数的作用，本书稍后集群升级章节会有说明。
-* cluster.routing.allocation.allow_rebalance
+* cluster.routing.allocation.allow\_rebalance
   该参数用来控制什么时候允许数据均衡。默认是 `indices_all_active`，即要求所有分片都正常启动成功以后，才可以进行数据均衡操作，否则的话，在集群重启阶段，会浪费太多流量了。
-* cluster.routing.allocation.cluster_concurrent_rebalance
+* cluster.routing.allocation.cluster\_concurrent\_rebalance
   该参数用来控制**集群内**同时运行的数据均衡任务个数。默认是 2 个。如果有节点增减，且集群负载压力不高的时候，可以适当加大。
-* cluster.routing.allocation.node_initial_primaries_recoveries
+* cluster.routing.allocation.node\_initial\_primaries\_recoveries
   该参数用来控制**节点**重启时，允许同时恢复几个主分片。默认是 4 个。如果节点是多磁盘，且 IO 压力不大，可以适当加大。
-* cluster.routing.allocation.node_concurrent_recoveries
+* cluster.routing.allocation.node\_concurrent\_recoveries
   该参数用来控制**节点**除了主分片重启恢复以外其他情况下，允许同时运行的数据恢复任务。默认是 2 个。所以，节点重启时，可以看到主分片迅速恢复完成，副本分片的恢复却很慢。除了副本分片本身数据要通过网络复制以外，并发线程本身也减少了一半。当然，这种设置也是有道理的——主分片一定是本地恢复，副本分片却需要走网络，带宽是有限的。从 ES 1.6 开始，冷索引的副本分片可以本地恢复，这个参数也就是可以适当加大了。
-* indices.recovery.concurrent_streams
+* indices.recovery.concurrent\_streams
   该参数用来控制**节点**从网络复制恢复副本分片时的数据流个数。默认是 3 个。可以配合上一条配置一起加大。
-* indices.recovery.max_bytes_per_sec
+* indices.recovery.max\_bytes\_per\_sec
   该参数用来控制**节点**恢复时的速率。默认是 40MB。显然是比较小的，建议加大。
 
 此外，ES 还有一些其他的分片分配控制策略。比如以 `tag` 和 `rack_id` 作为区分等。一般来说，Elastic Stack 场景中使用不多。运维人员可能比较常见的策略有两种：

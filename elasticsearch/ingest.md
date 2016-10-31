@@ -3,7 +3,7 @@
 Ingest 节点是 Elasticsearch 5.0 新增的节点类型和功能。其开启方式为：在 `elasticsearch.yml` 中定义：
 
 ```
-node.ingest: false
+node.ingest: true
 ```
 
 Ingest 节点的基础原理，是：节点接收到数据之后，根据请求参数中指定的管道流 id，找到对应的已注册管道流，对数据进行处理，然后将处理过后的数据，按照 Elasticsearch 标准的 indexing 流程继续运行。
@@ -111,4 +111,32 @@ Ingest 节点的处理器，相当于 Logstash 的 filter 插件。事实上其�
             "timezone" : "Europe/Amsterdam"
         }
     }
+```
+
+### 其他处理器插件
+
+除了内置的处理器之外，还有 3 个处理器，官方选择了以插件性质单独发布，它们是 attachement，geoip 和 user-agent 。原因应该是这 3 个处理器需要额外数据模块，而且处理性能一般，担心拖累 ES 集群。
+
+它们可以和其他普通 ES 插件一样安装：
+
+```
+sudo bin/elasticsearch-plugin install ingest-geoip
+```
+
+使用方式和其他处理器一样：
+
+```
+curl -XPUT http://localhost:9200/_ingest/pipeline/my-pipeline-id-2 -d '
+{
+    "description" : "Add geoip info",
+    "processors" : [
+        {
+            "geoip" : {
+                "field" : "ip",
+                "target_field" : "geo",
+                "database_file" : "GeoLite2-Country.mmdb.gz"
+            }
+        }
+    ]
+}
 ```

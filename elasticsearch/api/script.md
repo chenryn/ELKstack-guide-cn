@@ -1,6 +1,8 @@
 # script
 
-Elasticsearch 中，可以使用自定义脚本扩展功能。包括评分、过滤函数和聚合字段等方面。作为 Elastic Stack 场景，我们只介绍在聚合字段方面使用 script 的方式。
+Elasticsearch 中，可以使用自定义脚本扩展功能。包括评分、过滤函数和聚合字段等方面。内置脚本引擎历经 MVEL、Groovy、Lucene expression 的变换后，Elastic.co 最终决定实现一个自己专用的 Painless 脚本语言，并在 5.0 版正式发布。
+
+作为 Elastic Stack 场景，我们只介绍在聚合字段方面使用 script 的方式。
 
 ## 动态提交
 
@@ -11,20 +13,27 @@ Elasticsearch 中，可以使用自定义脚本扩展功能。包括评分、过
     "aggs" : {
         "clientip_top10" : {
             "terms" : {
-                "script" : "doc['clientip'].value"
+                "script" : {
+                    "lang" : "painless",
+                    "inline" : "doc['clientip'].value"
+                }
             }
         }
     }
 }'
 ```
 
-在 script 中，有两种方式引用数据：`doc['clientip'].value` 和 `_source.clientip`。其区别在于：`doc[].value` 读取 fielddata 内的数据，`_source.obj.attr` 读取 `_source` 的 JSON 内容。这也意味着，前者必须读取的是最终的词元字段数据，而后者可以返回任意的数据结构。
+在 script 中，有三种方式引用数据：`doc['clientip'].value`、`_field['clientip'].value` 和 `_source.clientip`。其区别在于：
 
-**注意**：因为读取的是 fielddata，所以如果有分词的话，`doc[].value` 读取到的是分词后的数据。所以请按需使用 `doc['clientip.raw'].value` 写法。
+* `doc[].value` 读取 doc value 内的数据；
+* `_field[]` 读取 field 设置 `"store":true` 的存储内容；
+* `_source.obj.attr` 读取 `_source` 的 JSON 内容。
+
+这也意味着，前者必须读取的是最终的词元字段数据，而后者可以返回任意的数据结构。
+
+**注意**：如果有分词，且未禁用 fielddata 的话，`doc[].value` 读取到的是分词后的数据。所以请注意使用 `doc['clientip.keyword'].value` 写法。
 
 ## 固定文件
-
-ES 在 1.4.0 之前，默认脚本引擎是使用 mvel 语言，随后改成 groovy，但是从 1.4.3 开始，因为安全漏洞，关掉了动态提交功能。只能使用固定文件方式运行。
 
 为了和动态提交的语法有区别，调用固定文件的写法如下：
 
@@ -33,11 +42,13 @@ ES 在 1.4.0 之前，默认脚本引擎是使用 mvel 语言，随后改成 gro
     "aggs" : {
         "clientip_subnet_top10" : {
             "terms" : {
-                "script_file" : "getvalue",
-                "lang" : "groovy",
-                "params" : {
-                    "fieldname": "clientip.raw",
-                    "pattern": "^((?:\d{1,3}\.?){3})\.\d{1,3}$"
+                "script" : {
+                   "file" : "getvalue",
+                    "lang" : "groovy",
+                    "params" : {
+                        "fieldname": "clientip.keyword",
+                        "pattern": "^((?:\d{1,3}\.?){3})\.\d{1,3}$"
+                    }
                 }
             }
         }
@@ -61,6 +72,7 @@ if (matcher.matches()) {
 
 ES 支持通过插件方式，扩展脚本语言的支持，目前默认自带的语言包括：
 
+* painless
 * lucene expression
 * groovy
 * mustache
