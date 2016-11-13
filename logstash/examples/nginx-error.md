@@ -27,7 +27,7 @@ filter {
     }
     grok {
         match => { "request" => '"%{WORD:verb} %{URIPATH:urlpath}(?:\?%{NGX_URIPARAM:urlparam})?(?: HTTP/%{NUMBER:httpversion})"' }
-        patterns_dir => "/etc/logstash/patterns"
+        patterns_dir => ["/etc/logstash/patterns"]
         remove_field => [ "message", "errinfo", "request" ]
     }
 }
