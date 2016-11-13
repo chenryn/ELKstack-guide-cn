@@ -1,119 +1,270 @@
 # 主页入口
 
-kibana 4 主页入口，分析方法跟 kibana 3 一样，看 index.html 和 require.config.js 即可。由此可以看到，首先进入的，应该是 index.js。主要分为两步。
+我们先从启动 Kibana 的命令行程序入手，可以看到这是一个 shell 脚本。最终执行的是 `node src/cli serve` 命令。然后跟着就可以找到 `src/cli/serve` 程序，其中最重要的是加载了 `src/server/kbn_server.js`。继续打开，可以看到它先后加载了 config, http, logging, plugin 和 uiExports。毫无疑问，其中重点是 http 和 uiExports 部分。
 
-## 第一步，route 设置
+`http/index.js` 中，初始化了 Hapi.Server 对象，加载 hapi plugin，并声明了主要的 route。包括静态文件、模板文件、短地址跳转和主页默认跳转到 `/app/kibana`。目前来说 Kibana 在服务器端主动做的事情还比较少。在我们不基于 Hapi 框架做二次开发的情况下，不用过于关注这期间 Kibana 做了什么。
 
-```
-define(function (require) {
-  var angular = require('angular');
-  var _ = require('lodash');
-  var $ = require('jquery');
-  var modules = require('modules');
-  var routes = require('routes');
+下面进入 `src/ui/` 目录继续。
 
-  var configFile = JSON.parse(require('text!config'));
-
-  var kibana = modules.get('kibana', [
-    'elasticsearch',
-    'pasvaz.bindonce',
-    'ngRoute',
-    'ngClipboard'
-  ]);
-
-  kibana
-    .constant('kbnVersion', window.KIBANA_VERSION)
-    .constant('minimumElasticsearchVersion', '1.6.0')
-    .constant('sessionId', Date.now())
-    .config(routes.config);
-
-  routes
-    .otherwise({
-      redirectTo: '/' + configFile.default_app_id
-    });
-```
-
-index.js 根据 configFile 设置默认 routes，设置要求的 Elasticsearch 版本；
-
-
-设置 routes 的具体操作在加载的 `utils/routes/index.js` 文件里，其中会调用 `utils/routes/_setup.js`，在未设置 default index pattern 的时候跳转 URL 到 "/settings/indices" 页面。
+`src/ui/index.js` 中完成了更细节的各类 app 的加载和路由分配：
 
 ```
-      handleKnownError: function (err) {
-        if (err instanceof NoDefaultIndexPattern || err instanceof NoDefinedIndexPatterns) {
-          kbnUrl.change('/settings/indices');
-        } else {
-          return Promise.reject(err);
-        }
-      }
+const uiExports = kbnServer.uiExports = new UiExports({
+  urlBasePath: config.get('server.basePath')
+});
+for (let plugin of kbnServer.plugins) {
+  uiExports.consumePlugin(plugin);
+}
+
+const bundles = kbnServer.bundles = new UiBundleCollection(bundlerEnv, config.get('optimize.bundleFilter'));
+
+for (let app of uiExports.getAllApps()) {
+  bundles.addApp(app);
+}
+server.route({
+  path: '/app/{id}',
+  method: 'GET',
+  handler: function (req, reply) {
+    const id = req.params.id;
+    const app = uiExports.apps.byId[id];
+    if (!app) return reply(Boom.notFound('Unknown app ' + id));
+
+    if (kbnServer.status.isGreen()) {
+      return reply.renderApp(app);
+    } else {
+      return reply.renderStatusPage();
+    }
+  }
+});
 ```
 
-此外，`utils/routes/index.js` 还会加载 `components/setup/setup.js` 完成整个环境的检查和启动(在 Kibana4.0 时，是在第二步 kibana plugin 加载的，4.1 开始往前挪到这里)。setup 过程包括：
+可以看到这里把所有的 app 都打包进了 bundle。这也是很多初次接触 Kibana 二次开发的新手很容易被绊倒的一点——改了一行代码怎么没生效？因为服务是优先使用 bundle 内容的，而不会每次都进到各源码目录执行。
+
+如果确实在频繁修改代码的阶段，每次都等 bundle 确实太累了，可以看到上面代码段里有一个 `config.get('optimize.bundleFilter')`。是的，其实 Kibana 支持在 config 中设定具体的 optimize 行为，但是官方文档上并没有介绍。最完整的配置项，见 `src/server/config/schema.js`。前文说过，这是在启动 `kbn_server` 的时候最先加载的。
+
+在 schema 中可以看到一个很可爱的配置：
 
 ```
-    var checkForEs = Private(require('components/setup/steps/check_for_es'));
-    var checkEsVersion = Private(require('components/setup/steps/check_es_version'));
-    var checkForKibanaIndex = Private(require('components/setup/steps/check_for_kibana_index'));
-    var createKibanaIndex = Private(require('components/setup/steps/create_kibana_index'));
-
-    return _.once(function () {
-      return checkForEs()
-      .then(checkEsVersion)
-      .then(checkForKibanaIndex)
-      .then(function (exists) {
-        if (!exists) return createKibanaIndex();
-      })
-    });
+optimize: _joi2['default'].object({
+  enabled: _joi2['default'].boolean()['default'](true),
+})
 ```
 
-也就是依次调用 `components/setup/steps/` 下的 `check_for_es`, `check_es_version`, `check_for_kibana_index`，如果没有 kibana index，再调用一个 `create_kibana_index`。完成。
+所以你只要在 `config/kibana.yml` 中加上这么一行配置就好了：`optimize.enabled: false`。
 
-## 第二步，kibana 插件加载
+## kibana app
+
+从 Kibana 4.5 版开始，Kibana 框架和 Kibana App 做了一个剥离。现在，我们进到 Kibana App 里看看。路径在 `src/core_plugins/kibana`。
+
+我们可以看到路径中有如下文件：
+
+* common/
+* index.js
+* package.json
+* public/
+* server/
+
+这是一个很显然的普通 nodejs 模块的结构。我们可以看看作为模块描述的 package.json 里写了啥：
 
 ```
-  kibana.load = _.onceWithCb(function (cb) {
-    var firstLoad = [ 'plugins/kibana/index' ];
-    var thenLoad = _.difference(configFile.plugins, firstLoad);
-    require(firstLoad, function loadApps() {
-      require(thenLoad, cb);
-    });
+{
+  "name": "kibana",
+  "version": "kibana"
+}
+```
+
+非常有趣的 version。事实上这个写法的意思是本插件的版本号和 Kibana 框架的版本号保持一致。事实上所有 core\_plugins 的版本号都写的是 kibana。
+
+然后 index.js 中，调用 uiExports 完成了 app 注册。也这是之后我们自己开发新的 Kibana 应用时必须做的。我们下面摘主要段落分别看一下：
+
+```
+module.exports = function (kibana) {
+  var kbnBaseUrl = '/app/kibana';
+  return new kibana.Plugin({
+    id: 'kibana',
+    config: function config(Joi) {
+      return Joi.object({
+        enabled: Joi.boolean()['default'](true),
+        defaultAppId: Joi.string()['default']('discover'),
+        index: Joi.string()['default']('.kibana')
+      })['default']();
+    },
+    uiExports: {
+      app: {
+         id: 'kibana',
+         title: 'Kibana',
+         listed: false,
+         description: 'the kibana you know and love',
+         main: 'plugins/kibana/kibana',
+```
+
+这是最基础的部分，注册成为一个 `kibana.Plugin`，id 叫什么，config 配置有什么，标题叫什么，入口文件是哪个，具体是什么类型的 uiExports，一般常见的选择有：app、visType。这两者也是做 Kibana 二次开发最容易入手的地方。
+
+```
+         uses: ['visTypes', 'spyModes', 'fieldFormats', 'navbarExtensions', 'managementSections', 'devTools', 'docViews'],
+         injectVars: function injectVars(server, options) {...}
+      },
+```
+
+uses 和 injectVars 是可选的方式，可以在 `src/ui/ui_app.js` 中看到起作用。分别是指明下列模块已经加载过，以后就不用再加载了；以及声明需要注入浏览器的 JSON 变量。
+
+```
+      links: [{
+        id: 'kibana:discover',
+        title: 'Discover',
+        order: -1003,
+        url: kbnBaseUrl + '#/discover',
+        description: 'interactively explore your data',
+        icon: 'plugins/kibana/assets/discover.svg'
+      }, {
+        ...
+      }],
+    },
+```
+
+这里是一个特殊的地方，一般来说其他应用不会用到 links 类型的 uiExports。因为 Kibana 应用本身不用单一的左侧边栏切换，而是需要把自己内部的 Discover、Visualize、Dashboard、Management 功能放上去。所以定义里，把自己的 `listed` 给 false 了，而把这具体的四项通过 links 的方式，添加到侧边栏上。links 具体可配置的属性，见 `src/ui/ui_nav_link.js`。这里就不细讲了。
+
+```
+    preInit: _asyncToGenerator(function* (server) {
+        yield mkdirp(server.config().get('path.data'));
+    }),
+```
+
+preInit 也是一个可选属性，如果有需要创建目录之类的要预先准备的操作，可以在这步完成。
+
+```
+    init: function init(server, options) {
+       // uuid
+       (0, _serverLibManage_uuid2['default'])(server);
+       // routes
+       (0, _serverRoutesApiIngest2['default'])(server);
+       (0, _serverRoutesApiSearch2['default'])(server);
+       (0, _serverRoutesApiSettings2['default'])(server);
+       (0, _serverRoutesApiScripts2['default'])(server);
+
+       server.expose('systemApi', systemApi);
+    }
   });
+}
 ```
 
-执行 `kibana.load()` 函数，先加载 `plugins/kibana/index.js`，然后加载 configFile 里定义的其他 plugins。
+init 是最后一步。我们看到 Kibana 应用的最后一步是继续加载了一些服务器端的 route 设置。比如这个 `_serverRoutesApiScripts2`，具体代码是在 `src/core_plugins/kibana/server/routes/api/scripts/register_languages.js` 里：
 
-`plugins/kibana/index.js` 里又有一系列操作：
+```
+server.route({
+  path: '/api/kibana/scripts/languages',
+  method: 'GET',
+  handler: function handler(request, reply) {
+    var callWithRequest = server.plugins.elasticsearch.callWithRequest;
+    return callWithRequest(request, 'cluster.getSettings', {
+      include_defaults: true,
+      filter_path: '**.script.engine.*.inline'
+    }).then(function (esResponse) {
+      var langs = _lodash2['default'].get(esResponse, 'defaults.script.engine', {});
+      var inlineLangs = _lodash2['default'].pick(langs, function (lang) {
+        return lang.inline === 'true';
+      });
+      var supportedLangs = _lodash2['default'].omit(inlineLangs, 'mustache');
+      return _lodash2['default'].keys(supportedLangs);
+    }).then(reply)['catch'](function (error) {
+      reply((0, _libHandle_es_error2['default'])(error));
+    });
+  }
+});
+```
 
-1. 加载 `components/courier/courier.js` 和 `components/config/config.js` 两个 angular.service；
-2. 加载 `plugins/kibana/_init`, `plugins/kibana/_apps`, `plugins/kibana/_timepicker`。
+我在之前 K4 源码解析中曾经讲过的一个二次开发场景 —— 切换脚本引擎支持。在 Elasticsearch 5.0 中，在 `/_cluster/settings` 接口里提供了具体的可用引擎细节，诸如一个个 `script.engine.painless.inline` 的列表。这样，就不必像之前那样明确知道自己可以用什么，然后硬改代码来支持了；而是可以通过这个接口数据，拿到集群实际支持什么引擎，当前默认是什么引擎等设置，直接在 Kibana 中使用。上面这段代码，就是提供了这个数据。
 
-`components/config/config.js` 主要是从 kibana index 里的 "config" type 中读取 "kbnVersion" id 的数据。这个 "kbnVersion" 就是之前 index.js 里的加载的第一个常量，在 grunt build 编译时会自动生成。
+*注意其中排除了 mustache，因为它只能做模板渲染，没法做字段值计算。*
 
-`plugins/kibana/_init` 里监听 `application.load` 事件，触发 `courier.start()` 函数。
+好了。应用注册完成，我们看到了 main 入口，那么去看看 main 入口的内容吧。打开 `src/core_plugins/kibana/public/kibana.js`。主要如下：
 
-`plugins/kibana/_timepicker` 提供时间选择器页面。
+```
+import kibanaLogoUrl from 'ui/images/kibana.svg';
+import 'ui/autoload/all';
+import 'plugins/kibana/discover/index';
+import 'plugins/kibana/visualize/index';
+import 'plugins/kibana/dashboard/index';
+import 'plugins/kibana/management/index';
+import 'plugins/kibana/doc';
+import 'plugins/kibana/dev_tools';
+import 'ui/vislib';
+import 'ui/agg_response';
+import 'ui/agg_types';
+import 'ui/timepicker';
+import Notifier from 'ui/notify/notifier';
+import 'leaflet';
+
+routes.enable();
+
+routes
+.otherwise({
+  redirectTo: `/${chrome.getInjected('kbnDefaultAppId', 'discover')}`
+});
+
+chrome
+.setRootController('kibana', function ($scope, courier, config) {
+  $scope.$on('application.load', function () {
+    courier.start();
+  });
+  ...
+});
+```
+
+基本上通过这一串 import 就可以看到 Kibana 中最主要的各项功能了。
+
+而对内部比较重要的则是这个 `ui/autoload/all`。这里面其实是加载了 kibana 自定义的各种 angular module、directive 和 filter。像我们熟悉的 markdown、moment、auto\_select、json\_input、paginate、file\_upload 等都在这里面加载。这些都是网页开发的通用工具，这里就不再介绍细节了，有兴趣的读者可以在 `src/ui/public/` 下找到对应文件。
+
+设置 routes 的具体操作在加载的 `src/ui/public/routes/route_manager.js` 文件里，其中会调用 `sr/ui/public/index_patterns/route_setup/load_default.js` 中提供的 `addSetupWork` 方法，在未设置 default index pattern 的时候跳转 URL 到 `whenMissingRedirectTo` 页面。
+
+```
+  uiRoutes
+  .addSetupWork(...)
+  .afterWork(
+    // success
+    null,
+
+    // failure
+    function (err, kbnUrl) {
+       let hasDefault = !(err instanceof NoDefaultIndexPattern);
+       if (hasDefault || !whenMissingRedirectTo) throw err; // rethrow
+
+       kbnUrl.change(whenMissingRedirectTo);
+       if (!defaultRequiredToasts) defaultRequiredToasts = [];
+       else defaultRequiredToasts.push(notify.error(err));
+    }
+  )
+```
+
+而这个 `whenMissingRedirectTo` 页面是在 kibana 应用的源码里写死的，见 `src/core_plugins/kibana/public/management/index.js`：
+
+```
+uiRoutes
+.when('/management', {
+      template: landingTemplate
+});
+
+require('ui/index_patterns/route_setup/load_default')({
+      whenMissingRedirectTo: '/management/kibana/index'
+});
+```
+
+在原先的版本中，routes 里面还会检查 Elasticsearch 的版本号，在 5.0 版里，这件事情从 kibana plugin 改到 elasticsearch plugin 里完成了。
 
 ### courier 概述
 
-`components/courier/courier.js` 中定义了 **Courier** 类。**Courier** 是一个非常重要的东西，可以简单理解为 kibana 跟 ES 之间的一个 object mapper。简要的说，包括一下功能：
+kibana.js 的最后，控制器则会监听 `application.load` 事件，在页面加载完成的时候触发 `courier.start()` 函数。
+
+`src/ui/public/courier/courier.js` 中定义了 **Courier** 类。**Courier** 是一个非常重要的东西，可以简单理解为 kibana 跟 ES 之间的一个 object mapper。简要的说，包括一下功能：
 
 ```
+    import DocSourceProvider from './data_source/doc_source';
+    ...
     function Courier() {
       var self = this;
-      var DocSource = Private(require('components/courier/data_source/doc_source'));
-      var SearchSource = Private(require('components/courier/data_source/search_source'));
-      var searchStrategy = Private(require('components/courier/fetch/strategy/search'));
-      var requestQueue = Private(require('components/courier/_request_queue'));
-      var fetch = Private(require('components/courier/fetch/fetch'));
-      var docLooper = self.docLooper = Private(require('components/courier/looper/doc'));
-      var searchLooper = self.searchLooper = Private(require('components/courier/looper/search'));
-
-      self.setRootSearchSource = Private(require('components/courier/data_source/_root_search_source')).set;
-      self.SavedObject = Private(require('components/courier/saved_object/saved_object'));
-      self.indexPatterns = indexPatterns;
-      self.redirectWhenMissing = Private(require('components/courier/_redirect_when_missing'));
+      var DocSource = Private(DocSourceProvider);
       self.DocSource = DocSource;
-      self.SearchSource = SearchSource;
+      ...
 
       self.start = function () {
         searchLooper.start();
@@ -154,7 +305,7 @@ index.js 根据 configFile 设置默认 routes，设置要求的 Elasticsearch �
 
 从类的方法中可以看出，其实主要就是五个属性的控制：
 
-* DocSource 和 SearchSource：继承自 `components/courier/data_source/_abstract.js`，调用 `components/courier/data_source/data_source/_doc_send_to_es.js` 完成跟 ES 数据的交互，用来做 savedObject 和 index_pattern 的读写：
+* DocSource 和 SearchSource：继承自 `src/ui/public/courier/data_source/_abstract.js`，调用 `src/ui/public/courier/data_source/data_source/_doc_send_to_es.js` 完成跟 ES 数据的交互，用来做 savedObject 和 index\_pattern 的读写：
 
 ```
       es[method](params)
@@ -180,45 +331,68 @@ index.js 根据 configFile 设置默认 routes，设置要求的 Elasticsearch �
         }
 ```
 
-这个 es 在是调用了 `services/es.js` 里定义的 service，里面内容超级简单，就是加载官方的 elasticsearch.js 库，然后初始化一个最简的 esFactory 客户端，包括超时都设成了 0，把这个控制交给 server 端。
+这个 es 在是调用了 `src/ui/public/es.js` 里定义的 service，里面内容超级简单，就是加载官方的 elasticsearch.js 库，然后初始化一个最简的 esFactory 客户端，包括超时都设成了 0，把这个控制交给 server 端。
 
 ```
-define(function (require) {
-  require('elasticsearch');
-  var _ = require('lodash');
-  var es; // share the client amoungst all apps
-  require('modules')
-    .get('kibana', ['elasticsearch', 'kibana/config'])
-    .service('es', function (esFactory, configFile, $q) {
-      if (es) return es;
+import 'elasticsearch-browser';
+import _ from 'lodash';
+import uiModules from 'ui/modules';
 
-      es = esFactory({
-        host: configFile.elasticsearch,
-        log: 'info',
-        requestTimeout: 0,
-        apiVersion: '1.4'
-      });
-      return es;
-    });
+let es; // share the client amongst all apps
+uiModules
+  .get('kibana', ['elasticsearch', 'kibana/config'])
+  .service('es', function (esFactory, esUrl, $q, esApiVersion, esRequestTimeout) {
+    if (es) return es;
+    es = esFactory({
+      host: esUrl,
+      log: 'info',
+      requestTimeout: esRequestTimeout,
+      apiVersion: esApiVersion,
+      plugins: [function (Client, config) {
+        // esFactory automatically injects the AngularConnector to the config
+        // https://github.com/elastic/elasticsearch-js/blob/master/src/lib/connectors/angular.js
+        _.class(CustomAngularConnector).inherits(config.connectionClass);
+        function CustomAngularConnector(host, config) {
+          CustomAngularConnector.Super.call(this, host, config);
+
+          this.request = _.wrap(this.request, function (request, params, cb) {
+          if (String(params.method).toUpperCase() === 'GET') {
+            params.query = _.defaults({ _: Date.now()  }, params.query);
+          }
+          return request.call(this, params, cb);
+        });
+      }
+      config.connectionClass = CustomAngularConnector;
+    }]
+  });
+  return es;
 });
 ```
 
 * searchLooper 和 docLooper：分别给 `Looper.start` 方法传递 searchStrategy 和 docStrategy，对应 ES 的 `/_msearch` 和 `/_mget` 请求。searchLooper 的实现如下：
 
 ```
-    var fetch = Private(require('components/courier/fetch/fetch'));
-    var searchStrategy = Private(require('components/courier/fetch/strategy/search'));
-    var requestQueue = Private(require('components/courier/_request_queue'));
-    var Looper = Private(require('components/courier/looper/_looper'));
-    var searchLooper = new Looper(null, function () {
+import FetchProvider from '../fetch';
+import SearchStrategyProvider from '../fetch/strategy/search';
+import RequestQueueProvider from '../_request_queue';
+import LooperProvider from './_looper';
+
+export default function SearchLooperService(Private, Promise, Notifier, $rootScope) {
+    let fetch = Private(FetchProvider);
+    let searchStrategy = Private(SearchStrategyProvider);
+    let requestQueue = Private(RequestQueueProvider);
+
+    let Looper = Private(LooperProvider);
+    let searchLooper = new Looper(null, function () {
       $rootScope.$broadcast('courier:searchRefresh');
       return fetch.these(
         requestQueue.getInactive(searchStrategy)
       );
     });
+    ...
 ```
 
-这里的关键方法是 `fetch.these()`，出自 `components/courier/fetch/_fetch_these.js`，其中调用的 `components/courier/fetch/_call_client.js` 有如下一段代码：
+这里的关键方法是 `fetch.these()`，出自 `src/ui/public/courier/fetch/fetch_these.js`，其中调用的 `src/ui/public/courier/fetch/call_client.js` 有如下一段代码：
 
 ```
       Promise.map(executable, function (req) {
@@ -231,12 +405,7 @@ define(function (require) {
         return strategy.reqsFetchParamsToBody(reqsFetchParams);
       })
       .then(function (body) {
-        return (esPromise = es[strategy.clientMethod]({
-          timeout: configFile.shard_timeout,
-          ignore_unavailable: true,
-          preference: sessionId,
-          body: body
-        }));
+        return (esPromise = es[strategy.clientMethod]({ body }));
       })
       .then(function (clientResp) {
         return strategy.getResponses(clientResp);
@@ -253,6 +422,7 @@ define(function (require) {
         searchLooper.ms(ms);
         return this;
       };
+      ...
       $rootScope.$watchCollection('timefilter.refreshInterval', function () {
         var refreshValue = _.get($rootScope, 'timefilter.refreshInterval.value');
         var refreshPause = _.get($rootScope, 'timefilter.refreshInterval.pause');
@@ -266,184 +436,19 @@ define(function (require) {
 
 ### 路径记忆功能的实现
 
-`plugins/kibana/_apps.js` 中，我们可以看到路径记忆功能是怎么实现的：
+`src/ui/public/chrome/api/apps.js` 中，我们可以看到路径记忆功能是怎么实现的：
 
 ```
-    function appKey(app) {
-      return 'lastPath:' + app.id;
-    }
-    function assignPaths(app) {
-      app.rootPath = '/' + app.id;
-      app.lastPath = sessionStorage.get(appKey(app)) || app.rootPath;
-      return app.lastPath;
-    }
-    function getShow(app) {
-      app.show = app.order >= 0 ? true : false;
-    }
-    function setLastPath(app, path) {
-      app.lastPath = path;
-      return sessionStorage.set(appKey(app), path);
-    }
-
-    $scope.apps = Private(require('registry/apps'));
-    // initialize each apps lastPath (fetch it from storage)
-    $scope.apps.forEach(assignPaths);
-    $scope.apps.forEach(getShow);
-
-    function onRouteChange() {
-      var route = $location.path().split(/\//);
-      $scope.apps.forEach(function (app) {
-        if (app.active = app.id === route[1]) {
-          $rootScope.activeApp = app;
-        }
-      });
-      if (!$rootScope.activeApp || $scope.appEmbedded) return;
-      setLastPath($rootScope.activeApp, globalState.removeFromUrl($location.url()));
-    }
-
-    $rootScope.$on('$routeChangeSuccess', onRouteChange);
-    $rootScope.$on('$routeUpdate', onRouteChange);
+module.exports = function (chrome, internals) {
+  internals.appUrlStore = internals.appUrlStore || window.sessionStorage;
+  ...
+  chrome.getLastUrlFor = function (appId) {
+    return internals.appUrlStore.getItem(`appLastUrl:${appId}`);
+  };
+  chrome.setLastUrlFor = function (appId, url) {
+    internals.appUrlStore.setItem(`appLastUrl:${appId}`, url);
+  };
 ```
 
-这里使用的 `sessionStorage` 是 HTML5 自带的新特性，这样，每次标签页切换的时候，都可以把 `$location.url` 保存下来。至于整个 Kibana 页面上标签页的初始状态，则通过 `registry/apps.js` 获取。
+这里使用的 `sessionStorage` 是 HTML5 自带的新特性，这样，每次标签页切换的时候，都可以把 `$location.url` 保存下来。
 
-### 插件的加载
-
-那么，各标签页插件是怎么进到 *registry/apps* 里的呢？
-
-之前我们已经说过，index.js 一开始加载完 kibana 以后，会挨个 `require(configFile.plugins)`。这个 configFile.plugins 按说就应该是列出来各个标签页了，但实际上，K4 的配置文件 `server/config/kibana.yml` 里并没有一个参数叫 `plugins`。所以，还得看看 server 端的实现了。
-
-和阅读 Kibana 主页入口一样，找到 server 端的主入口 `server/index.js`：
-
-```
-var requirePlugins = require('./lib/plugins/require_plugins');
-var extendHapi = require('./lib/extend_hapi');
-function Kibana(settings, plugins) {
-  plugins = plugins || [];
-  this.server = new Hapi.Server();
-  extendHapi(this.server);
-  var config = this.server.config();
-  if (settings) config.set(settings);
-
-  this.plugins = [];
-  var externalPluginsFolder = config.get('kibana.externalPluginsFolder');
-  if (externalPluginsFolder) {
-    this.plugins = _([externalPluginsFolder])
-      .flatten()
-      .map(requirePlugins)
-      .flatten()
-      .value();
-  }
-  this.plugins = this.plugins.concat(plugins);
-```
-
-根据这段代码，我们知道，K4 的 server 端，统一也有插件机制，由 `server/lib/plugins/require_plugins.js` 加载内置 server 插件，然后再加上外部 server 插件目录。requirePlugins 中查找内置插件的方法如下：
-
-```
-  globPath = globPath || join(__dirname, '..', '..', 'plugins', '*', 'index.js');
-  return glob.sync(globPath).map(function (file) {
-    var module = require(file);
-    var regex = new RegExp('([^/]+)/index.js');
-
-    var matches = file.match(regex);
-    if (!module.name && matches) {
-      module.name = matches[1];
-    }
-```
-
-也就是说，加载 `server/plugins/` 下所有子目录的 index.js。目前 K4 自带的有：config, elasticsearch, static, status。分别用来返回 config 数据，代理 ES 请求，处理纯静态文件请求，显示 server 端各插件状态。
-
-我们具体看这个 `server/plugins/config/index.js` 的内容：
-
-```
-var listPlugins = require('../../lib/plugins/list_plugins');
-
-module.exports = new kibana.Plugin({
-  init: function (server, options) {
-
-    server.route({
-      method: 'GET',
-      path: '/config',
-      handler: function (request, reply) {
-        var config = server.config();
-        reply({
-          kibana_index: config.get('kibana.index'),
-          default_app_id: config.get('kibana.defaultAppId'),
-          shard_timeout: config.get('elasticsearch.shardTimeout'),
-          plugins: listPlugins(server)
-        });
-      }
-    });
-
-  }
-});
-```
-
-很明显，一个标准的 node.js 的 route，用来响应对 "/config" 这个地址的 GET 请求，返回一个哈希 JSON，其中就有 plugins。没错，我们前面说的 configFiles.plugins 就是从这里获得的。
-
-下面看这个 `listPlugins` 的实现。
-
-```
-    var config = server.config();
-    var bundled_plugins = plugins(config.get('kibana.bundledPluginsFolder'));
-    var external_plugins = _(server.plugins).map(function (plugin, name) {
-      return plugin.self && plugin.self.publicPlugins || [];
-    }).flatten().value();
-```
-
-这个 "bundledPluginsFolder" 也不是我们 kibana.yml 里存在的参数设置。所以，还得看上面这行 `server.config()` 了。回到最早先的 `server/index.js` 里，其实在 require_plugins 后面，还有一个 extend_hapi。Hapi 是 nodejs 的一个可扩展框架。我们看到 index.js 中，正是在 `extendHapi(this.server)` 后第一次获取了 `server.config()`。
-
-extendHapi 只有两行：
-
-```
-  server.decorate('server', 'config', require('./config'));
-  server.decorate('server', 'loadKibanaPlugins', require('./plugins/load_kibana_plugins'));
-```
-
-这个 `server/lib/config/index.js` 主要加载同目录下的：config.js 用来实现 Config 类，schema.js 用来实现具体的 Joi 对象。
-
-然后我们看这个 `server/lib/config/schema.js`，就会发现各种配置属性全在这里了~和插件路径相关的几行如下：
-
-```
-var publicFolder = path.resolve(__dirname, '..', '..', 'public');
-if (!checkPath(publicFolder)) publicFolder = path.resolve(__dirname, '..', '..', '..', 'kibana');
-
-var bundledPluginsFolder = path.resolve(publicFolder, 'plugins');
-
-module.exports = Joi.object({
-  kibana: Joi.object({
-    bundledPluginsFolder: Joi.string().default(bundledPluginsFolder),
-```
-
-这里有两个路径，因为一个是源码位置，一个是 grunt build 编译后的位置。就我们阅读源码来说，这个 `__dirname/../../../kibana/plugins` 就是我们最终找到的地方了，我们从 server 端源码里找了一圈，终于回到 kibana 前端页面的源码目录中，这就是 `kibana/plugins` 目录，自动加载其下所有子目录为内置插件。包括：
-
-* dashboard
-* discover
-* doc
-* kbn_vislib_vis_types
-* kibana
-* markdown_vis
-* metric_vis
-* settings
-* table_vis
-* vis_debug_spy
-* visualize
-
-除 kibana 以外，随意进一个，(还记得 index.js 里是把 kibana 去除掉了吧)，比如 visualize，看 `visualize/index.js` 的内容，最底下有这么一段：
-
-```
-  var apps = require('registry/apps');
-  apps.register(function VisualizeAppModule() {
-    return {
-      id: 'visualize',
-      name: 'Visualize',
-      order: 1
-    };
-  });
-```
-
-其他目录也都一样。
-
-这个 `registry/apps.js` 主要是加载 `registry/_registry.js`，把注册的 app 存入 `utils/indexed_array/index` 的 IndexedArray 对象。对象主要有几个值：id, name, order。前面说到的路径记忆功能要用的两个方法，assignPaths 里就是用 app.id 设置 lastPath，而 getShow 里就是用 order 来判断是否展示在页面上。
-
-下一章，我们开始介绍官方提供的几个 apps。

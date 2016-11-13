@@ -1,14 +1,14 @@
-# dashboard app
+# dashboard
 
-`plugins/dashboard/index.js` 结构跟 visualize 类似，注册到 registry；设置两个调用 `savedDashboards.get()` 方法的 routes，提供一个叫 dashboard-app 的 directive。
+`plugins/kibana/public/dashboard/index.js` 结构跟 visualize 类似，设置两个调用 `savedDashboards.get()` 方法的 routes，提供一个叫 dashboard-app 的 directive。
 
-savedDashboards 由 `plugins/dashboard/services/saved_dashboard.js` 提供，调用 es.search 获取数据，生成 savedDashboard 对象，这个对象同样也是继承 savedObject，主要内容是 `panelsJSON` 数组字段。实现如下：
+savedDashboards 由 `plugins/kibana/public/dashboard/services/saved_dashboard.js` 提供，调用 es.search 获取数据，生成 savedDashboard 对象，这个对象同样也是继承 savedObject，主要内容是 `panelsJSON` 数组字段。实现如下：
 
 ```
   module.factory('SavedDashboard', function (courier) {
     _.class(SavedDashboard).inherits(courier.SavedObject);
     function SavedDashboard(id) {
-      courier.SavedObject.call(this, {
+      SavedDashboard.Super.call(this, {
         type: SavedDashboard.type,
         mapping: SavedDashboard.mapping,
         searchSource: SavedDashboard.searchsource,
@@ -18,17 +18,22 @@ savedDashboards 由 `plugins/dashboard/services/saved_dashboard.js` 提供，调
           hits: 0,
           description: '',
           panelsJSON: '[]',
+          optionsJSON: angular.toJson({
+            darkTheme: config.get('dashboard:defaultDarkTheme')
+          }),
+          uiStateJSON: '{}',
           version: 1,
           timeRestore: false,
           timeTo: undefined,
-          timeFrom: undefined
+          timeFrom: undefined,
+          refreshInterval: undefined
         },
         clearSavedIndexPattern: true
       });
     }
 ```
 
-可以注意到，这个 panelsJSON 是一个字符串，这跟之前 kibana_index 提到的是一致的。
+可以注意到，这个 panelsJSON 是一个字符串，这跟之前 kbnIndex 提到的是一致的。
 
 dashboard-app 中，最重要的功能，是监听搜索框和过滤条件的变更，我们可以看到 init 函数中有下面这段：
 
@@ -56,16 +61,17 @@ dashboard-app 中，最重要的功能，是监听搜索框和过滤条件的变
   <dashboard-grid></dashboard-grid>
 ```
 
-这也是一个 angular directive，通过加载 `plugins/dashboard/directives/grid.js` 引入的。其中添加面板相关的代码有两部分：
+这也是一个 angular directive，通过加载 `plugins/kibana/public/dashboard/directives/grid.js` 引入的。其中添加面板相关的代码有两部分：
 
 ```
           $scope.$watchCollection('state.panels', function (panels) {
-            var currentPanels = gridster.$widgets.toArray().map(function (el) {
+            const currentPanels = gridster.$widgets.toArray().map(function (el) {
               return getPanelFor(el);
             });
-            var added = _.difference(panels, currentPanels);
+            const removed = _.difference(currentPanels, panels);
+            const added = _.difference(panels, currentPanels);
             if (added.length) added.forEach(addPanel);
-          });
+            ...
 ```
 
 这段用来监听 `$state.panels` 数组，一旦有新增面板，调用 `addPanel` 函数。同理也有删除面板的，这里就不重复贴了。
@@ -78,16 +84,18 @@ dashboard-app 中，最重要的功能，是监听搜索框和过滤条件的变
             size_x: 3,
             size_y: 2
           });
+          ...
           panel.$scope = $scope.$new();
           panel.$scope.panel = panel;
           panel.$el = $compile('<li><dashboard-panel></li>')(panel.$scope);
           gridster.add_widget(panel.$el, panel.size_x, panel.size_y, panel.col, panel.row);
+          ...
         };
 ```
 
-这里即验证了之前 kibana_inex 小节中讲的 gridster 默认大小，又引入了一个新的 directive，叫 dashboard-panel。
+这里即验证了之前 kbnIndex 小节中讲的 gridster 默认大小，又引入了一个新的 directive，叫 dashboard-panel。
 
-dashboard-panel 在 `plugins/dashboard/components/panel/panel.js` 中实现，其中使用了 `plugins/dashboard/components/panel/panel.html` 页面。页面最后是这么一段：
+dashboard-panel 在 `plugins/kibana/public/dashboard/components/panel/panel.js` 中实现，其中使用了 `plugins/kibana/public/dashboard/components/panel/panel.html` 页面。页面最后是这么一段：
 
 ```
  <visualize ng-switch-when="visualization"
@@ -105,7 +113,7 @@ dashboard-panel 在 `plugins/dashboard/components/panel/panel.js` 中实现，�
   </doc-table>
 ```
 
-这里使用的 savedObj 对象，来自 `plugins/dashboard/components/panel/lib/load_panel.js` 获取的 savedSearch 或者 savedVisualization。获得的对象，以 savedVisualization 为例：
+这里使用的 savedObj 对象，来自 `plugins/kibana/public/dashboard/components/panel/lib/load_panel.js` 获取的 savedSearch 或者 savedVisualization。获得的对象，以 savedVisualization 为例：
 
 ```
 define(function (require) {
