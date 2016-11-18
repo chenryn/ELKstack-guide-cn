@@ -9,140 +9,140 @@ filter {
     # grok log lines by program name (listed alpabetically)
     if [program] =~ /^postfix.*\/anvil$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_ANVIL}" ]
             tag_on_failure => [ "_grok_postfix_anvil_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/bounce$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_BOUNCE}" ]
             tag_on_failure => [ "_grok_postfix_bounce_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/cleanup$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_CLEANUP}" ]
             tag_on_failure => [ "_grok_postfix_cleanup_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/dnsblog$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_DNSBLOG}" ]
             tag_on_failure => [ "_grok_postfix_dnsblog_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/local$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_LOCAL}" ]
             tag_on_failure => [ "_grok_postfix_local_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/master$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_MASTER}" ]
             tag_on_failure => [ "_grok_postfix_master_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/pickup$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_PICKUP}" ]
             tag_on_failure => [ "_grok_postfix_pickup_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/pipe$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_PIPE}" ]
             tag_on_failure => [ "_grok_postfix_pipe_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/postdrop$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_POSTDROP}" ]
             tag_on_failure => [ "_grok_postfix_postdrop_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/postscreen$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_POSTSCREEN}" ]
             tag_on_failure => [ "_grok_postfix_postscreen_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/qmgr$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_QMGR}" ]
             tag_on_failure => [ "_grok_postfix_qmgr_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/scache$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_SCACHE}" ]
             tag_on_failure => [ "_grok_postfix_scache_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/sendmail$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_SENDMAIL}" ]
             tag_on_failure => [ "_grok_postfix_sendmail_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/smtp$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_SMTP}" ]
             tag_on_failure => [ "_grok_postfix_smtp_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/lmtp$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_LMTP}" ]
             tag_on_failure => [ "_grok_postfix_lmtp_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/smtpd$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_SMTPD}" ]
             tag_on_failure => [ "_grok_postfix_smtpd_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/tlsmgr$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_TLSMGR}" ]
             tag_on_failure => [ "_grok_postfix_tlsmgr_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/tlsproxy$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_TLSPROXY}" ]
             tag_on_failure => [ "_grok_postfix_tlsproxy_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/trivial-rewrite$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_TRIVIAL_REWRITE}" ]
             tag_on_failure => [ "_grok_postfix_trivial_rewrite_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
         }
     } else if [program] =~ /^postfix.*\/discard$/ {
         grok {
-            patterns_dir   => "/etc/logstash/patterns.d"
+            patterns_dir   => ["/etc/logstash/patterns.d"]
             match          => [ "message", "%{POSTFIX_DISCARD}" ]
             tag_on_failure => [ "_grok_postfix_discard_nomatch" ]
             add_tag        => [ "_grok_postfix_success" ]
@@ -161,7 +161,7 @@ filter {
         # some post processing of key-value data
         if [postfix_client] {
             grok {
-                patterns_dir   => "/etc/logstash/patterns.d"
+                patterns_dir   => ["/etc/logstash/patterns.d"]
                 match          => ["postfix_client", "%{POSTFIX_CLIENT_INFO}"]
                 tag_on_failure => [ "_grok_kv_postfix_client_nomatch" ]
                 remove_field   => [ "postfix_client" ]
@@ -169,7 +169,7 @@ filter {
         }
         if [postfix_relay] {
             grok {
-                patterns_dir   => "/etc/logstash/patterns.d"
+                patterns_dir   => ["/etc/logstash/patterns.d"]
                 match          => ["postfix_relay", "%{POSTFIX_RELAY_INFO}"]
                 tag_on_failure => [ "_grok_kv_postfix_relay_nomatch" ]
                 remove_field   => [ "postfix_relay" ]
@@ -177,7 +177,7 @@ filter {
         }
         if [postfix_delays] {
             grok {
-                patterns_dir   => "/etc/logstash/patterns.d"
+                patterns_dir   => ["/etc/logstash/patterns.d"]
                 match          => ["postfix_delays", "%{POSTFIX_DELAYS}"]
                 tag_on_failure => [ "_grok_kv_postfix_delays_nomatch" ]
                 remove_field   => [ "postfix_delays" ]

@@ -102,7 +102,7 @@ filter {
 ```
 filter {
     grok {
-        patterns_dir => "/path/to/your/own/patterns"
+        patterns_dir => ["/path/to/your/own/patterns"]
         match => {
             "message" => "%{SYSLOGBASE} %{DATA:message}"
         }
