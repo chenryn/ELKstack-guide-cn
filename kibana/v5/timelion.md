@@ -1,6 +1,6 @@
 # timelion 介绍
 
-ES2.0 开始提供了一个崭新的 pipeline aggregation 特性，但是 Kibana 似乎并没有立刻跟进这方面的意思，相反，Elastic 公司推出了另一个实验室产品：[Timelion](https://github.com/elastic/timelion)。
+Elasticsearch 2.0 开始提供了一个崭新的 pipeline aggregation 特性，但是 Kibana 并没有立刻跟进这方面的意思，相反，Elastic 公司推出了另一个实验室产品：[Timelion](https://github.com/elastic/timelion)。最后在 5.0 版中，timelion 成为 Kibana 5 默认分发的一个插件。
 
 timelion 的用法在[官博](https://www.elastic.co/blog/timelion-timeline)里已经有介绍。尤其是最近两篇如何用 timelion 实现异常告警的[文章](https://www.elastic.co/blog/implementing-a-statistical-anomaly-detector-part-2)，更是从 ES 的 pipeline aggregation 细节和场景一路讲到 timelion 具体操作，我这里几乎没有再重新讲一遍 timelion 操作入门的必要了。不过，官方却一直没有列出来 timelion 支持的请求语法的文档，而是在页面上通过点击图标的方式下拉帮助。
 
