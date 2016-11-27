@@ -1,12 +1,12 @@
 # Kibana4 可视化插件开发
 
-上一节，我们看到了一个完整的 Kibana4 插件的官方用例。一般来说，我们不太会需要自己从头到尾写一个 angular app 出来。最常见的情况，应该是在 Kibana 功能的基础上做一定的二次开发和扩展。其中，可视化效果应该是重中之重。本节，以一个红绿灯效果，演示如何开发一个 Kibana4 可视化插件。
+上一节，我们看到了一个完整的 Kibana 插件的官方用例。一般来说，我们不太会需要自己从头到尾写一个 angular app 出来。最常见的情况，应该是在 Kibana 功能的基础上做一定的二次开发和扩展。其中，可视化效果应该是重中之重。本节，以一个红绿灯效果，演示如何开发一个 Kibana 可视化插件。
 
 ![](http://logz.io/wp-content/uploads/2015/12/kibana-traffic-light-visualization.png)
 
 ## 插件目录生成
 
-Kibana 开发组提供了一个简单的工具，辅助我们生成一个 Kibana4 插件的目录结构：
+Kibana 开发组提供了一个简单的工具，辅助我们生成一个 Kibana 插件的目录结构：
 
 ```
 npm install -g yo

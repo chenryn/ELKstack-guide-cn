@@ -1,8 +1,8 @@
-# Kibana4 服务器端插件开发
+# Kibana 服务器端插件开发
 
-上一节介绍了如何给 Kibana4 开发浏览器端的可视化插件。Kibana4 跟 Kibana3 比，最大的一个变化是有了独立的 node.js 服务器端。那么同样的，也就有了服务器端的 Kibana4 插件。最明显的一个场景：我们可以在 node.js 里跑定时器做 Elasticsearch 的告警逻辑了！
+上一节介绍了如何给 Kibana 开发浏览器端的可视化插件。新版 Kibana 跟 Kibana3 比，最大的一个变化是有了独立的 node.js 服务器端。那么同样的，也就有了服务器端的 Kibana 插件。最明显的一个场景：我们可以在 node.js 里跑定时器做 Elasticsearch 的告警逻辑了！
 
-本节示例一个最基础的 Kibana4 告警插件开发。只演示基础的定时器和 Kibana4 插件规范，实际运用中，肯定还涉及历史记录，告警项配置更新等。请读者不要直接 copy-paste。
+本节示例一个最基础的 Kibana 告警插件开发。只演示基础的定时器和 Kibana 插件规范，实际运用中，肯定还涉及历史记录，告警项配置更新等。请读者不要直接 copy-paste。
 
 首先，我们尽量沿袭 Elastic 官方的 watcher 产品的告警配置设计。也新建一个索引，里面是具体的配置内容：
 
@@ -194,3 +194,5 @@ module.exports = function (kibana) {
 ```
 
 这里通过调用 `server.plugins` 来直接引用 Kibana 里其他插件里的对象。这样，alert 插件就可以跟其他功能共用同一个 ES client，免去单独配置自己的 ES 设置项和新开网络连接的资源消耗。
+
+本节代码后续优化改进，见：<https://github.com/chenryn/kaae>。项目中还附带有一个 spy 式插件，有兴趣的读者可以继续学习 spy 这类不太常见的插件扩展的用法。
