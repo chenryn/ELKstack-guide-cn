@@ -8,7 +8,7 @@ grafana的套路基本上跟kibana差不多，都是根据查询条件设置聚�
 ![](images/grafana-21.png)
 
 ## 安装
-Grafan的安装非常简单，官方就有软件仓库可以直接使用，也可以通过docker镜像等方式直接本地启动。
+Grafana的安装非常简单，官方就有软件仓库可以直接使用，也可以通过docker镜像等方式直接本地启动。
 
 参考官方文档的安装方法，对应找到你的操作系统的安装方法即可: http://docs.grafana.org/
 
