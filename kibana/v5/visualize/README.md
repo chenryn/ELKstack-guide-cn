@@ -39,10 +39,7 @@ Visualize 标签页用来设计可视化。你可以保存可视化，以后再�
 当你从一个已保存的搜索开始创建并保存好了可视化，这个搜索就绑定在这个可视化上。如果你修改了搜索，对应的可视化也会自动更新。
 
 ### 第 3 步: 可视化编辑器
-
-The visualization editor enables you to configure and edit visualizations. The visualization editor has the following main elements:
 可视化编辑器用来配置编辑可视化。它有下面几个主要元素：
-
 1. 工具栏(Toolbar)
 2. 聚合构建器(Aggregation Builder)
 3. 预览画布(Preview Canvas)
