@@ -159,7 +159,7 @@
    * [插件](kibana/v5/plugin/README.md)
        * [可视化开发示例](kibana/v5/plugin/vis-develop.md)
        * [后端开发示例](kibana/v5/plugin/server-develop.md)
-       * [完整app开发示例](Kibana/v5/plugin/app.md)
+       * [完整app开发示例](kibana/v5/plugin/app.md)
    * [Kibana报表](kibana/phantomjs.md)
 * [竞品对比](diff-hdfs.md)
 * [推荐阅读](see-also.md)
