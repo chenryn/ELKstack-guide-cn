@@ -78,21 +78,19 @@ Discover 标签页用于交互式探索你的数据。你可以访问到匹配�
 
 ## 自动刷新页面
 
-亦可以配置一个刷新间隔来自动刷新 Discover 页面的最新索引数据。这回定期重新提交一次搜索请求。
+亦可以配置一个刷新间隔来自动刷新 Discover 页面的最新索引数据。这会定期重新提交一次搜索请求。
 
 设置刷新间隔后，会显示在菜单栏时间过滤器的左边。
 
 要设置刷新间隔：
 
-1. 点击菜单栏右上角的 `Time Filter` ![Time Filter](http://www.elasticsearch.org/guide/en/kibana/current/images/TimeFilter.jpg)。
-2. 点击 `Refresh Interval` 标签。
+1. 点击菜单栏右上角的 `Time Picker` ![Time Picker](https://www.elastic.co/guide/en/kibana/current/images/time-picker.jpg)。
+2. 点击 `Auto refresh` 标签。
 3. 从列表中选择一个刷新间隔。
-
-要想自动刷新数据，点击 ![images/autorefresh.png](https://www.elastic.co/guide/en/kibana/current/images/autorefresh.png) **Auto-refresh** 按钮然后选择一个自动刷新间隔：
 
 ![images/autorefresh-intervals.png](https://www.elastic.co/guide/en/kibana/current/images/autorefresh-intervals.png)
 
-开启自动刷新后，Kibana 的顶部栏会出现一个暂停按钮和自动刷新的间隔：![images/autorefresh-pause.png](https://www.elastic.co/guide/en/kibana/current/images/autorefresh-pause.png)。点击 **Pause** 按钮可以暂停自动刷新。
+开启自动刷新后，Kibana 的顶部栏会出现一个暂停按钮和自动刷新的间隔，点击 **Pause** 按钮可以暂停自动刷新。
 
 ## 按字段过滤
 
@@ -114,9 +112,7 @@ Discover 标签页用于交互式探索你的数据。你可以访问到匹配�
 
 ## 过滤器(Filter)的协同工作方式
 
-在 Kibana 的任意页面创建过滤器后，就会在搜索输入框的下方，出现一个绿色椭圆形的过滤条件：
-
-![](https://www.elastic.co/guide/en/kibana/current/images/filter-sample.png)
+在 Kibana 的任意页面创建过滤器后，就会在搜索输入框的下方，出现椭圆形的过滤条件。
 
 鼠标移动到过滤条件上，会显示下面几个图标：
 
@@ -153,7 +149,7 @@ Discover 标签页用于交互式探索你的数据。你可以访问到匹配�
 }
 ```
 
-想要对当前页所有过滤器统一执行上面的某个操作，点击 ![images/filter-actions.png](https://www.elastic.co/guide/en/kibana/current/images/filter-actions.png) **Global Filter Actions** 按钮，然后再执行操作即可。
+想要对当前页所有过滤器统一执行上面的某个操作，点击 **Actions** 按钮，然后再执行操作即可。
 
 ## 查看文档数据
 
@@ -177,14 +173,12 @@ Discover 标签页用于交互式探索你的数据。你可以访问到匹配�
 * 点击想要用来排序的字段名。能用来排序的字段在字段名右侧都有一个排序按钮。再次点击字段名，就会反向调整排序方式。
 
 ## 给文档表格添加字段列
-
-By default, the Documents table shows the localized version of the time field specified in the selected index pattern and the document `_source`. You can add fields to the table from the Fields list.
 默认的，文档表格会显示当前选择的索引模式中定义的时间字段内容(转换成本地时区)以及 `_source` 文档。你可以从字段列表添加字段到文档表格。
 
 要添加字段列到文档表格：
 
-1. 移动鼠标到字段列表的字段上，点击它的 `add` 按钮 ![Add Field Button](http://www.elasticsearch.org/guide/en/kibana/current/images/AddFieldButton.jpg)。
-2. 重复操作直到你添加完所有你想移除的字段。
+1. 从字段列表中添加一列，移动鼠标到字段列表的字段上，点击它的 `add` 按钮
+2. 从文档的字段数据添加一列，展开对应的文档后点击字段的![](https://www.elastic.co/guide/en/kibana/current/images/add-column-button.png)`Toggle column in table`按钮
 
 添加的字段会替换掉文档表格里的 `_source` 列。同时还会显示在字段列表顶部的 `Selected Fields` 区域里。
 
@@ -203,10 +197,8 @@ By default, the Documents table shows the localized version of the time field sp
 
 从字段列表，你可以看到文档表格里有多少数据包含了这个字段，排名前 5 的值是什么，以及包含各个值的文档的占比。
 
-要查看字段数据统计：
+要查看字段数据统计，在字段列表中点击对应的字段名即可。
 
-* 点击字段列表里一个字段的名字。这个字段可以在字段列表的任意位置 —— 已选字段(Selected Fields)，常用字段(Popular Fields)，或其他字段。
-
-![](http://www.elasticsearch.org/guide/en/kibana/current/images/Discover-FieldStats.jpg)
+![](https://www.elastic.co/guide/en/kibana/current/images/filter-field.jpg)
 
 > 要基于这个字段创建可视化，点击字段统计下方的 Visualize 按钮。
