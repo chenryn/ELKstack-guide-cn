@@ -5,6 +5,8 @@ Grafana是一个开源的指标量监测和可视化工具。常用于展示基�
 
 grafana的套路基本上跟kibana差不多，都是根据查询条件设置聚合规则，在合适的图表上进行展示，多个图表共同组建成一个dashboard，熟悉kibana的用户应该可以非常容易上手。另外grafana的可视化功能比kibana强得多，后面逐步会介绍到，而且4以上版本将集成报警功能。
 
+![](images/grafana-21.png)
+
 ## 安装
 Grafan的安装非常简单，官方就有软件仓库可以直接使用，也可以通过docker镜像等方式直接本地启动。
 
@@ -51,8 +53,6 @@ grafana目前支持的时序数据库有: Graphite, Prometheus, Elasticsearch, I
 先在kibana中看看查询结果:
 
 ![](images/grafana-4.png)
-
-
 
 很明显，`value`是希望绘制到曲线上的点，而`type_instance`应该作为ES聚合的`bucket`，如果`host`有多个，那么`host`也应作为一个bucket，我们先不管这个host，后面会再说怎么按照host分图形，grafana有更巧妙的办法。
 
