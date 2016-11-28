@@ -35,7 +35,6 @@ Elastic Stack 在最近两年迅速崛起，成为机器数据分析，或者说
 
 * es-hadoop 用例
 * beats 开发
-* grafana 介绍
 * codec/netflow 的详解
 * filter/elapsed 的用例
 * [K4的oauth2权限插件](https://github.com/trevan/oauth2)
