@@ -6,7 +6,7 @@
        * [下载安装](logstash/get-start/install.md)
        * [hello world](logstash/get-start/hello-world.md)
        * [配置语法](logstash/get-start/full-config.md)
-       * [plugin的安装](logstash/install-plugins.md)
+       * [plugin的安装](logstash/get-start/install-plugins.md)
        * [长期运行](logstash/get-start/daemon.md)
    * [插件配置]()
        * [input配置](logstash/plugins/input/README.md)
