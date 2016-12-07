@@ -39,7 +39,7 @@ output {
 示例中，同时将数据输出到本地文件和 zabbix server。注意，logstash-output-zabbix 并不是标准插件，需要额外安装：
 
 ```
-bin/plugin install logstash-output-zabbix
+bin/logstash-plugin install logstash-output-zabbix
 ```
 
 文件中记录的就是 heartbeat 事件的内容，示例如下：

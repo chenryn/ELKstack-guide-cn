@@ -8,7 +8,7 @@
 
 ```
 Usage:
-    bin/plugin [OPTIONS] SUBCOMMAND [ARG] ...
+    bin/logstash-plugin [OPTIONS] SUBCOMMAND [ARG] ...
 
 Parameters:
     SUBCOMMAND                    subcommand
@@ -26,12 +26,12 @@ Options:
 
 ## 示例
 
-首先，你可以通过 `bin/plugin list` 查看本机现在有多少插件可用。(其实就在 vendor/bundle/jruby/1.9/gems/ 目录下)
+首先，你可以通过 `bin/logstash-plugin list` 查看本机现在有多少插件可用。(其实就在 vendor/bundle/jruby/1.9/gems/ 目录下)
 
 然后，假如你看到 `https://github.com/logstash-plugins/` 下新发布了一个 `logstash-output-webhdfs` 模块(当然目前还没有)。打算试试，就只需要运行：
 
 ```
-bin/plugin install logstash-output-webhdfs
+bin/logstash-plugin install logstash-output-webhdfs
 ```
 
 就可以了。
@@ -39,17 +39,17 @@ bin/plugin install logstash-output-webhdfs
 同样，假如是升级，只需要运行：
 
 ```
-bin/plugin update logstash-input-tcp
+bin/logstash-plugin update logstash-input-tcp
 ```
 
 即可。
 
 ## 本地插件安装
 
-`bin/plugin` 不单可以通过 rubygems 平台安装插件，还可以读取本地路径的 gem 文件。这对自定义插件或者无外接网络的环境都非常有效：
+`bin/logstash-plugin` 不单可以通过 rubygems 平台安装插件，还可以读取本地路径的 gem 文件。这对自定义插件或者无外接网络的环境都非常有效：
 
 ```
-bin/plugin install /path/to/logstash-filter-crash.gem
+bin/logstash-plugin install /path/to/logstash-filter-crash.gem
 ```
 
 执行成功以后。你会发现，logstash-5.0.0 目录下的 Gemfile 文件最后会多出一段内容：
