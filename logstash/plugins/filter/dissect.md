@@ -8,7 +8,7 @@ grok 作为 Logstash 最广为人知的插件，在性能和资源损耗方面�
 
 ```
 filter {
-    dessect {
+    dissect {
         mapping => {
             "message" => "%{ts} %{+ts} %{+ts} %{src} %{} %{prog}[%{pid}]: %{msg}"
         }

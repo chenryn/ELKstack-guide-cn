@@ -70,25 +70,25 @@ Elasticsearch 中的计算方法是：
 
 上面说的各种配置，都是从策略层面，控制分片分配的选择。在必要的时候，还可以通过 ES 的 reroute 接口，手动完成对分片的分配选择的控制。
 
-reroute 接口支持三种指令：allocate，move 和 cancel。常用的一般是 allocate 和 move：
+reroute 接口支持五种指令：`allocate_replica`, `allocate_stale_primary`, `allocate_empty_primary`，`move` 和 `cancel`。常用的一般是 allocate 和 move：
 
-* allocate 指令
+* `allocate_*` 指令
 
-因为负载过高等原因，有时候个别分片可能长期处于 UNASSIGNED 状态，我们就可以手动分配分片到指定节点上。默认情况下只允许手动分配副本分片，所以如果是主分片故障，需要单独加一个 `allow_primary` 选项：
+因为负载过高等原因，有时候个别分片可能长期处于 UNASSIGNED 状态，我们就可以手动分配分片到指定节点上。默认情况下只允许手动分配副本分片(即使用 `allocate_replica`)，所以如果要分配主分片，需要单独加一个 `accept_data_loss` 选项：
 
 ```
 # curl -XPOST 127.0.0.1:9200/_cluster/reroute -d '{
   "commands" : [ {
-        "allocate" :
+        "allocate_stale_primary" :
             {
-              "index" : "logstash-2015.05.27", "shard" : 61, "node" : "10.19.0.77", "allow_primary" : true
+              "index" : "logstash-2015.05.27", "shard" : 61, "node" : "10.19.0.77", "accept_data_loss" : true
             }
         }
   ]
 }'
 ```
 
-注意，如果是历史数据的话，请提前确认一下哪个节点上保留有这个分片的实际目录，且目录大小最大。然后手动分配到这个节点上。以此减少数据丢失。
+注意，`allocate_stale_primary` 表示准备分配到的节点上可能有老版本的历史数据，运行时请提前确认一下是哪个节点上保留有这个分片的实际目录，且目录大小最大。然后手动分配到这个节点上。以此减少数据丢失。
 
 * move 指令
 

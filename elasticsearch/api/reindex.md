@@ -110,4 +110,6 @@ curl -XPOST http://localhost:9200/_reindex?requests_per_second=10000 -d '
 
 上面这个请求的作用，是将来自 192.168.0.2 集群的 metricbeat-2016.10.29 索引中，有关 `host:webserver` 的数据，读取出来以后，经过 localhost 集群的 `ingest-rule-1` 规则处理，在写入 localhost 集群的 metricbeat-2016.10.29-1 索引中。
 
+注意：读取远端集群数据需要先配置对应的 `reindex.remote.whitelist:192.168.0.2:9200` 到 elasticsearch.yml 的白名单里。
+
 通过 reindex 接口运行的任务可以通过同样是 5.0 新引入的任务管理接口进行取消、修改等操作。详细介绍见后续任务管理章节。
