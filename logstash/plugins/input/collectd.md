@@ -87,24 +87,9 @@ LoadPlugin disk
 ```
 
 ##logstash的配置
-以下配置实现通过 logstash 监听 `25826` 端口，接收从 collectd 发送过来的各项检测数据。注意 `logstash-input-collectd` 插件本身需要单独安装，logstash 插件安装说明之前已经讲过：
+以下配置实现通过 logstash 监听 `25826` 端口，接收从 collectd 发送过来的各项检测数据。
 
-```
-bin/logstash-plugin install logstash-input-collectd
-```
-
-### 示例一：
-
-```ruby
-input {
-    collectd {
-        port => 25826 ## 端口号与发送端对应
-        type => collectd
-    }
-}
-```
-
-### 示例二：（推荐）
+### 示例
 
 ```ruby
 udp {
