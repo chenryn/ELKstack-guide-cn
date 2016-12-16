@@ -51,7 +51,7 @@ make && make install
 解决依赖(RH系列):
 ```bash
 rpm -ivh "http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm"
-yum -y install libcurl libcurl-devel rrdtool rrdtool-devel perl-rrdtool rrdtool-prel libgcrypt-devel gcc make gcc-c++ liboping liboping-devel perl-CPAN net-snmp net-snmp-devel
+yum -y install libcurl libcurl-devel rrdtool rrdtool-devel perl-rrdtool rrdtool-perl libgcrypt-devel gcc make gcc-c++ liboping liboping-devel perl-CPAN net-snmp net-snmp-devel
 ```
 
 安装启动脚本
