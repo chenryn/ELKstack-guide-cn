@@ -17,14 +17,14 @@ ES 从 2.0 版本开始，默认的自动发现方式改为了单播(unicast)方
 ```
 network.host: "192.168.0.2" 
 discovery.zen.minimum_master_nodes: 3
-discovery.zen.ping.timeout: 100s
+discovery.zen.ping_timeout: 100s
 discovery.zen.fd.ping_timeout: 100s
 discovery.zen.ping.unicast.hosts: ["10.19.0.97","10.19.0.98","10.19.0.99","10.19.0.100"]
 ```
 
 上面的配置中，两个 timeout 可能会让人有所迷惑。这里的 **fd** 是 fault detection 的缩写。也就是说：
 
-* discovery.zen.ping.timeout 参数仅在加入或者选举 master 主节点的时候才起作用；
+* discovery.zen.ping_timeout 参数仅在加入或者选举 master 主节点的时候才起作用；
 * discovery.zen.fd.ping\_timeout 参数则在稳定运行的集群中，master 检测所有节点，以及节点检测 master 是否畅通时长期有用。
 
 既然是长期有用，自然还有运行间隔和重试的配置，也可以根据实际情况调整：
