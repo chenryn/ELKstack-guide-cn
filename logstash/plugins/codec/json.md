@@ -28,7 +28,7 @@ access_log /var/log/nginx/access.log_json json;
 ```
 input {
     file {
-        path => "/var/log/nginx/access.log_json""
+        path => "/var/log/nginx/access.log_json"
         codec => "json"
     }
 }

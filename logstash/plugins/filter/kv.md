@@ -11,7 +11,7 @@ filter {
         code => "
             new_event = LogStash::Event.new(Hash[@kname.zip(event.get('request').split('|'))])
             new_event.remove('@timestamp')
-            event.append(new_event)""
+            event.append(new_event)
         "
     }
     if [uri] {
@@ -20,7 +20,7 @@ filter {
             code => "
                 new_event = LogStash::Event.new(Hash[@kname.zip(event.get('uri').split('?'))])
                 new_event.remove('@timestamp')
-                event.append(new_event)""
+                event.append(new_event)
             "
         }
         kv {
