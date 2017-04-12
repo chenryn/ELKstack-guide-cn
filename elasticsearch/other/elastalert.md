@@ -119,6 +119,10 @@ body = rule_name
 * `realert`：设置一个时长，则该时长内，相同 `query_key` 的报警只发一个；
 * `exponential_realert`：设置一个时长，必须大于 `realert` 设置。则在 `realert` 到 `exponential_realert` 之间，每次报警后，realert 自动翻倍。
 
+#### 微信告警插件
+
+社区有人提供了使用微信做 ElastAlert 告警操作的扩展，其 GitHub 地址见：<https://github.com/anjia0532/elastalert-wechat-plugin>。
+
 ### enhancements 部分
 
 `match_enhancements` 配置，设置一个数组，在报警内容发送到 alert 之前修改具体数据。ElastAlert 默认不提供具体的 enhancements 实现，需要自己扩展。
