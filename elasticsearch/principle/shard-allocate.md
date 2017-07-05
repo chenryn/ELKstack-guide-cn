@@ -110,7 +110,7 @@ curl -XPOST 127.0.0.1:9200/_cluster/reroute -d '{
 
 如果是自己手工 reroute 失败，Elasticsearch 返回的响应中会带上失败的原因。不过格式非常难看，一堆 YES，NO。从 5.0 版本开始，Elasticsearch 新增了一个 allocation explain 接口，专门用来解释指定分片的具体失败理由：
 
-```
+``
 curl -XGET 'http://localhost:9200/_cluster/allocation/explain' -d'{
       "index": "logstash-2016.10.31",
       "shard": 0,
@@ -183,15 +183,15 @@ Elasticsearch 集群一个比较突出的问题是: 用户做一次大的查询�
 
 ### 实施方案
 
-1. N 台机器做热数据的存储, 上面只放当天的数据。这 N 台热数据节点上面的 elasticsearc.yml 中配置 `node.tag: hot`
-2. 之前的数据放在另外的 M 台机器上。这 M 台冷数据节点中配置 `node.tag: stale`
+1. N 台机器做热数据的存储, 上面只放当天的数据。这 N 台热数据节点上面的 elasticsearc.yml 中配置 `node.attr.tag: hot`
+2. 之前的数据放在另外的 M 台机器上。这 M 台冷数据节点中配置 `node.attr.tag: stale`
 3. 模板中控制对新建索引添加 hot 标签：
 ```
 {
     "order" : 0,
     "template" : "*",
     "settings" : {
-      "index.routing.allocation.require.tag" : "hot"
+      "index.routing.allocation.include.tag" : "hot"
     }
 }
 ```
@@ -202,7 +202,7 @@ Elasticsearch 集群一个比较突出的问题是: 用户做一次大的查询�
    "index": {
       "routing": {
          "allocation": {
-            "require": {
+            "include": {
                "tag": "stale"
             }
          }
