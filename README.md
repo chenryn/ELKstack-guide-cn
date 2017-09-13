@@ -37,5 +37,13 @@ Elastic Stack 在最近两年迅速崛起，成为机器数据分析，或者说
 * beats 开发
 * codec/netflow 的详解
 * filter/elapsed 的用例
-* [K4的oauth2权限插件](https://github.com/trevan/oauth2)
 * zeppelin 的 es 用例
+* kibana的filter交互用法
+* painless的date对象用法：同比环比图
+* significant_text aggs用例
+* cat nodeattrs接口
+* timelion保存成panel的用法
+* regionmap用法
+* Time Series Visual Builder用法
+* Viewing Document Context用法
+* Dead Letter Queues讲解

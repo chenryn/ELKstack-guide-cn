@@ -40,7 +40,10 @@ query 跟 filter 上下文的区别，简单来说：
 
 在这个请求中，
 
-1. ES 先看到一个 **query**，那么进入 query 上下文；
+1. ES 先看到一个 **query**，那么进入 query 上下文。
+2. 然后在 **bool** 里看到一个 **must_not**，那么改进入 filter 上下文，这个有关 title 字段的查询不参与评分。
+3. 然后接着是一个 **must** 的 **match**，这个又属于 query 上下文，这个有关 content 字段的查询会影响评分。
+4. 最后碰到 **filter**，还属于 filter 上下文，这个有关 status 和 publish_date 字段的查询不参与评分。
 
 需要注意的是，filter cache 是节点层面的缓存设置，每个节点上所有数据在响应请求时，是共用一个缓存空间的。当空间用满，按照 LRU 策略淘汰掉最冷的数据。
 
