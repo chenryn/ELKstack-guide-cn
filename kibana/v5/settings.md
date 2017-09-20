@@ -210,16 +210,20 @@ Kibana 服务器在启动的时候会从 `kibana.yml` 文件读取属性设置�
 
 |属性                         | 描述                                                           |
 |-----------------------------|----------------------------------------------------------------|
-|port                         | Kibana 服务器运行的端口。默认：`port: 5601`。                  |
-|host                         | Kibana 服务器监听的地址。默认：`host: "0.0.0.0"`。             |
-|elasticsearch_url            | 你想请求的索引存在哪个 Elasticsearch 实例上。默认：`elasticsearch_url: "http://localhost:9200"`。|
-|elasticsearch_preserve_host  | 默认的，浏览器请求中的主机名即作为 Kibana 发送给 Elasticsearch 时请求的主机名。如果你设置这个参数为 `false`, Kibana 会改用 `elasticsearch_url` 里的主机名。你应该不用担心这个设置 —— 直接用默认即可。默认：`elasticsearch_preserve_host: true`。|
-|kibana_index                 | 保存搜索，可视化，仪表板信息的索引的名字。默认：`kibana_index: .kibana`。|
-|default_app_id               | 进入 Kibana 是默认显示的页面。可以为 `discover`, `visualize`, `dashboard` 或 `settings`。默认：`default_app_id: "discover"`。|
-|request_timeout              | 等待 Kibana 后端或 Elasticsearch 的响应的超时时间，单位毫秒。默认：`request_timeout: 500000`。|
-|shard_timeout                | Elasticsearch 等待分片响应的超时时间。设置为 0 表示关闭超时控制。默认：`shard_timeout: 0`。|
-|verify_ssl                   | 定义是否验证 Elasticsearch SSL 证书。设置为 false 关闭 SSL 认证。默认：`verify_ssl: true`。|
-|ca                           | 你的 Elasticsearch 实例的 CA 证书的路径。如果你是自己签的证书，必须指定这个参数，证书才能被认证。否则，你需要关闭 `verify_ssl`。默认：none。|
-|ssl_key_file                 | Kibana 服务器的密钥文件路径。设置用来加密浏览器和 Kibana 之间的通信。默认：none。|
-|ssl_cert_file                | Kibana 服务器的证书文件路径。设置用来加密浏览器和 Kibana 之间的通信。默认：none。|
-|pid_file                     | 你想用来存进程 ID 文件的位置。如果没有指定，PID 文件存在 `/var/run/kibana.pid`。默认：none。|
+|server.port                  | Kibana 服务器运行的端口。默认：`5601`。                  |
+|server.host                  | Kibana 服务器监听的地址。默认：`"0.0.0.0"`。             |
+|server.defaultRoute          | 进入 Kibana 时默认跳转的地址。默认为 `/app/kibana`。       |
+|server.ssl.enabled           | 是否开启 Kibana 服务器的 SSL 验证。|
+|server.ssl.key               | Kibana 服务器的密钥文件路径。设置用来加密浏览器和 Kibana 之间的通信。默认：none。|
+|server.ssl.certificate       | Kibana 服务器的证书文件路径。设置用来加密浏览器和 Kibana 之间的通信。默认：none。|
+|pid.file                     | 你想用来存进程 ID 文件的位置。如果没有指定，PID 文件存在 `/var/run/kibana.pid`。|
+|kibana.index                 | 保存搜索，可视化，仪表板信息的索引的名字。默认：`.kibana`。|
+|kibana.defaultAppId          | 进入 Kibana App 后默认显示的页面。默认：`discover`。|
+|tilemap.url                  | 用来显示瓦片地图的服务接口 URL。想使用高德地图的读者可以设置为：`"http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}"`。 |
+|elasticsearch.url            | 你想请求的索引存在哪个 Elasticsearch 实例上。默认：`"http://localhost:9200"`。|
+|elasticsearch.preserveHost   | 默认的，浏览器请求中的主机名即作为 Kibana 发送给 Elasticsearch 时请求的主机名。如果你设置这个参数为 `false`, Kibana 会改用 `elasticsearch.url` 里的主机名。你应该不用担心这个设置 —— 直接用默认即可。默认：`true`。|
+|elasticsearch.requestTimeout | 等待 Kibana 后端或 Elasticsearch 的响应的超时时间，单位毫秒。默认：`30000`。|
+|elasticsearch.shardTimeout   | Elasticsearch 等待分片响应的超时时间。设置为 0 表示关闭超时控制。默认：`0`。|
+|elasticsearch.ssl.key        | 用来加密 Kibana 和 Elasticsearch 之间的通信的密钥文件。默认：none。|
+|elasticsearch.ssl.certificate| 用来加密 Kibana 和 Elasticsearch 之间的通信的证书文件。默认：none。|
+|elasticsearch.tribe.url      | 如果使用 Elasticsearch 的 Tribe Node 查询多个集群的数据，需配置 Tribe Node 的地址。|
