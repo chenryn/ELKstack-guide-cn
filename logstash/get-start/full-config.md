@@ -177,3 +177,16 @@ pipeline:
         size: 125
         delay: 5
 ```
+
+从 Logstash 6.0 开始，新增了 `$LS_HOME/config/pipelines.yml` 文件，用于管理多个 pipeline 的配置。示例如下：
+
+```YAML
+- pipeline.id: my-pipeline_1
+  path.config: "/etc/path/to/p1.config"
+  pipeline.workers: 3
+- pipeline.id: my-other-pipeline
+  path.config: "/etc/different/path/p2.cfg"
+  queue.type: persisted
+```
+
+您可以注意到，上面只定义了第一个 pipeline 的 workers 线程数，那么第二个 pipeline 就会继续使用 logstash.yml 里定义的参数值。

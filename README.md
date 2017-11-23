@@ -47,3 +47,5 @@ Elastic Stack 在最近两年迅速崛起，成为机器数据分析，或者说
 * Time Series Visual Builder用法
 * Viewing Document Context用法
 * Dead Letter Queues讲解
+* elastalert 新版说明
+
